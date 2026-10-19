@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ff7da5">
+  <meta name="theme-color" content="#fdf4f8">
   <meta name="color-scheme" content="light dark">
   <meta name="description" content="TW — a private little world for two.">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,225 +15,466 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>TW</title>
   <style>
-    :root { --ink:#382938; --muted:#806d7b; --paper:#fff9fb; --pink:#ff7da5; --pink-strong:#d6336c; --pink-soft:#ffe0eb; --purple:#7b5cbd; --mint:#e3f7ed; --line:#f2d7e1; --shadow:0 12px 30px rgba(128,68,95,.14); }
+    /* ---- Design tokens ------------------------------------------------------------------------------- */
+    :root {
+      --bg:#fdf4f8; --bg-2:#f4eefc; --app:rgba(255,255,255,.6);
+      --surface:#ffffff; --surface-2:#faf3f7; --line:#eedce6;
+      --ink:#2a2130; --muted:#76657a;
+      --accent:#d6336c; --accent-soft:#ffe4ee; --accent-text:#b02a5b; --pink:#ff7da5;
+      --purple:#6f4fb8; --purple-soft:#efe9fb;
+      --mint:#e2f6ec; --mint-ink:#27664d; --danger:#b3261e;
+      --radius:18px; --radius-sm:12px;
+      --shadow:0 1px 2px rgba(80,40,60,.05),0 8px 22px rgba(80,40,60,.07);
+      --tabbar-h:64px;
+    }
+    body.dark {
+      --bg:#121014; --bg-2:#17121b; --app:rgba(24,18,25,.75);
+      --surface:#1d171e; --surface-2:#261f28; --line:#352b38;
+      --ink:#f2e9f0; --muted:#b4a5b0;
+      --accent-soft:#3a2230; --accent-text:#ffb3cd;
+      --purple:#b9a0f6; --purple-soft:#2a2234;
+      --mint:#1f332d; --mint-ink:#7fd9b3; --danger:#ff8a80;
+      --shadow:none;
+    }
+
+    /* ---- Base ---------------------------------------------------------------------------------------- */
     * { box-sizing:border-box; }
-    body { margin:0; font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif; color:var(--ink); background:radial-gradient(circle at 14% 8%,rgba(255,191,214,.85),transparent 25%),radial-gradient(circle at 88% 28%,rgba(204,185,255,.62),transparent 27%),linear-gradient(150deg,#fff4f8 0%,#f7f1ff 52%,#effcf5 100%); min-height:100vh; }
-    button,input,textarea,select { font:inherit; }
-    button { cursor:pointer; border:0; }
-    .app { width:min(100%,760px); min-height:100vh; min-height:100dvh; margin:auto; background:rgba(255,255,255,.46); padding:max(16px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left)); }
-    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }.account-actions { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
-    .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; }
-    .heart { width:38px; height:38px; display:grid; place-items:center; border-radius:14px; background:var(--pink); color:white; box-shadow:0 6px 14px #ff9bbb; }
-    .lock { background:white; color:var(--purple); padding:9px 12px; border-radius:12px; font-size:.84rem; box-shadow:var(--shadow); }
-    .sub { color:var(--muted); margin:0; }
-    .nav { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:12px 0 14px; }
-    .nav button { color:var(--muted); background:transparent; padding:9px 2px; border-radius:999px; font-size:.72rem; font-weight:750; }
-    .nav button.active { color:var(--purple); background:white; box-shadow:0 7px 16px rgba(93,65,126,.12); }
-    .nav-swipe { touch-action:pan-y; }
-    .view { display:none; } .view.active { display:block; }
-    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:13px; }
-    .card { border-radius:20px; padding:15px; background:rgba(255,255,255,.82); border:1px solid rgba(255,255,255,.86); box-shadow:var(--shadow); transition:transform .2s ease,box-shadow .2s ease; }.card:hover { transform:translateY(-2px); box-shadow:0 16px 33px rgba(128,68,95,.12); }
-    .card h2 { margin:0 0 5px; font-size:1.04rem; } .card p { margin:0; color:var(--muted); font-size:.87rem; line-height:1.45; }
-    .wide { grid-column:1/-1; }
-    .button { background:var(--pink); color:white; padding:10px 14px; border-radius:13px; font-weight:800; margin-top:12px; box-shadow:0 5px 10px #ffc3d4; }
-    .button.alt { background:var(--purple); box-shadow:none; }.button.soft { background:var(--pink-soft); color:#a23b62; box-shadow:none; }
-    .icon { display:grid; place-items:center; width:42px; height:42px; font-size:1.55rem; margin-bottom:9px; border-radius:15px; background:linear-gradient(135deg,#fff0f5,#f0eaff); }.tiny { font-size:.75rem; color:var(--muted); }
-    .note-maker { display:grid; gap:9px; margin-top:10px; }.moods { display:flex; gap:7px; flex-wrap:wrap; }.mood { padding:7px 10px; border-radius:99px; background:#fff1f5; color:#a23b62; font-size:.82rem; }.mood.selected { background:var(--pink); color:#fff; }
-    textarea { width:100%; resize:vertical; min-height:76px; padding:11px; border:1px solid var(--line); border-radius:13px; color:var(--ink); background:white; }.result { margin-top:11px; display:none; text-align:center; background:linear-gradient(120deg,#fff0f5,#f0eaff); padding:15px; border-radius:16px; line-height:1.45; }.result.show { display:block; }
-    .poke { width:100%; padding:17px 9px; border-radius:17px; background:var(--mint); color:#32735a; font-weight:900; font-size:1rem; }.poke:active { transform:scale(.97); }.poke-status { min-height:21px; text-align:center; margin-top:8px; color:#32735a; font-size:.83rem; font-weight:700; }.poke-input { width:100%; margin-top:10px; padding:10px 11px; border:1px solid var(--line); border-radius:12px; color:var(--ink); background:white; }
-    .game-action { width:100%; background:#f0eaff; color:#604499; padding:11px 9px; border-radius:13px; font-weight:800; margin-top:10px; }
-    .quiz-q { text-align:center; font-weight:800; color:var(--purple); font-size:1.05rem; min-height:44px; margin:6px 0 12px; }
-    .quiz-options { display:grid; gap:9px; }
-    .quiz-option { width:100%; text-align:left; padding:12px 14px; border-radius:14px; background:#fff; border:2px solid var(--line); color:var(--ink); font-weight:700; transition:.15s; }
-    .quiz-option:hover { border-color:var(--pink); }
-    .quiz-option.picked { border-color:var(--purple); background:#f0eaff; }
-    .quiz-option.correct { border-color:#32735a; background:var(--mint); }
-    .quiz-option.wrong { border-color:#bd355f; background:#ffe6ec; }
-    .quiz-option:disabled { cursor:default; opacity:.85; }
-    .quiz-status { text-align:center; min-height:22px; margin-top:11px; font-weight:750; color:var(--muted); }
-    .quiz-score { display:flex; justify-content:center; gap:18px; margin-top:10px; font-size:.85rem; color:var(--muted); font-weight:700; }
-    .quiz-score b { color:var(--purple); font-size:1.1rem; }
-    .chat { min-height:260px; display:flex; flex-direction:column; gap:10px; }.bubble { max-width:78%; padding:10px 12px; border-radius:15px 15px 15px 4px; background:white; box-shadow:0 3px 10px rgba(99,55,75,.08); font-size:.9rem; }.bubble.mine { align-self:flex-end; border-radius:15px 15px 4px 15px; background:var(--pink); color:white; }.chat-form { display:flex; gap:8px; margin-top:14px; }.chat-form input { min-width:0; flex:1; padding:10px 11px; border:1px solid var(--line); border-radius:12px; }.send { background:var(--purple); color:white; border-radius:12px; padding:0 14px; font-weight:800; }
-    .privacy { background:linear-gradient(130deg,#f0edff,#fff); }.setting { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #eae5f8; font-size:.91rem; }.setting:last-child { border:0; }.switch { appearance:none; width:42px; height:24px; border-radius:99px; background:#ddd; position:relative; transition:.2s; }.switch:checked { background:var(--purple); }.switch:before { content:""; width:18px; height:18px; background:#fff; border-radius:50%; position:absolute; left:3px; top:3px; transition:.2s; }.switch:checked:before { transform:translateX(18px); }
-    .hidden { display:none!important; } .notice { text-align:center; color:#32735a; margin:8px 0 0; min-height:19px; font-size:.82rem; font-weight:700; }.effort-number { font-size:2.35rem; line-height:1; margin:8px 0 4px; font-weight:900; background:linear-gradient(90deg,#ff5c91,#8256c2); -webkit-background-clip:text; background-clip:text; color:transparent; }.rating-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }.rating-row label { color:var(--muted); font-size:.78rem; font-weight:700; }.rating-row select { width:100%; margin-top:4px; padding:9px; background:#fff; border:1px solid var(--line); border-radius:11px; color:var(--ink); }
-    .view.active { animation:viewIn .35s ease; } @keyframes viewIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-    .presence-dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:#d8cfe0; margin-right:5px; transition:.2s; } .presence-dot.online { background:#32c48d; box-shadow:0 0 0 4px rgba(50,196,141,.22); }
-    .presence-row { display:flex; align-items:center; gap:5px; font-size:.79rem; color:var(--muted); font-weight:700; margin-top:2px; }
-    .typing-indicator { font-size:.79rem; color:var(--muted); font-style:italic; min-height:18px; padding:2px 2px 6px; }
-    .reactions { display:flex; gap:5px; margin-top:5px; flex-wrap:wrap; } .reaction-pill { background:#fff; border:1px solid var(--line); border-radius:99px; padding:2px 8px; font-size:.76rem; font-weight:700; color:var(--ink); } .reaction-pill.mine { border-color:var(--pink); background:#fff0f5; }
-    .reaction-picker { display:flex; gap:2px; margin-top:4px; } .reaction-picker button { background:transparent; font-size:.92rem; padding:2px 5px; border-radius:8px; opacity:.55; transition:.15s; } .reaction-picker button:hover { background:#f5eefc; opacity:1; transform:scale(1.15); }
-    .bubble-wrap { max-width:78%; display:flex; flex-direction:column; } .bubble-wrap.mine { align-self:flex-end; align-items:flex-end; }
-    .activity-feed { display:grid; gap:2px; margin-top:6px; } .activity-item { display:flex; gap:9px; align-items:flex-start; font-size:.83rem; padding:8px 0; border-bottom:1px solid #f2eaf7; } .activity-item:last-child { border:0; } .activity-icon { font-size:1.05rem; } .activity-text { display:block; color:var(--ink); font-weight:600; } .activity-time { display:block; color:var(--muted); font-size:.72rem; margin-top:1px; }
-    .confetti-layer { position:fixed; inset:0; pointer-events:none; z-index:60; overflow:hidden; } .confetti-piece { position:absolute; top:-24px; animation:confetti-fall linear forwards; } @keyframes confetti-fall { to { transform:translateY(112vh) rotate(540deg); opacity:.25; } }
-    .bouquet-art { display:flex; justify-content:center; align-items:flex-end; margin:8px 0 2px; } .bouquet-art span { display:inline-block; margin:0 -8px; } .bouquet-art span:nth-child(1){ font-size:2rem; transform:rotate(-18deg); } .bouquet-art span:nth-child(2){ font-size:2.3rem; transform:rotate(10deg); } .bouquet-art span:nth-child(3){ font-size:2.7rem; transform:rotate(-4deg); } .bouquet-art span:nth-child(4){ font-size:2.2rem; transform:rotate(16deg); } .bouquet-art span:nth-child(5){ font-size:1.9rem; transform:rotate(-8deg); }
-    .ai-badge { display:inline-block; font-size:.68rem; font-weight:800; color:var(--purple); background:#f0eaff; padding:3px 8px; border-radius:99px; margin-left:6px; vertical-align:middle; }
-    .snap-preview { width:100%; border-radius:16px; margin:10px 0; max-height:240px; object-fit:cover; display:block; }
-    .snap-mode-row { display:flex; gap:14px; margin:10px 0; font-size:.82rem; color:var(--muted); font-weight:700; flex-wrap:wrap; } .snap-mode-row label { display:flex; align-items:center; gap:5px; }
-    .snap-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
-    .snap-thumb { position:relative; border-radius:12px; overflow:hidden; aspect-ratio:1; background:#f4eef8; cursor:pointer; }
-    .snap-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-    .snap-thumb.unseen:after { content:"NEW"; position:absolute; top:4px; right:4px; background:var(--pink); color:#fff; font-size:.6rem; font-weight:900; padding:2px 6px; border-radius:99px; }
-    .snap-view-img { width:100%; border-radius:16px; max-height:60vh; object-fit:contain; background:#000; }
-    .task-text { text-align:center; font-weight:800; color:var(--purple); font-size:1.02rem; line-height:1.4; margin:6px 0 2px; }
-    #authScreen,#surpriseScreen,#bouquetScreen,#snapViewScreen { position:fixed; inset:0; z-index:8; display:grid; place-items:center; padding:20px; background:linear-gradient(145deg,#ffe4ee,#eae0ff); }.authbox { width:min(100%,370px); text-align:center; background:#fff; padding:28px; border-radius:28px; box-shadow:var(--shadow); }.authbox .heart { margin:auto auto 16px; }.authbox h2 { margin:0 0 6px; }.authbox input { width:100%; padding:12px; border-radius:13px; border:1px solid var(--line); margin-top:10px; }.authbox .button { width:100%; }.authbox .button.soft { margin-top:8px; }.pair-code { margin:14px 0; padding:12px; border-radius:13px; background:#fff0f5; color:#a23b62; font-weight:900; letter-spacing:.12em; }.auth-message { min-height:20px; margin:9px 0 0; color:#a23b62; font-size:.82rem; }.surprise-text { margin:16px 0; padding:16px; border-radius:16px; background:linear-gradient(120deg,#fff0f5,#f0eaff); line-height:1.5; white-space:pre-wrap; }
-    @media(max-width:440px) { .app { padding:max(12px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(22px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }.grid { gap:10px; }.card { padding:14px; } }
-    body.dark { --ink:#e9e2e8; --muted:#afa1ab; --line:#40323d; --pink-soft:#2c1d27; --mint:#1f332d; background:#111012; }
-    body.dark .app { background:#151015; }
-    body.dark .card, body.dark .authbox, body.dark .lockbox { background:#1d171d; border-color:#322530; box-shadow:none; }
-    body.dark .lock { background:#221b22; color:#eadfee; box-shadow:none; } body.dark textarea, body.dark input, body.dark select, body.dark .chat-form input { background:#241d24; color:#f1e8ef; border-color:#40323d; }
-    body.dark .bubble { background:#272027; color:#f1e8ef; } body.dark .nav button.active { background:#241d24; }
-    .install-help { margin-top:8px; font-size:.75rem; color:var(--muted); }
-
-    /* Accessibility, focus and touch comfort */
+    html, body { height:100%; }
+    body { margin:0; overflow:hidden; font-family:ui-rounded,"SF Pro Rounded","Nunito",system-ui,-apple-system,"Segoe UI",sans-serif; font-size:16px; line-height:1.4; color:var(--ink); background:linear-gradient(160deg,var(--bg),var(--bg-2)); -webkit-text-size-adjust:100%; }
+    button, input, textarea, select { font:inherit; color:inherit; }
+    button { cursor:pointer; border:0; background:none; padding:0; -webkit-tap-highlight-color:transparent; }
+    button:disabled { cursor:default; opacity:.55; }
+    h1, h2, h3, p { margin:0; }
     :focus-visible { outline:3px solid var(--purple); outline-offset:2px; }
-    button:disabled { cursor:default; opacity:.6; }
-    .visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
-    .link-btn { background:none; color:var(--purple); font-weight:700; font-size:.82rem; padding:8px; text-decoration:underline; }
-    .reaction-picker button { padding:4px 7px; }
-    .button, .bubble.mine, .mood.selected, .snap-thumb.unseen:after { background:var(--pink-strong); }
-    .button.alt { background:var(--purple); } .button.soft { background:var(--pink-soft); }
-    .authbox { margin:auto; }
-    #authScreen,#surpriseScreen,#bouquetScreen,#snapViewScreen { overflow-y:auto; }
+    .hidden { display:none !important; }
+    .muted { color:var(--muted); }
+    .center { text-align:center; }
 
-    /* The two characters on the "Come closer" card slide together when you tap the button */
-    .pair-chars { position:relative; display:flex; justify-content:center; gap:8px; margin:12px 0 2px; }
-    .pair-char { width:60px; height:60px; border-radius:20px; display:grid; place-items:center; font-size:1.8rem; line-height:1; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid rgba(255,255,255,.9); box-shadow:0 8px 16px rgba(128,68,95,.08); transition:transform .65s cubic-bezier(.2,.8,.2,1); }
-    .pair-chars.together .pair-char:first-child { transform:translateX(7px); }
-    .pair-chars.together .pair-char:last-child { transform:translateX(-7px); }
-    .pair-chars.together:after { content:"💞"; position:absolute; left:50%; top:-14px; font-size:1.1rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
-    body.dark .pair-char { background:linear-gradient(145deg,#241c24,#2a2233); border-color:#35293a; }
+    /* ---- Controls ------------------------------------------------------------------------------------ */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:46px; padding:0 20px; border-radius:var(--radius-sm); background:var(--accent); color:#fff; font-weight:700; font-size:.95rem; transition:transform .12s ease,opacity .12s ease; }
+    .btn:active:not(:disabled) { transform:scale(.97); }
+    .btn.soft { background:var(--accent-soft); color:var(--accent-text); }
+    .btn.ghost { background:transparent; color:var(--purple); }
+    .btn.danger { background:transparent; color:var(--danger); border:1px solid var(--line); }
+    .btn.wide { width:100%; }
+    .link-btn { background:none; color:var(--purple); font-weight:700; font-size:.85rem; padding:10px; text-decoration:underline; }
+    .icon-btn { display:grid; place-items:center; width:42px; height:42px; border-radius:50%; color:var(--ink); }
+    .icon-btn:hover { background:var(--surface-2); }
+    .icon-btn svg, .tab svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    input[type=text], input[type=email], input[type=password], input:not([type]), textarea, select { width:100%; min-height:46px; padding:0 14px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--surface); color:var(--ink); }
+    textarea { padding:12px 14px; min-height:92px; resize:vertical; line-height:1.45; }
+    input::placeholder, textarea::placeholder { color:var(--muted); opacity:.8; }
+    .status { min-height:20px; margin-top:10px; font-size:.85rem; color:var(--muted); }
+    .status:empty { min-height:0; margin:0; }
+    .field { display:grid; gap:10px; margin-top:14px; }
+    .chip { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; background:var(--purple-soft); color:var(--purple); font-size:.78rem; font-weight:800; }
+    .ai-badge { display:inline-block; margin-left:6px; padding:2px 8px; border-radius:999px; background:var(--purple-soft); color:var(--purple); font-size:.66rem; font-weight:800; vertical-align:middle; }
+    .switch { appearance:none; flex:none; width:46px; height:28px; border-radius:99px; background:var(--line); position:relative; transition:background .2s; cursor:pointer; }
+    .switch:checked { background:var(--accent); }
+    .switch:before { content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .2s; }
+    .switch:checked:before { transform:translateX(18px); }
+    .setting { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:52px; padding:8px 0; border-bottom:1px solid var(--line); font-size:.95rem; }
+    .setting:last-child { border-bottom:0; }
+    .segmented { display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:4px; padding:4px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); }
+    .seg { min-height:40px; border-radius:10px; color:var(--muted); font-weight:700; font-size:.88rem; }
+    .seg.active { background:var(--surface); color:var(--ink); box-shadow:0 1px 4px rgba(80,40,60,.12); }
+
+    /* ---- App shell ----------------------------------------------------------------------------------- */
+    .app { display:flex; flex-direction:column; width:min(100%,640px); height:100vh; height:var(--app-h,100dvh); margin:0 auto; background:var(--app); }
+    @media (min-width:700px) { .app { border-left:1px solid var(--line); border-right:1px solid var(--line); } }
+    .topbar { flex:none; display:flex; align-items:center; gap:10px; padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 8px max(16px,env(safe-area-inset-left)); }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; letter-spacing:-.01em; }
+    .logo { display:grid; place-items:center; width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg,var(--pink),#9a74e0); color:#fff; font-size:1rem; box-shadow:0 4px 12px rgba(214,51,108,.28); }
+    .logo.big { width:56px; height:56px; border-radius:18px; font-size:1.5rem; margin:0 auto 14px; }
+    .presence { display:flex; align-items:center; gap:7px; margin-left:auto; max-width:48%; padding:6px 12px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:.78rem; font-weight:700; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .presence-dot { flex:none; width:9px; height:9px; border-radius:50%; background:#cfc3d6; transition:.2s; }
+    .presence-dot.online { background:#2fc48d; box-shadow:0 0 0 4px rgba(47,196,141,.2); }
+    .invite-row { flex:none; display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px; margin:0 16px 8px; padding:12px 14px; border-radius:16px; background:var(--accent-soft); color:var(--accent-text); }
+    .invite-label { display:block; font-size:.78rem; font-weight:700; }
+    .invite-row b { display:block; margin-top:2px; font-size:1.3rem; letter-spacing:.2em; }
+    .invite-row .btn { min-height:40px; padding:0 18px; font-size:.88rem; }
+    .views { flex:1; min-height:0; position:relative; }
+    .view { position:absolute; inset:0; display:none; overflow-y:auto; overscroll-behavior:contain; padding:6px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left)); }
+    .view.active { display:block; animation:viewIn .25s ease; }
+    .view.chat-view.active { display:flex; flex-direction:column; padding:0; overflow:hidden; }
+    @keyframes viewIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+    .tabbar { flex:none; display:grid; grid-template-columns:repeat(5,1fr); padding:6px 6px max(6px,env(safe-area-inset-bottom)); background:var(--surface); border-top:1px solid var(--line); }
+    .tab { position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 0; color:var(--muted); font-size:.68rem; font-weight:700; }
+    .tab .pill { display:grid; place-items:center; width:54px; height:30px; border-radius:999px; transition:background .2s,color .2s; }
+    .tab.active { color:var(--accent-text); }
+    .tab.active .pill { background:var(--accent-soft); }
+    .tab .dot { position:absolute; top:2px; left:calc(50% + 8px); width:10px; height:10px; border-radius:50%; background:var(--accent); border:2px solid var(--surface); }
+
+    /* ---- Cards and lists ----------------------------------------------------------------------------- */
+    .card { margin-bottom:12px; padding:18px; border-radius:var(--radius); background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); }
+    .card h2 { font-size:1.08rem; font-weight:800; letter-spacing:-.01em; }
+    .card .lead { margin-top:4px; color:var(--muted); font-size:.9rem; line-height:1.45; }
+    .card > .btn, .card .field > .btn { margin-top:2px; }
+    details.card summary { cursor:pointer; font-weight:800; font-size:1.02rem; list-style:none; display:flex; align-items:center; justify-content:space-between; }
+    details.card summary::-webkit-details-marker { display:none; }
+    details.card summary:after { content:"+"; color:var(--muted); font-size:1.3rem; line-height:1; }
+    details.card[open] summary:after { content:"–"; }
+    .empty { padding:22px 8px; text-align:center; color:var(--muted); font-size:.92rem; }
+    .empty .btn { margin-top:12px; }
+
+    /* Home */
+    .hero-card { text-align:center; }
+    .pair-chars { position:relative; display:flex; justify-content:center; gap:10px; margin:2px 0 14px; padding-top:10px; }
+    .pair-char { display:grid; place-items:center; width:72px; height:72px; border-radius:24px; font-size:2.2rem; line-height:1; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid var(--line); box-shadow:0 8px 18px rgba(128,68,95,.1); transition:transform .65s cubic-bezier(.2,.8,.2,1); }
+    body.dark .pair-char { background:linear-gradient(145deg,#2a2030,#2b2338); }
+    .pair-chars.together .pair-char:first-child { transform:translateX(9px); }
+    .pair-chars.together .pair-char:last-child { transform:translateX(-9px); }
+    .pair-chars.together:after { content:"💞"; position:absolute; left:50%; top:-8px; font-size:1.3rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
     @keyframes heartFloat { 50% { transform:translateX(-50%) translateY(-5px); } }
-    .invite-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 12px; padding:8px 10px; border-radius:14px; background:var(--pink-soft); color:#a23b62; font-size:.8rem; font-weight:700; }
-    .invite-row b { letter-spacing:.12em; font-size:.92rem; }
-    .invite-row .lock { margin-left:auto; padding:6px 10px; font-size:.78rem; }
+    .love-points { margin-bottom:14px; font-size:.95rem; color:var(--muted); }
+    .love-points b { font-size:1.5rem; color:var(--accent-text); margin:0 2px; }
+    .activity-feed { display:grid; margin-top:8px; }
+    .activity-item { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--line); font-size:.92rem; }
+    .activity-item:last-child { border-bottom:0; padding-bottom:0; }
+    .activity-icon { flex:none; display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--surface-2); font-size:1rem; }
+    .activity-text { display:block; font-weight:600; line-height:1.35; overflow-wrap:anywhere; }
+    .activity-time { display:block; margin-top:2px; color:var(--muted); font-size:.75rem; }
 
-    /* Snaps, trivia and misc states */
-    .snap-thumb { display:block; width:100%; padding:0; border:0; }
-    .snap-thumb.unseen { display:grid; place-items:center; font-size:1.6rem; }
-    .snap-thumb.opened img { opacity:.45; }
-    .snap-thumb.opened:after { content:"OPENED"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(56,41,56,.75); color:#fff; font-size:.6rem; font-weight:900; padding:3px 8px; border-radius:99px; }
+    /* Send */
+    .send-panel { margin-top:14px; }
+    .moods { display:flex; gap:8px; flex-wrap:wrap; }
+    .mood { min-height:38px; padding:0 14px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); color:var(--muted); font-size:.88rem; font-weight:700; }
+    .mood.selected { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .result { display:none; margin-top:14px; padding:16px; border-radius:var(--radius-sm); text-align:center; line-height:1.5; background:linear-gradient(120deg,var(--accent-soft),var(--purple-soft)); }
+    .result.show { display:block; }
+
+    /* Play */
+    .quiz-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; }
+    .quiz-score { display:flex; gap:14px; color:var(--muted); font-size:.82rem; font-weight:700; }
+    .quiz-score b { color:var(--purple); font-size:1.05rem; margin-left:2px; }
+    .quiz-q { margin:0 0 14px; font-size:1.15rem; font-weight:800; line-height:1.3; min-height:2.6em; }
+    .quiz-options { display:grid; gap:10px; }
+    .quiz-option { width:100%; min-height:50px; padding:12px 16px; text-align:left; border-radius:14px; background:var(--surface); border:2px solid var(--line); font-weight:700; transition:border-color .15s,background .15s; }
+    .quiz-option:hover:not(:disabled) { border-color:var(--pink); }
+    .quiz-option.picked { border-color:var(--purple); background:var(--purple-soft); }
+    .quiz-option.correct { border-color:#2f9d73; background:var(--mint); }
+    .quiz-option.wrong { border-color:#d24a6c; background:var(--accent-soft); }
     .quiz-option.partner-pick { border-style:dashed; border-color:var(--purple); }
+    .quiz-option:disabled { opacity:1; cursor:default; }
     .quiz-option .pick-tag { float:right; font-size:.7rem; font-weight:800; color:var(--muted); }
+    .quiz-status { text-align:center; font-weight:700; }
+    .row { display:flex; gap:10px; margin-top:12px; }
+    .row .btn { flex:1; }
+    .rating-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0; }
+    .rating-row label { display:grid; gap:6px; color:var(--muted); font-size:.8rem; font-weight:700; }
+    .effort-note { margin-top:10px; text-align:center; color:var(--muted); font-size:.85rem; }
+
+    /* Snaps */
+    .task-text { margin:10px 0 2px; font-size:1.15rem; font-weight:800; line-height:1.4; }
+    .assigned { margin-top:12px; padding:12px 14px; border-radius:var(--radius-sm); background:var(--accent-soft); color:var(--accent-text); font-weight:700; font-size:.9rem; }
+    .assigned:empty { display:none; }
+    .snap-preview { display:block; width:100%; max-height:260px; margin:14px 0 10px; border-radius:14px; object-fit:cover; }
+    .snap-mode-row { display:grid; gap:8px; margin:12px 0; font-size:.9rem; font-weight:600; }
+    .snap-mode-row label { display:flex; align-items:center; gap:10px; min-height:36px; }
+    .snap-mode-row input { width:20px; height:20px; accent-color:var(--accent); }
+    .snap-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
+    .snap-gallery .empty { grid-column:1/-1; padding:14px 0 4px; }
+    .snap-thumb { position:relative; display:block; width:100%; aspect-ratio:1; padding:0; overflow:hidden; border-radius:14px; background:var(--surface-2); }
+    .snap-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
+    .snap-thumb.unseen { display:grid; place-items:center; font-size:1.8rem; background:linear-gradient(135deg,var(--accent-soft),var(--purple-soft)); }
+    .snap-thumb.unseen:after { content:"NEW"; position:absolute; top:6px; right:6px; padding:2px 7px; border-radius:99px; background:var(--accent); color:#fff; font-size:.6rem; font-weight:900; }
+    .snap-thumb.opened img { opacity:.4; }
+    .snap-thumb.opened:after { content:"OPENED"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); padding:3px 8px; border-radius:99px; background:rgba(42,33,48,.78); color:#fff; font-size:.6rem; font-weight:900; }
+    .snap-view-img { display:block; width:100%; max-height:60vh; object-fit:contain; border-radius:16px; background:#000; }
+
+    /* Chat */
+    .chat-scroll { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:10px max(16px,env(safe-area-inset-right)) 6px max(16px,env(safe-area-inset-left)); }
+    .chat { display:flex; flex-direction:column; gap:6px; min-height:100%; justify-content:flex-end; }
+    .bubble-wrap { display:flex; flex-direction:column; max-width:80%; }
+    .bubble-wrap.mine { align-self:flex-end; align-items:flex-end; }
+    .bubble { padding:9px 14px; border-radius:18px 18px 18px 5px; background:var(--surface); border:1px solid var(--line); line-height:1.4; overflow-wrap:anywhere; white-space:pre-wrap; cursor:pointer; text-align:left; }
+    .bubble.mine { border-radius:18px 18px 5px 18px; background:var(--accent); border-color:var(--accent); color:#fff; }
+    .msg-time { margin:2px 6px 0; color:var(--muted); font-size:.68rem; }
+    .reactions { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+    .reactions:empty { display:none; }
+    .reaction-pill { padding:2px 9px; min-height:26px; border-radius:99px; background:var(--surface); border:1px solid var(--line); font-size:.78rem; font-weight:700; }
+    .reaction-pill.mine { border-color:var(--pink); background:var(--accent-soft); }
+    .reaction-picker { display:none; gap:2px; margin-top:4px; padding:3px 6px; border-radius:99px; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); }
+    .bubble-wrap.picking .reaction-picker { display:flex; }
+    .reaction-picker button { width:34px; height:34px; border-radius:50%; font-size:1.05rem; }
+    .reaction-picker button:hover { background:var(--surface-2); }
+    .typing-indicator { flex:none; min-height:22px; padding:0 18px 4px; color:var(--muted); font-size:.8rem; font-style:italic; }
+    .chat-form { flex:none; display:flex; gap:8px; padding:8px max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left)); border-top:1px solid var(--line); background:var(--surface); }
+    .chat-form input { flex:1; min-width:0; border-radius:999px; padding:0 18px; }
+    .send { display:grid; place-items:center; flex:none; width:46px; height:46px; border-radius:50%; background:var(--accent); color:#fff; }
+    .send svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* ---- Full-screen cards: sign-in, surprise, bouquet, snap viewer --------------------------------- */
+    .screen { position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:20px; overflow-y:auto; background:rgba(34,22,40,.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+    .screen.opaque { background:linear-gradient(160deg,var(--bg),var(--bg-2)); backdrop-filter:none; }
+    .modal-card { width:min(100%,380px); margin:auto; padding:28px 24px; border-radius:26px; text-align:center; background:var(--surface); box-shadow:0 20px 50px rgba(40,20,50,.25); }
+    .modal-card h2 { font-size:1.3rem; font-weight:800; margin-bottom:6px; }
+    .modal-card input, .modal-card select { margin-top:10px; }
+    .modal-card .btn { margin-top:10px; }
+    .modal-card .field .btn { margin-top:2px; }
+    .modal-card .setting { text-align:left; border-bottom:0; }
+    .modal-card .setting select { width:auto; margin:0; }
+    .auth-message { min-height:20px; margin-top:8px; color:var(--accent-text); font-size:.85rem; }
+    .divider { display:flex; align-items:center; gap:12px; margin:18px 0 4px; color:var(--muted); font-size:.8rem; font-weight:700; }
+    .divider:before, .divider:after { content:""; flex:1; height:1px; background:var(--line); }
+    .surprise-text { margin:16px 0; padding:16px; border-radius:var(--radius-sm); line-height:1.5; white-space:pre-wrap; background:linear-gradient(120deg,var(--accent-soft),var(--purple-soft)); }
+    .bouquet-art { display:flex; justify-content:center; align-items:flex-end; margin:4px 0 8px; }
+    .bouquet-art span { display:inline-block; margin:0 -8px; }
+    .bouquet-art span:nth-child(1) { font-size:2rem; transform:rotate(-18deg); }
+    .bouquet-art span:nth-child(2) { font-size:2.3rem; transform:rotate(10deg); }
+    .bouquet-art span:nth-child(3) { font-size:2.7rem; transform:rotate(-4deg); }
+    .bouquet-art span:nth-child(4) { font-size:2.2rem; transform:rotate(16deg); }
+    .bouquet-art span:nth-child(5) { font-size:1.9rem; transform:rotate(-8deg); }
     .snap-view-actions { display:grid; gap:8px; }
 
-    /* Dark mode: components that had light-only colours */
-    body.dark .quiz-option { background:#241d24; color:var(--ink); border-color:#40323d; }
-    body.dark .quiz-option:hover { border-color:var(--pink); }
-    body.dark .quiz-option.picked { background:#2a2233; border-color:#a58be0; }
-    body.dark .quiz-option.correct { background:#1f332d; border-color:#4fb98f; }
-    body.dark .quiz-option.wrong { background:#3a1f29; border-color:#e0607f; }
-    body.dark .reaction-pill { background:#241d24; color:var(--ink); }
-    body.dark .reaction-pill.mine { background:#3a2230; border-color:var(--pink); }
-    body.dark .reaction-picker button:hover { background:#2a2233; }
-    body.dark .surprise-text, body.dark .result { background:linear-gradient(120deg,#2c1d27,#251f33); color:var(--ink); }
-    body.dark .pair-code, body.dark .invite-row, body.dark .mood { background:#2c1d27; color:#ffb3cd; }
-    body.dark .mood.selected { background:var(--pink-strong); color:#fff; }
-    body.dark .button.soft { background:#2c1d27; color:#ffb3cd; }
-    body.dark .bubble.mine { background:var(--pink-strong); color:#fff; }
-    body.dark .poke, body.dark .poke-status, body.dark .notice { color:#7fd9b3; }
-    body.dark .quiz-q, body.dark .task-text, body.dark .quiz-score b, body.dark .nav button.active, body.dark .ai-badge, body.dark .link-btn { color:#c4aef7; }
-    body.dark .ai-badge { background:#2a2233; }
-    body.dark .game-action { background:#2a2233; color:#c4aef7; }
-    body.dark .icon { background:linear-gradient(135deg,#2c1d27,#251f33); }
-    body.dark .setting, body.dark .activity-item { border-color:#322530; }
-    body.dark .snap-thumb { background:#241d24; }
-    body.dark #authScreen, body.dark #surpriseScreen, body.dark #bouquetScreen, body.dark #snapViewScreen { background:linear-gradient(145deg,#1a1119,#1c1730); }
-    body.dark .switch { background:#4a3d48; } body.dark .switch:checked { background:var(--purple); }
+    /* ---- Settings sheet, confirm dialog, toast ------------------------------------------------------- */
+    dialog { border:0; padding:0; color:var(--ink); background:var(--surface); }
+    dialog::backdrop { background:rgba(34,22,40,.55); backdrop-filter:blur(4px); }
+    dialog.sheet { width:min(100%,520px); max-height:88vh; max-height:88dvh; margin:auto auto 0; border-radius:26px 26px 0 0; overflow-y:auto; animation:sheetIn .25s ease; }
+    @media (min-width:700px) { dialog.sheet { margin:auto; border-radius:26px; } }
+    @keyframes sheetIn { from { transform:translateY(24px); opacity:0; } to { transform:none; opacity:1; } }
+    .sheet-body { padding:6px 22px max(22px,env(safe-area-inset-bottom)); }
+    .sheet-head { display:flex; align-items:center; justify-content:space-between; padding:14px 8px 4px 22px; }
+    .sheet-head h2 { font-size:1.2rem; font-weight:800; }
+    .sheet-actions { display:grid; gap:10px; margin-top:14px; }
+    .privacy-note { margin-top:16px; padding:14px; border-radius:var(--radius-sm); background:var(--surface-2); color:var(--muted); font-size:.82rem; line-height:1.5; }
+    .code-chip { letter-spacing:.12em; font-weight:800; }
+    dialog.confirm { width:min(calc(100% - 40px),360px); margin:auto; padding:22px; border-radius:22px; box-shadow:0 20px 50px rgba(40,20,50,.3); }
+    dialog.confirm p { line-height:1.5; margin-bottom:18px; }
+    dialog.confirm .row { margin-top:0; }
+    #toast { position:fixed; z-index:90; left:50%; bottom:calc(var(--tabbar-h) + 18px + env(safe-area-inset-bottom)); max-width:min(90vw,420px); padding:11px 18px; border-radius:999px; background:#2a2130; color:#fff; font-size:.88rem; font-weight:600; text-align:center; opacity:0; transform:translate(-50%,8px); pointer-events:none; transition:opacity .2s,transform .2s; }
+    #toast.show { opacity:1; transform:translate(-50%,0); }
+    body.dark #toast { background:#f2e9f0; color:#2a2130; }
+
+    /* ---- Confetti ------------------------------------------------------------------------------------ */
+    .confetti-layer { position:fixed; inset:0; z-index:100; overflow:hidden; pointer-events:none; }
+    .confetti-piece { position:absolute; top:-24px; animation:confetti-fall linear forwards; }
+    @keyframes confetti-fall { to { transform:translateY(112vh) rotate(540deg); opacity:.25; } }
 
     @media (prefers-reduced-motion:reduce) {
-      *, *:before, *:after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+      *, *:before, *:after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
       .confetti-layer { display:none; }
     }
   </style>
 </head>
 <body>
   <script>try { var savedDark = localStorage.getItem("ty-dark-mode"); if (savedDark === "1" || (savedDark === null && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark"); } catch (error) {}</script>
-  <div id="surpriseScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="authbox"><div class="heart">♥</div><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="button" id="closeSurprise" type="button">Open TW</button></div></div>
-  <div id="bouquetScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="authbox"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="button" id="closeBouquet" type="button">Open TW</button></div></div>
-  <div id="snapViewScreen" class="hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="authbox"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="button" id="closeSnapView" type="button">Close</button><button class="button soft hidden" id="deleteSnap" type="button">Delete this snap</button></div></div></div>
-  <div id="authScreen">
-    <div class="authbox">
-      <div class="heart">♥</div>
-      <section id="loginPanel"><h2>Welcome to TW</h2><p class="sub">Sign in to find your person.</p>
+
+  <!-- Surprise, bouquet and snap viewer -->
+  <div id="surpriseScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="modal-card"><div class="logo big">♥</div><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="btn wide" id="closeSurprise" type="button">Open TW</button></div></div>
+  <div id="bouquetScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="modal-card"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="btn wide" id="closeBouquet" type="button">Open TW</button></div></div>
+  <div id="snapViewScreen" class="screen hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="modal-card"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="btn wide" id="closeSnapView" type="button">Close</button><button class="btn soft wide hidden" id="deleteSnap" type="button">Delete this snap</button></div></div></div>
+
+  <!-- Sign in and pairing -->
+  <div id="authScreen" class="screen opaque">
+    <div class="modal-card">
+      <div class="logo big">♥</div>
+      <section id="loginPanel">
+        <h2>Welcome to TW</h2><p class="muted">Sign in to find your person.</p>
         <form id="loginForm" onsubmit="return false" novalidate>
-          <input id="authEmail" type="email" autocomplete="email" placeholder="Your email" aria-label="Email">
-          <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password (at least 6 characters)" aria-label="Password">
-          <button class="button" id="signIn" type="submit" disabled>Sign in</button>
-          <button class="button soft" id="signUp" type="button" disabled>Create my account</button>
+          <div class="field">
+            <input id="authEmail" type="email" autocomplete="email" placeholder="Your email" aria-label="Email">
+            <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password (at least 6 characters)" aria-label="Password">
+            <button class="btn wide" id="signIn" type="submit" disabled>Sign in</button>
+            <button class="btn soft wide" id="signUp" type="button" disabled>Create my account</button>
+          </div>
           <button class="link-btn" id="forgotBtn" type="button">Forgot password?</button>
           <div class="auth-message" id="authMessage">Loading…</div>
         </form>
       </section>
-      <section id="pairPanel" class="hidden"><h2>Connect your hearts</h2><p class="sub">Create a private code or enter the one your partner sent you.</p><div class="setting"><label for="genderSelect">Your character</label><select id="genderSelect"><option value="girl">Girl</option><option value="boy">Boy</option></select></div><button class="button" id="createPair" type="button">Create our code</button><input id="joinCode" maxlength="8" placeholder="Enter partner’s code" aria-label="Partner’s code" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="button soft" id="joinPair" type="button">Join with code</button><button class="link-btn hidden" id="pairBack" type="button">← Back to our space</button><div class="auth-message" id="pairMessage"></div></section>
-      <section id="statusPanel" class="hidden"><h2>One moment…</h2><p class="sub" id="statusText"></p><button class="button" id="retryBtn" type="button">Try again</button><button class="button soft" id="statusLogout" type="button">Log out</button></section>
+      <section id="pairPanel" class="hidden">
+        <h2>Connect your hearts</h2><p class="muted">Start a private space for two, or join the one your partner made.</p>
+        <div class="setting" style="margin-top:14px"><label for="genderSelect">Your character</label><select id="genderSelect"><option value="girl">Girl</option><option value="boy">Boy</option></select></div>
+        <button class="btn wide" id="createPair" type="button" style="margin-top:12px">Create our code</button>
+        <div class="divider">or</div>
+        <input id="joinCode" maxlength="8" placeholder="Enter your partner’s code" aria-label="Partner’s code" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        <button class="btn soft wide" id="joinPair" type="button">Join with code</button>
+        <button class="link-btn hidden" id="pairBack" type="button">← Back to our space</button>
+        <div class="auth-message" id="pairMessage"></div>
+      </section>
+      <section id="statusPanel" class="hidden">
+        <h2>One moment…</h2><p class="muted" id="statusText"></p>
+        <button class="btn wide" id="retryBtn" type="button">Try again</button>
+        <button class="btn soft wide" id="statusLogout" type="button">Log out</button>
+      </section>
     </div>
   </div>
+
+  <!-- The app -->
   <main class="app hidden" id="app">
-    <header class="top"><div class="brand"><span class="heart">♥</span> TW</div><div class="account-actions"><button class="lock" id="darkBtn" type="button">🌙 Dark</button><button class="lock" id="downloadBtn" type="button">📲 Install</button><button class="lock" id="codeBtn" type="button">Change code</button><button class="lock" id="logoutBtn" type="button">Log out</button></div></header>
-    <div class="invite-row hidden" id="inviteRow"><span>Waiting for your partner · code <b id="inviteCode"></b></span><button class="lock" id="shareCode" type="button">Copy</button></div>
-    <nav class="nav nav-swipe" aria-label="Main navigation"><button class="active" data-view="home" type="button" aria-current="page">Home</button><button data-view="notes" type="button">Love note</button><button data-view="play" type="button">Play</button><button data-view="task" type="button">Task</button><button data-view="chat" type="button">Chat</button></nav>
-    <section id="home" class="view active"><div class="grid">
-      <article class="card wide"><div class="icon">📣</div><h2>Recent activity</h2><p>What's been happening in your little world.</p><div class="activity-feed" id="activityFeed"></div></article>
-      <article class="card"><div class="icon">🫶</div><h2>Come closer</h2><p>Make your little characters meet in the middle.</p><div class="pair-chars" aria-hidden="true"><div class="pair-char" id="youFace">🧸</div><div class="pair-char" id="themFace">🐰</div></div><button class="button" id="approach" type="button" aria-pressed="false">Approach each other</button></article>
-      <article class="card"><div class="icon">👆</div><h2>Magic poke <span class="ai-badge">AI</span></h2><p>Type a thought and turn it into a cute note.</p><input class="poke-input" id="pokeThought" maxlength="140" placeholder="e.g. I miss your smile" aria-label="Your thought"><button class="poke" id="poke" type="button">Make note &amp; poke</button><div class="poke-status" id="pokeStatus"></div></article>
-      <article class="card"><div class="icon">🏆</div><h2>Love effort</h2><p>Grows from the ratings you give each other after games.</p><div class="effort-number" id="effortCount">0</div><span class="tiny">mutual love points</span></article>
-      <article class="card"><div class="icon">🎁</div><h2>Opening surprise <span class="ai-badge">AI</span></h2><p>Set a loving message that appears the next time your partner opens TW.</p><input class="poke-input" id="surpriseInput" maxlength="220" placeholder="e.g. I’m sorry, I miss you so much…" aria-label="Your surprise message"><button class="button" id="setSurprise" type="button">Save opening surprise</button><div class="poke-status" id="surpriseStatus"></div></article>
-      <article class="card"><div class="icon">💐</div><h2>Send a bouquet <span class="ai-badge">AI</span></h2><p>Surprise them with a virtual bouquet and a little AI-written note.</p><input class="poke-input" id="bouquetInput" maxlength="140" placeholder="Optional: what's it for? Leave blank for a surprise" aria-label="What the bouquet is for"><button class="button" id="sendBouquet" type="button">Send a bouquet</button><div class="poke-status" id="bouquetStatus"></div></article>
-      <article class="card wide privacy"><h2>Privacy first</h2><p>Your messages, notes and snaps are stored in your private TW space online. Security rules let only the two of you read them, but they are not end-to-end encrypted, so keep anything truly secret out of here.</p><div class="setting"><label for="notifyToggle">Notify me of pokes, notes &amp; messages</label><input class="switch" id="notifyToggle" type="checkbox" checked></div><div class="setting"><span id="notifyStatusLabel">Browser notifications: not requested yet</span><button class="lock" id="enableNotify" type="button">Enable</button></div></article>
-    </div></section>
-    <section id="notes" class="view"><article class="card"><div class="icon">💌</div><h2>Make a little note <span class="ai-badge">AI</span></h2><p>Choose a feeling, write from your heart, and give it a cute surprise style.</p><div class="note-maker"><div class="moods" id="moods"><button class="mood selected" data-mood="loving" type="button" aria-pressed="true">Loving</button><button class="mood" data-mood="happy" type="button" aria-pressed="false">Happy</button><button class="mood" data-mood="missing you" type="button" aria-pressed="false">Missing you</button><button class="mood" data-mood="sorry" type="button" aria-pressed="false">Sorry</button></div><textarea id="noteText" placeholder="Write something for your partner…" aria-label="Your note" maxlength="500"></textarea><button class="button" id="makeNote" type="button">Wrap it with love</button></div><div id="noteResult" class="result"></div></article></section>
-    <section id="play" class="view"><div class="grid">
-      <article class="card wide">
-        <div class="icon">🧠</div><h2>Couple Trivia</h2>
-        <p>How well do you know each other? Answer together — matching picks score a point for both of you.</p>
-        <div class="quiz-q" id="quizQ">Loading question…</div>
-        <div class="quiz-options" id="quizOptions"></div>
-        <div class="quiz-status" id="quizStatus"></div>
-        <div class="quiz-score"><span>You: <b id="quizScoreYou">0</b></span><span>Together: <b id="quizScoreShared">0</b></span><span>Question <span id="quizProgress">1</span>/<span id="quizTotal">10</span></span></div>
-        <button class="button" id="quizNext" type="button" disabled>Next question</button>
-        <button class="button soft" id="quizReset" type="button">Restart quiz</button>
-      </article>
-      <article class="card wide"><div class="icon">🌟</div><h2>Rate the effort</h2><p>After the quiz, rate how sweet each other was. Your combined hearts add to your Love Effort.</p><div class="rating-row"><label>Rate yourself<select id="rateYou"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label><label>Rate your partner<select id="rateHer"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label></div><button class="button" id="saveRating" type="button">Add mutual rating</button><div class="notice" id="ratingStatus"></div></article>
-    </div></section>
-    <section id="task" class="view"><div class="grid">
-      <article class="card wide">
-        <div class="icon">📅</div><h2>Today's task</h2>
-        <p class="tiny" id="dailyTaskDate"></p>
-        <div class="task-text" id="dailyTaskText">Loading today's task…</div>
-      </article>
-      <article class="card wide">
-        <div class="icon">📝</div><h2>Set a task for your partner</h2>
-        <p>Give them something to do — a snap of it is the proof.</p>
-        <input class="poke-input" id="customTaskInput" maxlength="140" placeholder="e.g. Send me a snap of your dinner tonight" aria-label="Task for your partner">
-        <button class="button" id="setCustomTask" type="button">Assign task</button>
-        <div class="poke-status" id="customTaskStatus"></div>
-        <div class="notice" id="assignedTaskView"></div>
-      </article>
-      <article class="card wide">
-        <div class="icon">📸</div><h2>Send a snap</h2>
-        <p>Complete a task and send proof — you choose how it disappears.</p>
-        <input type="file" accept="image/*" id="snapFile" class="hidden" aria-label="Choose a photo">
-        <button class="button" id="snapPickBtn" type="button">Take / choose a photo</button>
-        <div id="snapPreviewWrap" class="hidden">
-          <img id="snapPreview" class="snap-preview" alt="Preview of your snap">
-          <input class="poke-input" id="snapCaption" maxlength="120" placeholder="Add a little caption (optional)" aria-label="Caption">
-          <div class="snap-mode-row">
-            <label><input type="radio" name="snapMode" value="once" checked> View once (disappears)</label>
-            <label><input type="radio" name="snapMode" value="keep"> Keep in gallery</label>
-          </div>
-          <button class="button" id="snapSendBtn" type="button">Send snap</button>
-          <button class="button soft" id="snapCancelBtn" type="button">Cancel</button>
+    <header class="topbar">
+      <div class="brand"><span class="logo">♥</span> TW</div>
+      <div class="presence" id="presenceChip"><span class="presence-dot" id="presenceDot"></span><span id="presenceLabel">Connecting…</span></div>
+      <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
+    </header>
+    <div class="invite-row hidden" id="inviteRow"><div><span class="invite-label">Share this code with your partner</span><b id="inviteCode"></b></div><button class="btn" id="shareCode" type="button">Copy</button></div>
+
+    <div class="views">
+      <section id="home" class="view active" aria-label="Home">
+        <article class="card hero-card">
+          <div class="pair-chars" aria-hidden="true"><div class="pair-char" id="youFace">🧸</div><div class="pair-char" id="themFace">🐰</div></div>
+          <p class="love-points"><span aria-hidden="true">🏆</span><b id="effortCount">0</b>love points</p>
+          <button class="btn" id="approach" type="button" aria-pressed="false">Come closer</button>
+        </article>
+        <article class="card">
+          <h2>Recent activity</h2>
+          <div class="activity-feed" id="activityFeed"></div>
+        </article>
+      </section>
+
+      <section id="chat" class="view chat-view" aria-label="Chat">
+        <div class="chat-scroll" id="chatScroll">
+          <div class="chat" id="chatMessages" role="log" aria-live="polite" aria-label="Messages"></div>
         </div>
-        <div class="poke-status" id="snapStatus"></div>
-      </article>
-      <article class="card wide">
-        <div class="icon">🖼️</div><h2>Snap gallery</h2>
-        <p>New view-once snaps show a NEW badge — tap once and they're gone. Keep-forever snaps stay here always.</p>
-        <div class="snap-gallery" id="snapGallery"></div>
-      </article>
-    </div></section>
-    <section id="chat" class="view"><article class="card"><h2>Private chat</h2><div class="presence-row"><span class="presence-dot" id="presenceDot"></span><span id="presenceLabel">Checking presence…</span></div><p>Live messages for your connected pair.</p><div class="chat" id="chatMessages" role="log" aria-live="polite" aria-label="Messages"></div><div class="typing-indicator hidden" id="typingIndicator"></div><form class="chat-form" id="chatForm"><input id="message" autocomplete="off" placeholder="Send a little message…" aria-label="Message" maxlength="1000"><button class="send" type="submit">Send</button></form></article></section>
+        <div class="typing-indicator" id="typingIndicator"></div>
+        <form class="chat-form" id="chatForm">
+          <input id="message" autocomplete="off" placeholder="Message your person…" aria-label="Message" maxlength="1000">
+          <button class="send" type="submit" aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6.5 11.5 12 6l5.5 5.5"/></svg></button>
+        </form>
+      </section>
+
+      <section id="send" class="view" aria-label="Send love">
+        <div class="segmented" role="tablist" aria-label="What would you like to send?">
+          <button class="seg active" type="button" role="tab" aria-selected="true" data-send="poke">Poke</button>
+          <button class="seg" type="button" role="tab" aria-selected="false" data-send="note">Note</button>
+          <button class="seg" type="button" role="tab" aria-selected="false" data-send="bouquet">Bouquet</button>
+          <button class="seg" type="button" role="tab" aria-selected="false" data-send="surprise">Surprise</button>
+        </div>
+        <article class="card send-panel" id="send-poke">
+          <h2>Magic poke <span class="ai-badge">AI</span></h2>
+          <p class="lead">Type a thought and turn it into a cute note.</p>
+          <div class="field">
+            <input id="pokeThought" maxlength="140" placeholder="e.g. I miss your smile" aria-label="Your thought">
+            <button class="btn wide" id="poke" type="button">Make note &amp; poke</button>
+          </div>
+          <div class="status" id="pokeStatus"></div>
+        </article>
+        <article class="card send-panel hidden" id="send-note">
+          <h2>Love note <span class="ai-badge">AI</span></h2>
+          <p class="lead">Choose a feeling, write from your heart, and we’ll wrap it with love.</p>
+          <div class="field">
+            <div class="moods" id="moods"><button class="mood selected" data-mood="loving" type="button" aria-pressed="true">Loving</button><button class="mood" data-mood="happy" type="button" aria-pressed="false">Happy</button><button class="mood" data-mood="missing you" type="button" aria-pressed="false">Missing you</button><button class="mood" data-mood="sorry" type="button" aria-pressed="false">Sorry</button></div>
+            <textarea id="noteText" placeholder="Write something for your partner…" aria-label="Your note" maxlength="500"></textarea>
+            <button class="btn wide" id="makeNote" type="button">Wrap it with love</button>
+          </div>
+          <div id="noteResult" class="result"></div>
+        </article>
+        <article class="card send-panel hidden" id="send-bouquet">
+          <h2>Send a bouquet <span class="ai-badge">AI</span></h2>
+          <p class="lead">Surprise them with a virtual bouquet and a little note.</p>
+          <div class="field">
+            <input id="bouquetInput" maxlength="140" placeholder="Optional: what's it for?" aria-label="What the bouquet is for">
+            <button class="btn wide" id="sendBouquet" type="button">Send a bouquet</button>
+          </div>
+          <div class="status" id="bouquetStatus"></div>
+        </article>
+        <article class="card send-panel hidden" id="send-surprise">
+          <h2>Opening surprise <span class="ai-badge">AI</span></h2>
+          <p class="lead">Leave a loving message that appears the next time your partner opens TW.</p>
+          <div class="field">
+            <input id="surpriseInput" maxlength="220" placeholder="e.g. I’m sorry, I miss you so much…" aria-label="Your surprise message">
+            <button class="btn wide" id="setSurprise" type="button">Save opening surprise</button>
+          </div>
+          <div class="status" id="surpriseStatus"></div>
+        </article>
+      </section>
+
+      <section id="play" class="view" aria-label="Play">
+        <article class="card">
+          <div class="quiz-top">
+            <span class="chip">Question <span id="quizProgress">1</span>/<span id="quizTotal">10</span></span>
+            <span class="quiz-score"><span>You <b id="quizScoreYou">0</b></span><span>Together <b id="quizScoreShared">0</b></span></span>
+          </div>
+          <h2 class="quiz-q" id="quizQ">Loading question…</h2>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="status quiz-status" id="quizStatus"></div>
+          <div class="row"><button class="btn" id="quizNext" type="button" disabled>Next question</button><button class="btn ghost" id="quizReset" type="button">Restart</button></div>
+          <p class="effort-note">Answer about each other — matching picks score a point for both of you.</p>
+        </article>
+        <article class="card">
+          <h2>Rate the effort</h2>
+          <p class="lead">After the quiz, rate how sweet each other was. Your hearts add to your love points.</p>
+          <div class="rating-row">
+            <label>Rate yourself<select id="rateYou"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label>
+            <label>Rate your partner<select id="rateHer"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label>
+          </div>
+          <button class="btn wide" id="saveRating" type="button">Add mutual rating</button>
+          <div class="status center" id="ratingStatus"></div>
+        </article>
+      </section>
+
+      <section id="snaps" class="view" aria-label="Snaps">
+        <article class="card">
+          <span class="chip" id="dailyTaskDate"></span>
+          <h2 class="task-text" id="dailyTaskText">Loading today's task…</h2>
+          <div class="assigned" id="assignedTaskView"></div>
+        </article>
+        <article class="card">
+          <h2>Send a snap</h2>
+          <p class="lead">Complete a task and send proof — you choose how it disappears.</p>
+          <input type="file" accept="image/*" id="snapFile" class="hidden" aria-label="Choose a photo">
+          <div class="field"><button class="btn wide" id="snapPickBtn" type="button">📷 Take or choose a photo</button></div>
+          <div id="snapPreviewWrap" class="hidden">
+            <img id="snapPreview" class="snap-preview" alt="Preview of your snap">
+            <input id="snapCaption" maxlength="120" placeholder="Add a little caption (optional)" aria-label="Caption">
+            <div class="snap-mode-row">
+              <label><input type="radio" name="snapMode" value="once" checked> View once — disappears after they open it</label>
+              <label><input type="radio" name="snapMode" value="keep"> Keep in the gallery</label>
+            </div>
+            <div class="row"><button class="btn" id="snapSendBtn" type="button">Send snap</button><button class="btn soft" id="snapCancelBtn" type="button">Cancel</button></div>
+          </div>
+          <div class="status" id="snapStatus"></div>
+        </article>
+        <article class="card">
+          <h2>Snap gallery</h2>
+          <p class="lead">New view-once snaps show a NEW badge — open one and it’s gone. Kept snaps stay here.</p>
+          <div class="snap-gallery" id="snapGallery"></div>
+        </article>
+        <details class="card">
+          <summary>Set a task for your partner</summary>
+          <p class="lead">Give them something to do — a snap of it is the proof.</p>
+          <div class="field">
+            <input id="customTaskInput" maxlength="140" placeholder="e.g. Send me a snap of your dinner tonight" aria-label="Task for your partner">
+            <button class="btn wide" id="setCustomTask" type="button">Assign task</button>
+          </div>
+          <div class="status" id="customTaskStatus"></div>
+        </details>
+      </section>
+    </div>
+
+    <nav class="tabbar" id="tabbar" aria-label="Main navigation">
+      <button class="tab active" type="button" data-view="home" aria-current="page"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M5.5 9.8V20h13V9.8"/></svg></span>Home<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="chat"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/></svg></span>Chat<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="send"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2C19.5 15.4 12 20 12 20Z"/></svg></span>Send<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="play"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9 6.8 19.7l1-5.9-4.3-4.1 5.9-.8Z"/></svg></span>Play<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="snaps"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3V19H4Z"/><circle cx="12" cy="13.5" r="3.3"/></svg></span>Snaps<span class="dot hidden"></span></button>
+    </nav>
   </main>
+
+  <!-- Settings sheet -->
+  <dialog id="settingsDialog" class="sheet" aria-labelledby="settingsTitle">
+    <div class="sheet-head"><h2 id="settingsTitle">Settings</h2><button class="icon-btn" id="closeSettings" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="setting"><label for="darkToggle">Dark mode</label><input class="switch" id="darkToggle" type="checkbox"></div>
+      <div class="setting"><label for="notifyToggle">Notify me of pokes, notes &amp; messages</label><input class="switch" id="notifyToggle" type="checkbox" checked></div>
+      <div class="setting"><span id="notifyStatusLabel">Browser notifications: not enabled yet</span><button class="btn soft" id="enableNotify" type="button" style="min-height:38px;padding:0 14px">Enable</button></div>
+      <div class="setting"><span>Our connection code</span><span class="code-chip" id="settingsCode">—</span></div>
+      <div class="sheet-actions">
+        <button class="btn soft wide" id="downloadBtn" type="button">📲 Install the app</button>
+        <button class="btn soft wide" id="codeBtn" type="button">Change connection code</button>
+        <button class="btn danger wide" id="logoutBtn" type="button">Log out</button>
+      </div>
+      <p class="privacy-note">Your messages, notes and snaps are stored in your private TW space online. Security rules let only the two of you read them, but they are not end-to-end encrypted, so keep anything truly secret out of here.</p>
+    </div>
+  </dialog>
+
+  <!-- Confirm / info dialog and toast -->
+  <dialog id="confirmDialog" class="confirm" aria-labelledby="confirmText">
+    <p id="confirmText"></p>
+    <div class="row"><button class="btn ghost" id="confirmCancel" type="button">Cancel</button><button class="btn" id="confirmOk" type="button">OK</button></div>
+  </dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
@@ -253,16 +494,16 @@
     const withTimeout = (promise,ms) => Promise.race([promise, new Promise((_,reject)=>setTimeout(()=>reject(new Error("timeout")),ms))]);
     const pick = list => list[Math.floor(Math.random()*list.length)];
     const millis = ts => ts && ts.toMillis ? ts.toMillis() : 0;
-    document.querySelectorAll(".poke-status,.notice,.quiz-status,.auth-message").forEach(el=>{ el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); });
+    document.querySelectorAll(".status,.auth-message").forEach(el=>{ el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); });
 
     function setDarkMode(enabled,persist){
       document.body.classList.toggle("dark",enabled);
-      $("darkBtn").textContent=enabled?"☀️ Light":"🌙 Dark";
-      document.querySelector('meta[name="theme-color"]').content=enabled?"#151015":"#ff7da5";
+      $("darkToggle").checked=enabled;
+      document.querySelector('meta[name="theme-color"]').content=enabled?"#121014":"#fdf4f8";
       if(persist) store.set("ty-dark-mode",enabled?"1":"0");
     }
     setDarkMode(document.body.classList.contains("dark"),false);
-    $("darkBtn").onclick=()=>setDarkMode(!document.body.classList.contains("dark"),true);
+    $("darkToggle").onchange=()=>setDarkMode($("darkToggle").checked,true);
 
     // ---- State -------------------------------------------------------------------------------------------
     let authUser=null, coupleId=null, partnerUid=null, members=[], coupleUnsubs=[];
@@ -271,12 +512,38 @@
     let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
     let lastPresence={};
     let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapBlob=null, selectedSnapUrl=null;
-    let currentSnap=null, openingSnap=false, deferredInstallPrompt=null, swipeStartX=0, swipeStartY=0;
+    let currentSnap=null, openingSnap=false, deferredInstallPrompt=null, swipeStartX=0, swipeStartY=0, swipeBlocked=false, toastTimer=null;
     const genderCache={}, genderTried={}, purging=new Set(), scoring=new Set(), celebratedTrivia=new Set();
     const MESSAGE_LIMIT=100, SNAP_LIMIT=60, PRESENCE_TTL_MS=50000;
     const defaultFaces = { you: { girl:"👧", boy:"👦" }, them: { girl:"👩", boy:"👨" } };
-    const tabOrder = ["home","notes","play","task","chat"];
+    const tabOrder = ["home","chat","send","play","snaps"];
     const coupleRef = () => doc(db,"couples",coupleId);
+
+    // ---- Toasts, dialogs and sizing ------------------------------------------------------------------------
+    function toast(message){
+      const el=$("toast"); el.textContent=message; el.classList.add("show");
+      clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),2600);
+    }
+    const openDialog = dialog => { if(dialog.showModal) { if(!dialog.open) dialog.showModal(); } else dialog.setAttribute("open",""); };
+    const closeDialog = dialog => { if(dialog.close) { if(dialog.open) dialog.close(); } else dialog.removeAttribute("open"); };
+    // A friendly replacement for confirm(); pass cancel:null for a single-button message.
+    function askConfirm(message,{ok="OK",cancel="Cancel"}={}){
+      const dialog=$("confirmDialog");
+      if(!dialog.showModal) return Promise.resolve(cancel ? window.confirm(message) : (window.alert(message), true));
+      return new Promise(resolve=>{
+        $("confirmText").textContent=message; $("confirmOk").textContent=ok;
+        $("confirmCancel").textContent=cancel||""; $("confirmCancel").classList.toggle("hidden",!cancel);
+        const finish=value=>{ dialog.close(); resolve(value); };
+        $("confirmOk").onclick=()=>finish(true); $("confirmCancel").onclick=()=>finish(false);
+        dialog.oncancel=()=>resolve(false);
+        dialog.showModal();
+      });
+    }
+    // Keep the layout the size of what is actually visible, so the chat box stays above the phone keyboard.
+    if(window.visualViewport){
+      const fit=()=>{ if(visualViewport.scale>1.01) return; document.documentElement.style.setProperty("--app-h",visualViewport.height+"px"); window.scrollTo(0,0); };
+      visualViewport.addEventListener("resize",fit); fit();
+    }
 
     // ---- Small helpers -----------------------------------------------------------------------------------
     const CODE_ALPHABET="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -335,6 +602,7 @@
     // Until AI_ENDPOINT is set, every AI-flavored feature below quietly falls back to its built-in template text,
     // so the app is fully usable out of the box.
     const AI_ENDPOINT = "";
+    if(!AI_ENDPOINT) document.querySelectorAll(".ai-badge").forEach(badge=>badge.classList.add("hidden"));
     async function generateAIText(prompt,fallback){ if(!AI_ENDPOINT) return fallback; try{ const res=await fetch(AI_ENDPOINT,{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({prompt}) }); if(!res.ok) throw new Error("bad response"); const data=await res.json(); return (data.text||"").trim()||fallback; } catch(error){ return fallback; } }
 
     // ---- Notifications -----------------------------------------------------------------------------------
@@ -343,7 +611,7 @@
       if(!("Notification" in window)){ label.textContent="Browser notifications: not supported here"; button.style.display="none"; return; }
       if(Notification.permission==="granted"){ label.textContent="Browser notifications: on"; button.style.display="none"; }
       else if(Notification.permission==="denied"){ label.textContent="Browser notifications: blocked — allow them in your browser's site settings"; button.style.display="none"; }
-      else { label.textContent="Browser notifications: not enabled yet"; button.style.display="inline-block"; }
+      else { label.textContent="Browser notifications: not enabled yet"; button.style.display=""; }
     }
     async function requestNotifyPermission(){
       if(!("Notification" in window)){ updateNotifyLabel(); return; }
@@ -398,7 +666,10 @@
       try { await sendPasswordResetEmail(auth,email); setAuthMessage("If that email has an account, a reset link is on its way."); }
       catch(error){ setAuthMessage(friendlyError(error)); }
     };
-    $("logoutBtn").onclick=()=>signOut(auth);
+    $("settingsBtn").onclick=()=>openDialog($("settingsDialog"));
+    $("closeSettings").onclick=()=>closeDialog($("settingsDialog"));
+    $("settingsDialog").addEventListener("click",event=>{ if(event.target===$("settingsDialog")) closeDialog($("settingsDialog")); });
+    $("logoutBtn").onclick=()=>{ closeDialog($("settingsDialog")); signOut(auth); };
     $("statusLogout").onclick=()=>signOut(auth);
     $("retryBtn").onclick=()=>enterApp();
 
@@ -450,7 +721,7 @@
     $("joinPair").onclick=()=>busy($("joinPair"),joinPair);
     $("joinCode").addEventListener("keydown",event=>{ if(event.key==="Enter") $("joinPair").click(); });
     // Nothing is lost by opening this screen: your current space only changes once you create or join a new one.
-    $("codeBtn").onclick=()=>{ showPanel("pair"); setPairMessage("Creating or joining a new code leaves your current space behind."); };
+    $("codeBtn").onclick=()=>{ closeDialog($("settingsDialog")); showPanel("pair"); setPairMessage("Creating or joining a new code leaves your current space behind."); };
     $("pairBack").onclick=()=>{ showApp(); setPairMessage(""); };
     $("shareCode").textContent = navigator.share ? "Share" : "Copy";
     $("shareCode").onclick=async()=>{
@@ -459,8 +730,8 @@
       try {
         if(navigator.share){ await navigator.share({ title:"TW", text }); return; }
         await navigator.clipboard.writeText(coupleId);
-        button.textContent="Copied ✓"; setTimeout(()=>{ button.textContent="Copy"; },1500);
-      } catch(error){ if(error?.name!=="AbortError") prompt("Copy this code and send it to your partner:",coupleId); }
+        button.textContent="Copied ✓"; toast("Code copied"); setTimeout(()=>{ button.textContent="Copy"; },1500);
+      } catch(error){ if(error?.name!=="AbortError") toast("Your code is "+coupleId); }
     };
 
     function teardown(){
@@ -469,7 +740,7 @@
       clearTimeout(typingTimer); typingSentAt=0; currentSnap=null; openingSnap=false;
     }
     onAuthStateChanged(auth,user=>{
-      authUser=user; teardown();
+      authUser=user; teardown(); closeDialog($("settingsDialog"));
       if(!user){ $("authPassword").value=""; showPanel("login"); return; }
       enterApp();
     });
@@ -480,7 +751,7 @@
       seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"" };
       surpriseShown=false; bouquetShown=false; sharedApproach=false; prevApproach=false; lastTriviaSig="";
       celebratedTrivia.clear(); scoring.clear(); purging.clear();
-      $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show");
+      $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show"); setActiveTab("home");
       showApp();
       const listenError = name => error => console.warn("TW: could not listen to "+name,error?.code||error);
       coupleUnsubs.push(onSnapshot(coupleRef(),onCoupleSnapshot,error=>{ if(coupleId===id) showStatus("We couldn't open your space ("+(error?.code||"error")+").",true); }));
@@ -494,7 +765,7 @@
     function renderInvite(id,waiting){ $("inviteRow").classList.toggle("hidden",!waiting); $("inviteCode").textContent=id; }
     function renderApproach(on,live){
       sharedApproach=on;
-      $("approach").textContent=on?"Aww, they found each other!":"Approach each other";
+      $("approach").textContent=on?"Together 💞":"Come closer";
       $("approach").setAttribute("aria-pressed",String(on));
       document.querySelector(".pair-chars").classList.toggle("together",on);
       if(on && !prevApproach && live){ confettiBurst(); playChime("success"); }
@@ -510,10 +781,10 @@
       partnerUid=members.find(uid=>uid!==me)||null;
       if(partnerUid!==previousPartner && partnerUid) delete genderTried[partnerUid];
       $("effortCount").textContent=data.effort||0;
-      renderInvite(snap.id,members.length<2);
+      renderInvite(snap.id,members.length<2); $("settingsCode").textContent=snap.id;
       renderApproach(!!shared.approach,live);
 
-      if(shared.lastPoke) $("pokeStatus").textContent=shared.lastPoke;
+      if(shared.lastPoke) $("pokeStatus").textContent=`Last poke (${shared.lastPokeBy===me?"you":"your partner"}): ${shared.lastPoke}`;
       const pokeKey=changeKey(shared.lastPoke,shared.lastPokeAt);
       if(live && shared.lastPoke && shared.lastPokeBy && shared.lastPokeBy!==me && pokeKey!==seen.poke) notifyMe("A little poke 💌",shared.lastPoke);
       seen.poke=pokeKey;
@@ -559,19 +830,23 @@
     setInterval(heartbeat,20000);
     function renderPresence(){
       const dot=$("presenceDot"), label=$("presenceLabel"), typing=$("typingIndicator");
-      if(!coupleId || !partnerUid){ dot.classList.remove("online"); label.textContent="Waiting for your partner to join"; typing.classList.add("hidden"); return; }
+      if(!coupleId || !partnerUid){ dot.classList.remove("online"); label.textContent="Waiting for partner"; typing.textContent=""; return; }
       const info=lastPresence[partnerUid]||{}, atMs=millis(info.at);
       const online=!!atMs && (Date.now()-atMs)<PRESENCE_TTL_MS;
       dot.classList.toggle("online",online);
-      label.textContent=online?"Online now":(atMs?"Last seen "+timeAgo(atMs):"Not seen yet");
-      if(info.typing && online){ typing.classList.remove("hidden"); typing.textContent="Your partner is typing…"; } else typing.classList.add("hidden");
+      label.textContent=online?"Partner online":(atMs?"Last seen "+timeAgo(atMs):"Partner offline");
+      typing.textContent=(info.typing && online) ? "Your partner is typing…" : "";
     }
     // Re-check now and then so "Online now" fades when the partner's heartbeats stop.
     setInterval(()=>{ if(coupleId) renderPresence(); },10000);
     const activityIcons={poke:"👆",note:"💌",chat:"💬"};
     function renderActivity(items){
       const box=$("activityFeed"); box.innerHTML="";
-      if(!items.length){ const p=document.createElement("p"); p.className="tiny"; p.textContent="Nothing yet — send a poke or note to get started."; box.appendChild(p); return; }
+      if(!items.length){
+        const empty=document.createElement("div"); empty.className="empty"; empty.textContent="Nothing yet — send a poke or a note to get things going.";
+        const go=document.createElement("button"); go.type="button"; go.className="btn soft"; go.textContent="Send something sweet"; go.onclick=()=>openTab("send");
+        empty.appendChild(document.createElement("br")); empty.appendChild(go); box.appendChild(empty); return;
+      }
       items.forEach(m=>{
         const row=document.createElement("div"); row.className="activity-item";
         const icon=document.createElement("span"); icon.className="activity-icon"; icon.setAttribute("aria-hidden","true"); icon.textContent=activityIcons[m.type]||"💗";
@@ -587,12 +862,19 @@
       if(!coupleId) return;
       try { await updateDoc(doc(db,"couples",coupleId,"messages",msgId),{[`reactions.${emoji}`]: alreadyReacted?arrayRemove(authUser.uid):arrayUnion(authUser.uid)}); } catch(error){}
     }
+    const clock = ms => new Date(ms).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+    const kindLabels={poke:"👆 Poke",note:"💌 Love note"};
     function renderBubble(id,m,container){
       const mine=m.authorId===authUser.uid;
       const wrap=document.createElement("div"); wrap.className="bubble-wrap"+(mine?" mine":"");
+      if(kindLabels[m.type]){ const kind=document.createElement("div"); kind.className="msg-time"; kind.textContent=kindLabels[m.type]; wrap.appendChild(kind); }
       const bubble=document.createElement("div"); bubble.className="bubble"+(mine?" mine":""); bubble.textContent=m.text;
-      if(m.createdAt) bubble.title=new Date(millis(m.createdAt)).toLocaleString();
+      bubble.tabIndex=0; bubble.setAttribute("role","button"); bubble.setAttribute("aria-label","React to this message");
+      const togglePicker=()=>{ const open=wrap.classList.contains("picking"); document.querySelectorAll(".bubble-wrap.picking").forEach(w=>w.classList.remove("picking")); if(!open) wrap.classList.add("picking"); };
+      bubble.onclick=togglePicker;
+      bubble.onkeydown=event=>{ if(event.key==="Enter" || event.key===" "){ event.preventDefault(); togglePicker(); } };
       wrap.appendChild(bubble);
+      const time=document.createElement("div"); time.className="msg-time"; time.textContent=clock(millis(m.createdAt)||Date.now()); wrap.appendChild(time);
       const reactions=m.reactions||{};
       const pillRow=document.createElement("div"); pillRow.className="reactions";
       Object.keys(reactions).forEach(emoji=>{
@@ -608,20 +890,26 @@
       });
       wrap.appendChild(picker); container.appendChild(wrap);
     }
+    // A dot on a tab tells you something new is waiting there.
+    function markUnread(view){
+      if(document.querySelector(".tab.active")?.dataset.view===view) return;
+      document.querySelector(`.tab[data-view="${view}"] .dot`)?.classList.remove("hidden");
+    }
     // One query feeds both the chat and the "Recent activity" card (newest first).
     function onMessagesSnapshot(snap){
-      const box=$("chatMessages"), docs=snap.docs, me=authUser.uid;
-      const nearBottom=window.innerHeight+window.scrollY>=document.body.scrollHeight-160;
+      const box=$("chatMessages"), scroller=$("chatScroll"), docs=snap.docs, me=authUser.uid;
+      const nearBottom=scroller.scrollHeight-scroller.scrollTop-scroller.clientHeight<140;
       box.innerHTML="";
+      if(!docs.length){ const hello=document.createElement("p"); hello.className="empty"; hello.textContent="No messages yet — say hi 👋"; box.appendChild(hello); }
       for(let i=docs.length-1;i>=0;i--) renderBubble(docs[i].id,docs[i].data(),box);
       renderActivity(docs.slice(0,6).map(item=>item.data()));
-      const newest=docs[0]?.data();
-      if($("chat").classList.contains("active") && (nearBottom || newest?.authorId===me)) box.lastElementChild?.scrollIntoView({block:"nearest"});
+      if(nearBottom || !seen.chat || docs[0]?.data().authorId===me) scroller.scrollTop=scroller.scrollHeight;
       if(seen.chat){
         snap.docChanges().forEach(change=>{
           if(change.type!=="added") return;
           const m=change.doc.data();
-          if(m.authorId!==me && m.type==="chat") notifyMe("New message 💬",m.text);
+          if(m.authorId===me) return;
+          if(m.type==="chat"){ notifyMe("New message 💬",m.text); markUnread("chat"); } else markUnread("home");
         });
       }
       seen.chat=true;
@@ -667,27 +955,33 @@
 
     // ---- Tabs --------------------------------------------------------------------------------------------
     function setActiveTab(view){
-      document.querySelectorAll(".nav button").forEach(btn=>{
+      document.querySelectorAll(".tab").forEach(btn=>{
         const on=btn.dataset.view===view;
         btn.classList.toggle("active",on);
-        if(on) btn.setAttribute("aria-current","page"); else btn.removeAttribute("aria-current");
+        if(on){ btn.setAttribute("aria-current","page"); btn.querySelector(".dot").classList.add("hidden"); } else btn.removeAttribute("aria-current");
       });
       document.querySelectorAll(".view").forEach(panel=>panel.classList.toggle("active",panel.id===view));
     }
     function openTab(view){
       const target=tabOrder.includes(view)?view:"home";
       setActiveTab(target);
-      if(target==="chat") $("chatMessages").lastElementChild?.scrollIntoView({block:"nearest"});
+      if(target==="chat") requestAnimationFrame(()=>{ $("chatScroll").scrollTop=$("chatScroll").scrollHeight; });
     }
-    document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>openTab(b.dataset.view));
-    const nav = document.querySelector(".nav");
-    nav.addEventListener("touchstart",e=>{ const t=e.touches[0]; swipeStartX=t.clientX; swipeStartY=t.clientY; },{passive:true});
-    nav.addEventListener("touchend",e=>{
+    document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>openTab(b.dataset.view));
+    const views = document.querySelector(".views");
+    views.addEventListener("touchstart",e=>{ const t=e.touches[0]; swipeStartX=t.clientX; swipeStartY=t.clientY; swipeBlocked=!!e.target.closest("input,textarea,select"); },{passive:true});
+    views.addEventListener("touchend",e=>{
+      if(swipeBlocked) return;
       const t=e.changedTouches[0], dx=t.clientX-swipeStartX, dy=t.clientY-swipeStartY;
-      if(Math.abs(dx)<45 || Math.abs(dx)<Math.abs(dy)) return;
-      const active=document.querySelector(".nav button.active")?.dataset.view||"home", index=tabOrder.indexOf(active);
+      if(Math.abs(dx)<80 || Math.abs(dx)<Math.abs(dy)*1.8) return;
+      const active=document.querySelector(".tab.active")?.dataset.view||"home", index=tabOrder.indexOf(active);
       openTab(dx<0 ? tabOrder[Math.min(tabOrder.length-1,index+1)] : tabOrder[Math.max(0,index-1)]);
     },{passive:true});
+    // Pick what to send: poke, note, bouquet or surprise.
+    document.querySelectorAll(".seg").forEach(btn=>btn.onclick=()=>{
+      document.querySelectorAll(".seg").forEach(other=>{ const on=other===btn; other.classList.toggle("active",on); other.setAttribute("aria-selected",String(on)); });
+      document.querySelectorAll(".send-panel").forEach(panel=>panel.classList.toggle("hidden",panel.id!=="send-"+btn.dataset.send));
+    });
 
     // ---- Install -----------------------------------------------------------------------------------------
     const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
@@ -696,7 +990,7 @@
     window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferredInstallPrompt=e; });
     $("downloadBtn").onclick=async()=>{
       if(deferredInstallPrompt){ deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice.catch(()=>{}); deferredInstallPrompt=null; return; }
-      alert("On iPhone, tap Share and choose Add to Home Screen. On Android or desktop Chrome, use the install option in the browser menu.");
+      askConfirm("On iPhone, tap Share and choose Add to Home Screen. On Android or desktop Chrome, use the install option in the browser menu.",{ok:"Got it",cancel:null});
     };
 
     // ---- Home cards --------------------------------------------------------------------------------------
@@ -840,7 +1134,7 @@
     }
     function renderSnapGallery(items){
       const box=$("snapGallery"); box.innerHTML="";
-      if(!items.length){ const p=document.createElement("p"); p.className="tiny"; p.textContent="No snaps yet — send one from Today's task!"; box.appendChild(p); return; }
+      if(!items.length){ const p=document.createElement("p"); p.className="empty"; p.textContent="No snaps yet — send one from Today's task!"; box.appendChild(p); return; }
       items.forEach(item=>{
         const mine=item.authorId===authUser.uid, unseen=item.viewOnce && !mine && !item.viewed;
         const tile=document.createElement("button"); tile.type="button";
@@ -860,7 +1154,7 @@
         snap.docChanges().forEach(change=>{
           if(change.type!=="added") return;
           const m=change.doc.data();
-          if(m.authorId!==me && !(m.viewOnce && m.viewed)) notifyMe("A snap arrived 📸",m.caption||"Tap to view it.");
+          if(m.authorId!==me && !(m.viewOnce && m.viewed)){ notifyMe("A snap arrived 📸",m.caption||"Tap to view it."); markUnread("snaps"); }
         });
       }
       seen.snaps=true;
@@ -887,9 +1181,10 @@
       if(finished?.consume) purgeSnap(finished.item);
     }
     $("closeSnapView").onclick=closeSnapView;
-    $("deleteSnap").onclick=()=>{
-      if(!currentSnap || !confirm("Delete this snap for both of you?")) return;
-      const item=currentSnap.item; currentSnap=null;
+    $("deleteSnap").onclick=async()=>{
+      const item=currentSnap?.item;
+      if(!item || !(await askConfirm("Delete this snap for both of you?",{ok:"Delete"})) || currentSnap?.item.id!==item.id) return;
+      currentSnap=null;
       $("snapViewScreen").classList.add("hidden"); $("snapViewImg").removeAttribute("src");
       purgeSnap(item);
     };
@@ -977,7 +1272,7 @@
       try { await updateDoc(coupleRef(),{"shared.trivia.index":next,"shared.trivia.answers":{},"shared.trivia.scoredIndexes":arrayRemove(next)}); } catch(error){}
     });
     $("quizReset").onclick=async()=>{
-      if(!coupleId || !confirm("Restart the trivia quiz and reset your shared score?")) return;
+      if(!coupleId || !(await askConfirm("Restart the trivia quiz and reset your shared score?",{ok:"Restart"}))) return;
       try { await updateDoc(coupleRef(),{"shared.trivia":{index:0,answers:{},scoredIndexes:[]},"shared.triviaScore":0,"shared.triviaAnswered":{}}); } catch(error){}
     };
 
