@@ -1,44 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffc9dd"/>
-      <stop offset="1" stop-color="#cbb6ff"/>
+      <stop offset="0" stop-color="#ffc7ab"/>
+      <stop offset=".55" stop-color="#ff8aa6"/>
+      <stop offset="1" stop-color="#f0498a"/>
     </linearGradient>
-    <linearGradient id="pink" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ff7fab"/>
-      <stop offset="1" stop-color="#ff4f86"/>
+    <radialGradient id="light" cx="30%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf9"/>
+      <stop offset="1" stop-color="#ffeadb"/>
     </linearGradient>
-    <linearGradient id="lilac" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#b79cff"/>
-      <stop offset="1" stop-color="#8d6cf0"/>
+    <linearGradient id="gRose" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffa889"/>
+      <stop offset="1" stop-color="#ff3f7f"/>
     </linearGradient>
-    <path id="heart" d="M0 -30C0 -78 -78 -82 -82 -26C-86 26 -32 56 0 88C32 56 86 26 82 -26C78 -82 0 -78 0 -30Z"/>
+    <linearGradient id="gHeart" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff7aa5"/>
+      <stop offset="1" stop-color="#e02b6b"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
   </defs>
   <rect width="512" height="512" rx="120" fill="url(#bg)"/>
-  <ellipse cx="256" cy="440" rx="150" ry="16" fill="#8d6cf0" opacity=".16"/>
-
-  <!-- little lilac heart -->
-  <g transform="translate(352 318) rotate(14) scale(1.02)">
-    <use href="#heart" fill="url(#lilac)"/>
-    <ellipse cx="-44" cy="-42" rx="14" ry="8" fill="#fff" opacity=".45" transform="rotate(-30 -44 -42)"/>
-    <ellipse cx="-24" cy="0" rx="8" ry="11" fill="#43284a"/><ellipse cx="24" cy="0" rx="8" ry="11" fill="#43284a"/>
-    <circle cx="-21" cy="-4" r="3" fill="#fff"/><circle cx="27" cy="-4" r="3" fill="#fff"/>
-    <ellipse cx="-44" cy="20" rx="13" ry="8" fill="#ffa6c9" opacity=".75"/><ellipse cx="44" cy="20" rx="13" ry="8" fill="#ffa6c9" opacity=".75"/>
-    <path d="M-9 18Q0 30 9 18" fill="none" stroke="#43284a" stroke-width="5" stroke-linecap="round"/>
+  <rect width="512" height="512" rx="120" fill="url(#light)"/>
+  <ellipse cx="256" cy="432" rx="150" ry="16" fill="#8c1d4e" opacity=".22" filter="url(#soft)"/>
+  <!-- Mochi: tail, ears, body -->
+  <g transform="translate(256 262) scale(4)">
+    <path d="M30 16q24-2 20-22" fill="none" stroke="#fff3e6" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-26 -14L-31 -40-9 -25Z" fill="url(#fur)" stroke="#f3d6c3" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M26 -14L31 -40 9 -25Z" fill="url(#fur)" stroke="#f3d6c3" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M-24 -19L-27 -33-15 -25Z" fill="#ffb7cc"/><path d="M24 -19L27 -33 15 -25Z" fill="#ffb7cc"/>
+    <ellipse cx="0" cy="8" rx="35" ry="31" fill="url(#fur)" stroke="#f3d6c3" stroke-width="1.6"/>
+    <ellipse cx="-13" cy="-8" rx="13" ry="7" fill="#fff" opacity=".7" transform="rotate(-22 -13 -8)"/>
+    <ellipse cx="-11" cy="-2" rx="3.7" ry="5.2" fill="#43284a"/><ellipse cx="11" cy="-2" rx="3.7" ry="5.2" fill="#43284a"/>
+    <circle cx="-9.8" cy="-4.2" r="1.5" fill="#fff"/><circle cx="12.2" cy="-4.2" r="1.5" fill="#fff"/>
+    <ellipse cx="-22" cy="6" rx="6.8" ry="4.2" fill="#ffa6c1" opacity=".85"/><ellipse cx="22" cy="6" rx="6.8" ry="4.2" fill="#ffa6c1" opacity=".85"/>
+    <path d="M-5 8q2.5 4 5 0q2.5 4 5 0" fill="none" stroke="#43284a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(20 -30) rotate(18)"><path d="M0 0L-12 -8V8ZM0 0L12 -8V8Z" fill="url(#gRose)"/><circle r="4" fill="#ff5d8f"/><circle cx="-1" cy="-1" r="1.4" fill="#fff" opacity=".6"/></g>
   </g>
-
-  <!-- big pink heart -->
-  <g transform="translate(222 232) rotate(-9) scale(1.62)">
-    <use href="#heart" fill="url(#pink)"/>
-    <ellipse cx="-46" cy="-44" rx="15" ry="8.5" fill="#fff" opacity=".5" transform="rotate(-30 -46 -44)"/>
-    <ellipse cx="-27" cy="2" rx="8" ry="11" fill="#43284a"/><ellipse cx="27" cy="2" rx="8" ry="11" fill="#43284a"/>
-    <circle cx="-24" cy="-2" r="3.2" fill="#fff"/><circle cx="30" cy="-2" r="3.2" fill="#fff"/>
-    <ellipse cx="-47" cy="24" rx="13" ry="8" fill="#ffc2d8" opacity=".85"/><ellipse cx="47" cy="24" rx="13" ry="8" fill="#ffc2d8" opacity=".85"/>
-    <path d="M-10 22Q0 35 10 22" fill="none" stroke="#43284a" stroke-width="4.6" stroke-linecap="round"/>
+  <!-- holding a heart -->
+  <g transform="translate(256 392) scale(.62)"><path d="M0 -30C0 -78 -78 -82 -82 -26C-86 26 -32 56 0 88C32 56 86 26 82 -26C78 -82 0 -78 0 -30Z" fill="url(#gHeart)"/><ellipse cx="-34" cy="-34" rx="14" ry="8" fill="#fff" opacity=".5" transform="rotate(-30 -34 -34)"/></g>
+  <ellipse cx="206" cy="392" rx="21" ry="19" fill="url(#fur)" stroke="#f3d6c3" stroke-width="5"/>
+  <ellipse cx="306" cy="392" rx="21" ry="19" fill="url(#fur)" stroke="#f3d6c3" stroke-width="5"/>
+  <g fill="#fff" opacity=".9">
+    <path d="M96 118l5 14 14 5-14 5-5 14-5-14-14-5 14-5Z"/><path d="M420 96l4 11 11 4-11 4-4 11-4-11-11-4 11-4Z" opacity=".8"/><circle cx="430" cy="226" r="4" opacity=".7"/><circle cx="82" cy="260" r="3.5" opacity=".7"/>
   </g>
-
-  <!-- sparkles -->
-  <path d="M96 118l7 20 20 7-20 7-7 20-7-20-20-7 20-7Z" fill="#fff" opacity=".9"/>
-  <path d="M410 96l5 14 14 5-14 5-5 14-5-14-14-5 14-5Z" fill="#fff" opacity=".85"/>
-  <path d="M118 396l4 11 11 4-11 4-4 11-4-11-11-4 11-4Z" fill="#fff" opacity=".7"/>
 </svg>

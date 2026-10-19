@@ -1,4 +1,7 @@
 {
+  "functions": {
+    "api/couple-portrait.js": { "maxDuration": 60 }
+  },
   "headers": [
     {
       "source": "/(.*)",

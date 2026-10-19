@@ -11,7 +11,8 @@ static site backed by Firebase (Auth and Firestore; no Storage bucket or paid pl
 | `index.html` | The whole app (markup, styles and the module script). `our-little-world.html` just redirects here for old links. |
 | `service-worker.js`, `manifest.webmanifest`, `icon*.svg/png` | PWA: offline shell, install metadata, icons. |
 | `firestore.rules`, `firebase.json`, `.firebaserc` | Firestore security rules and CLI config (project `aytt-677b4`). |
-| `vercel.json` | Security headers for the Vercel deployment. |
+| `api/couple-portrait.js` | Optional Vercel function that draws the AI couple portrait (see below). |
+| `vercel.json` | Security headers and the function's timeout for the Vercel deployment. |
 | `tw-local-app/Start TW.command` | Double-click on a Mac to serve this folder on `http://localhost:8765`. |
 
 ## Run it locally
@@ -32,6 +33,21 @@ firebase deploy --only firestore:rules --project aytt-677b4
 ```
 
 or by pasting the file into Firebase console → Firestore Database → Rules and clicking Publish.
+
+## Couple portrait (photos + optional AI)
+
+Each of you can add a photo from the home screen. With both photos in, the home screen shows a collage of the two of you
+with your days-together count (from the day you set), free and instant. If you both tick “Let AI use my photo”, either of you
+can ask for an AI-drawn couple portrait instead.
+
+The AI drawing runs through `api/couple-portrait.js`, which calls Google's Gemini image model. To switch it on:
+
+1. Create a key at <https://aistudio.google.com/apikey> (image generation may be billed by Google — check their pricing).
+2. In the Vercel project settings add an environment variable `GEMINI_API_KEY` with that key, then redeploy.
+3. Optional: set `GEMINI_IMAGE_MODEL` to use a different image model (default `gemini-2.5-flash-image`).
+
+Until the key exists the function answers “not configured” and the app keeps the collage. The function only accepts signed-in
+TW users (it checks their Firebase ID token), allows one portrait per person per minute, and never stores the photos.
 
 ## Good to know
 

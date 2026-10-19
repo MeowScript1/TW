@@ -91,6 +91,43 @@ service cloud.firestore {
           && request.resource.data.createdAt == request.time;
         allow delete: if memberOf(coupleId);
       }
+
+      // Each person's photo for the couple portrait. You manage only your own; both of you can see them.
+      match /photos/{photoId} {
+        allow read: if memberOf(coupleId);
+        allow create: if memberOf(coupleId) && photoId == request.auth.uid
+          && request.resource.data.keys().hasOnly(['authorId', 'data', 'aiOk', 'createdAt'])
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.data is string
+          && request.resource.data.data.size() < 600000
+          && request.resource.data.aiOk is bool
+          && request.resource.data.createdAt == request.time;
+        allow update: if memberOf(coupleId) && photoId == request.auth.uid && (
+          // Changing only the "AI may use my photo" choice…
+          (onlyChanges(['aiOk']) && request.resource.data.aiOk is bool) ||
+          // …or replacing the whole photo.
+          (request.resource.data.keys().hasOnly(['authorId', 'data', 'aiOk', 'createdAt'])
+            && request.resource.data.authorId == request.auth.uid
+            && request.resource.data.data is string
+            && request.resource.data.data.size() < 600000
+            && request.resource.data.aiOk is bool
+            && request.resource.data.createdAt == request.time)
+        );
+        allow delete: if memberOf(coupleId) && photoId == request.auth.uid;
+      }
+
+      // The AI-drawn couple portrait shown on the home screen (the collage needs no document).
+      match /portraits/{portraitId} {
+        allow read: if memberOf(coupleId);
+        allow create, update: if memberOf(coupleId)
+          && request.resource.data.keys().hasOnly(['data', 'kind', 'by', 'createdAt'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.kind == 'ai'
+          && request.resource.data.data is string
+          && request.resource.data.data.size() < 900000
+          && request.resource.data.createdAt == request.time;
+        allow delete: if memberOf(coupleId);
+      }
     }
   }
 }

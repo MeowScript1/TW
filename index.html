@@ -121,7 +121,11 @@
     .activity-feed { display:grid; margin-top:8px; }
     .activity-item { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--line); font-size:.92rem; }
     .activity-item:last-child { border-bottom:0; padding-bottom:0; }
-    .activity-icon { flex:none; display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--surface-2); font-size:1rem; }
+    .activity-icon { flex:none; display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:var(--accent-soft); color:var(--accent-text); }
+    .activity-icon svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .activity-icon .duo, .tab .duo { fill:currentColor; fill-opacity:.2; stroke:none; }
+    .tab .duo { fill-opacity:0; }
+    .tab.active .duo { fill-opacity:.22; }
     .activity-text { display:block; font-weight:600; line-height:1.35; overflow-wrap:anywhere; }
     .activity-time { display:block; margin-top:2px; color:var(--muted); font-size:.75rem; }
 
@@ -232,57 +236,186 @@
     #toast.show { opacity:1; transform:translate(-50%,0); }
     body.dark #toast { background:#f2e9f0; color:#2a2130; }
 
-    /* ---- Home: greeting, characters, moments, moods, stats ------------------------------------------- */
+    /* ---- Home: hero scene, moments, moods, featured cards --------------------------------------------- */
+    .scene { position:relative; overflow:hidden; margin:2px 0 22px; padding:0; border-radius:32px; text-align:center; color:#2a2130; background:linear-gradient(165deg,#ffc9de 0%,#f1c8ff 52%,#cdc4ff 100%); box-shadow:0 18px 40px rgba(180,90,150,.22); }
+    body.dark .scene { color:#fff; background:linear-gradient(165deg,#4d2646 0%,#3a2755 55%,#29275a 100%); box-shadow:0 18px 40px rgba(0,0,0,.35); }
+    .scene:before { content:""; position:absolute; width:260px; height:260px; right:-90px; top:-100px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.65),transparent 70%); pointer-events:none; }
+    body.dark .scene:before { background:radial-gradient(circle,rgba(255,150,210,.28),transparent 70%); }
+    .scene > * { position:relative; }
+    .scene-bg { position:absolute !important; inset:0; overflow:hidden; pointer-events:none; }
+    .scene-bg i { position:absolute; bottom:-24px; width:18px; height:18px; opacity:0; animation:drift 9s linear infinite; background:center/contain no-repeat; }
+    .scene-bg i.h { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z' fill='%23ff6f9c'/%3E%3C/svg%3E"); }
+    .scene-bg i.s { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z' fill='%23fff'/%3E%3C/svg%3E"); }
+    .scene-bg i:nth-child(1) { left:7%; width:18px; height:18px; animation-delay:0s; }
+    .scene-bg i:nth-child(2) { left:22%; width:14px; height:14px; animation-delay:2.2s; animation-duration:8s; }
+    .scene-bg i:nth-child(3) { left:44%; width:21px; height:21px; animation-delay:4.4s; }
+    .scene-bg i:nth-child(4) { left:63%; width:14px; height:14px; animation-delay:1.1s; animation-duration:10s; }
+    .scene-bg i:nth-child(5) { left:80%; width:19px; height:19px; animation-delay:3.3s; }
+    .scene-bg i:nth-child(6) { left:92%; width:16px; height:16px; animation-delay:5.5s; animation-duration:8.5s; }
+    @keyframes drift { 0% { transform:translateY(0) rotate(0); opacity:0; } 12% { opacity:.85; } 100% { transform:translateY(-330px) rotate(24deg); opacity:0; } }
+    .pair-chars { position:relative; display:flex; justify-content:center; align-items:flex-end; gap:6px; }
+    .char-col { position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; transition:transform .7s cubic-bezier(.2,.8,.2,1); }
+    .pair-chars.together .char-col:first-child { transform:translateX(20px); }
+    .pair-chars.together .char-col:last-child { transform:translateX(-20px); }
+    .pair-chars.together:after { content:"💞"; position:absolute; left:50%; top:-6px; font-size:1.5rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
+    @keyframes heartFloat { 50% { transform:translateX(-50%) translateY(-6px); } }
+    .pair-char { width:136px; height:152px; padding:0; border-radius:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .char-svg { display:block; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 12px 14px rgba(190,50,110,.28)); animation:charBob 3.6s ease-in-out infinite; }
+    .char-col:last-child .char-svg { animation-delay:-1.8s; }
+    @keyframes charBob { 50% { transform:translateY(-7px) rotate(1.2deg); } }
+    .pair-char.squish { animation:squish .5s ease; }
+    .pair-char.wiggle { animation:wiggle .8s ease; }
+    @keyframes squish { 0% { transform:scale(1); } 30% { transform:scale(1.18,.84); } 60% { transform:scale(.94,1.1); } 100% { transform:scale(1); } }
+    @keyframes wiggle { 0%,100% { transform:rotate(0); } 15% { transform:rotate(-12deg) scale(1.06); } 35% { transform:rotate(10deg) scale(1.06); } 55% { transform:rotate(-7deg); } 75% { transform:rotate(5deg); } }
+    .char-name { margin-top:-4px; font-size:.78rem; font-weight:800; letter-spacing:.03em; }
+    .char-mood { min-height:1.1em; font-size:.74rem; font-weight:700; opacity:.75; }
+    .mood-line { min-height:20px; margin:8px 4px 12px; font-size:.86rem; line-height:1.35; opacity:.82; }
+    .float-heart { position:fixed; z-index:120; pointer-events:none; font-size:1.4rem; animation:floatUp 1.1s ease-out forwards; }
+    @keyframes floatUp { from { transform:translateY(0) scale(.7); opacity:1; } to { transform:translateY(-90px) scale(1.2); opacity:0; } }
+    .scene-pills { display:grid; grid-template-columns:1.15fr 1fr; gap:10px; }
+    .glass-pill { display:flex; align-items:center; gap:10px; min-width:0; padding:10px 12px; border-radius:20px; text-align:left; color:inherit; background:rgba(255,255,255,.52); border:1px solid rgba(255,255,255,.75); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+    body.dark .glass-pill { background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.16); }
+    button.glass-pill { cursor:pointer; transition:transform .12s ease; }
+    button.glass-pill:active { transform:scale(.97); }
+    .pill-ico { flex:none; display:grid; place-items:center; width:32px; height:32px; }
+    .pill-ico svg { width:30px; height:30px; }
+    .pill-text { display:flex; flex-direction:column; min-width:0; gap:1px; }
+    .pill-text b { font-size:.9rem; font-weight:800; line-height:1.2; }
+    .pill-text small { font-size:.72rem; line-height:1.3; opacity:.75; }
+    .level-bar { display:block; width:100%; height:7px; margin-top:5px; border-radius:99px; background:rgba(255,255,255,.55); overflow:hidden; }
+    body.dark .level-bar { background:rgba(255,255,255,.14); }
+    .level-bar span, .tap-bar span { display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,#ff6b9d,#8d6cf0); transition:width .5s ease; }
+    .come-closer { justify-content:center; width:100%; margin-top:10px; padding:11px 14px; font-size:.9rem; font-weight:800; }
+    .home-section { margin:0 0 22px; }
+    .home-section > h2 { margin:0 4px 12px; font-size:1.05rem; font-weight:800; letter-spacing:-.01em; }
+    .moments { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+    .moment { display:flex; flex-direction:column; align-items:center; gap:7px; font-size:.72rem; font-weight:800; color:var(--muted); }
+    .moment .m-art { display:grid; place-items:center; width:62px; height:62px; border-radius:50%; background:linear-gradient(150deg,var(--surface),var(--accent-soft)); border:1px solid var(--line); box-shadow:var(--shadow); transition:transform .14s cubic-bezier(.2,1.4,.4,1); }
+    .moment .m-art svg { width:40px; height:40px; }
+    .moment:active .m-art { transform:scale(.86); }
+    .mood-row { display:flex; gap:8px; overflow-x:auto; padding:2px 2px 8px; margin:0 -2px; scrollbar-width:none; }
+    .mood-row::-webkit-scrollbar { display:none; }
+    .mood-chip { flex:none; display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:0 16px 0 12px; border-radius:999px; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); font-size:.88rem; font-weight:700; color:var(--muted); transition:transform .12s ease; }
+    .mood-chip .mood-face { display:block; width:28px; height:28px; }
+    .mood-chip .mood-face svg { display:block; width:100%; height:100%; }
+    .mood-chip:active { transform:scale(.95); }
+    .mood-chip.selected { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .feature { display:flex; align-items:center; gap:14px; width:100%; margin-bottom:10px; padding:14px 16px; border-radius:22px; text-align:left; color:#2a2130; box-shadow:var(--shadow); transition:transform .14s ease; }
+    .feature:active { transform:scale(.98); }
+    .feat-emoji { flex:none; display:grid; place-items:center; width:58px; height:58px; border-radius:18px; background:rgba(255,255,255,.62); }
+    .feat-emoji svg { width:38px; height:38px; }
+    .feat-text { display:flex; flex-direction:column; gap:2px; min-width:0; }
+    .feat-text b { font-size:1rem; font-weight:800; line-height:1.25; }
+    .feat-text small { font-size:.82rem; line-height:1.35; opacity:.78; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+    .feat-go { margin-left:auto; flex:none; font-size:1.8rem; font-weight:700; line-height:1; opacity:.45; }
+    .feature-play { background:linear-gradient(135deg,#ffdbe9,#e2d2ff); }
+    .feature-task { background:linear-gradient(135deg,#d8f4e7,#cfe5ff); }
+    .feature-play.hot { background:linear-gradient(135deg,#ff9ec0,#c3a8ff); animation:hotPulse 1.8s ease-in-out infinite; }
+    @keyframes hotPulse { 50% { transform:scale(1.015); box-shadow:0 12px 30px rgba(214,51,108,.35); } }
+    body.dark .feature { color:#fff; }
+    body.dark .feat-emoji { background:rgba(255,255,255,.12); }
+    body.dark .feature-play { background:linear-gradient(135deg,#4a2840,#33284f); }
+    body.dark .feature-task { background:linear-gradient(135deg,#243f38,#24334f); }
+    body.dark .feature-play.hot { background:linear-gradient(135deg,#a8386b,#5b3fa8); }
+    .activity-card { padding:6px 16px; }
+    .activity-card .activity-item:first-child { padding-top:10px; }
+    .activity-card .activity-item:last-child { padding-bottom:10px; }
+
     .greeting { margin:6px 4px 14px; }
     .greeting h1 { font-size:1.6rem; font-weight:800; letter-spacing:-.02em; }
     .greeting p { margin-top:2px; font-size:.9rem; }
-    .hero-card { text-align:center; }
-    .pair-chars { position:relative; display:flex; justify-content:center; gap:14px; margin:4px 0 8px; padding-top:18px; }
-    .char-col { position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; transition:transform .65s cubic-bezier(.2,.8,.2,1); }
-    .pair-chars.together .char-col:first-child { transform:translateX(10px); }
-    .pair-chars.together .char-col:last-child { transform:translateX(-10px); }
-    .pair-chars.together:after { content:"💞"; position:absolute; left:50%; top:-2px; font-size:1.4rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
-    @keyframes heartFloat { 50% { transform:translateX(-50%) translateY(-5px); } }
-    .pair-char { display:grid; place-items:center; width:84px; height:84px; border-radius:28px; font-size:2.6rem; line-height:1; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid var(--line); box-shadow:0 10px 22px rgba(128,68,95,.12); cursor:pointer; }
-    body.dark .pair-char { background:linear-gradient(145deg,#2a2030,#2b2338); }
-    .pair-char.squish { animation:squish .5s ease; }
-    .pair-char.wiggle { animation:wiggle .8s ease; }
-    @keyframes squish { 0% { transform:scale(1); } 30% { transform:scale(1.2,.82); } 60% { transform:scale(.92,1.12); } 100% { transform:scale(1); } }
-    @keyframes wiggle { 0%,100% { transform:rotate(0); } 15% { transform:rotate(-12deg) scale(1.08); } 35% { transform:rotate(10deg) scale(1.08); } 55% { transform:rotate(-7deg); } 75% { transform:rotate(5deg); } }
-    .char-name { font-size:.75rem; font-weight:800; color:var(--muted); }
-    .mood-bubble { position:absolute; top:-16px; right:-12px; z-index:2; display:grid; place-items:center; min-width:36px; height:36px; padding:0 6px; border-radius:50%; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); font-size:1.2rem; animation:bubblePop .4s cubic-bezier(.2,1.4,.4,1); }
-    @keyframes bubblePop { from { transform:scale(.3); opacity:0; } to { transform:scale(1); opacity:1; } }
-    #youMood { right:auto; left:-12px; }
-    .mood-line { min-height:22px; margin:6px 0 4px; color:var(--muted); font-size:.88rem; }
-    .float-heart { position:fixed; z-index:120; pointer-events:none; font-size:1.4rem; animation:floatUp 1.1s ease-out forwards; }
-    @keyframes floatUp { from { transform:translateY(0) scale(.7); opacity:1; } to { transform:translateY(-90px) scale(1.2); opacity:0; } }
-    .section-label { margin:14px 0 8px; font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-    .moments { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:14px; }
-    .moment { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0 7px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); font-size:.7rem; font-weight:800; color:var(--muted); transition:transform .12s ease,background .15s; }
-    .moment span { font-size:1.45rem; line-height:1.2; }
-    .moment:active { transform:scale(.92); background:var(--accent-soft); }
-    .mood-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-    .mood-chip { display:inline-flex; align-items:center; gap:6px; min-height:42px; padding:0 14px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); font-size:.88rem; font-weight:700; color:var(--muted); transition:transform .12s ease; }
-    .mood-chip span { font-size:1.25rem; }
-    .mood-chip:active { transform:scale(.95); }
-    .mood-chip.selected { background:var(--accent-soft); border-color:var(--accent); color:var(--accent-text); }
-    .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-    .stat-grid .card { margin-bottom:0; }
-    .stat-card { display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-width:0; text-align:left; }
-    .stat-label { font-size:.7rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-    .stat-num { font-size:1.7rem; font-weight:800; line-height:1.1; letter-spacing:-.02em; color:var(--accent-text); }
-    .stat-num small { font-size:.8rem; font-weight:700; color:var(--muted); }
-    .stat-sub { font-size:.78rem; color:var(--muted); line-height:1.35; }
-    button.stat-card { width:100%; cursor:pointer; }
-    .level-name { font-size:.9rem; font-weight:800; }
-    .level-bar { width:100%; height:9px; margin:4px 0 2px; border-radius:99px; background:var(--surface-2); border:1px solid var(--line); overflow:hidden; }
-    .level-bar span, .tap-bar span { display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,var(--pink),var(--purple)); transition:width .5s ease; }
+    .scene-body { padding:14px 18px 18px; }
+    .scene.mode-portrait .scene-body { padding-top:16px; }
+
+    .scene.mode-portrait .world, .scene.mode-portrait .come-closer, .scene.mode-portrait #sinceBtn, .scene.mode-portrait .mood-names { display:none; }
+    .scene.mode-portrait .scene-pills { grid-template-columns:1fr; }
+    .scene.mode-world .portrait, .scene.mode-world .who-row, #sinceBtn { display:none; }
+    .scene-pills { grid-template-columns:1fr !important; }
+    .scene.mode-portrait .mood-line.idle { display:none; }
+    .scene-bg { z-index:1; }
+    .hero-toggle { position:absolute; z-index:6; top:12px; left:12px; display:flex; padding:3px; border-radius:999px; background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.8); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+    .hero-toggle button { min-height:30px; padding:0 12px; border-radius:999px; font-size:.76rem; font-weight:800; color:#5b3a55; }
+    .hero-toggle button.active { background:#fff; color:#2a2130; box-shadow:0 1px 4px rgba(80,40,60,.2); }
+    body.dark .hero-toggle { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.2); }
+    body.dark .hero-toggle button { color:#e8d6ee; }
+    body.dark .hero-toggle button.active { background:rgba(255,255,255,.2); color:#fff; }
+
+    /* Our little world */
+    .world { position:relative; width:100%; aspect-ratio:360/300; overflow:hidden; border-radius:32px 32px 0 0; }
+    .world-art, .world-art svg { position:absolute; inset:0; width:100%; height:100%; display:block; }
+    .world .island { animation:islandBob 6s ease-in-out infinite; }
+    @keyframes islandBob { 50% { transform:translateY(-5px); } }
+    .world .cloud.c1 { animation:cloudDrift 28s linear infinite; }
+    .world .cloud.c2 { animation:cloudDrift 38s linear infinite reverse; }
+    @keyframes cloudDrift { from { transform:translateX(-30px); } to { transform:translateX(70px); } }
+    .world .sway { transform-box:fill-box; transform-origin:50% 100%; animation:treeSway 5s ease-in-out infinite; }
+    @keyframes treeSway { 50% { transform:rotate(1.6deg); } }
+    .world .twinkle { animation:twinkle 2.4s ease-in-out infinite; }
+    @keyframes twinkle { 50% { opacity:.25; } }
+    .world-days { position:absolute; z-index:4; left:16px; top:14px; padding-top:44px; text-align:left; color:#2a2130; text-shadow:0 1px 10px rgba(255,255,255,.5); }
+    .world[data-sky="night"] .world-days, .world[data-sky="dusk"] .world-days { color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.35); }
+    .world-days .days-label { display:block; font-size:.7rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; opacity:.85; }
+    .world-days-btn { display:block; text-align:left; color:inherit; }
+    .world-days .days-big { margin:2px 0 1px; font-size:2.1rem; }
+    .world-days .days-sub { display:block; max-width:190px; font-size:.78rem; line-height:1.3; opacity:.9; text-shadow:inherit; }
+    .world .pair-chars { position:absolute; z-index:3; left:50%; bottom:27%; transform:translateX(-50%); margin:0; gap:0; }
+    .world .pair-char { width:92px; height:104px; }
+    .world .char-col:first-child { margin-right:-10px; }
+    .world .char-svg { animation-duration:3.4s; }
+    .pet { position:absolute; z-index:4; right:9%; bottom:9%; width:70px; height:64px; padding:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .pet-svg { display:block; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 6px 6px rgba(60,20,60,.22)); animation:petBob 3s ease-in-out infinite; }
+    .pet[data-state="hungry"] .pet-svg { animation-duration:4.4s; }
+    @keyframes petBob { 50% { transform:translateY(-4px); } }
+    .pet.squish { animation:squish .5s ease; }
+    .pet-bubble { position:absolute; z-index:5; left:50%; bottom:9px; transform:translateX(-50%); max-width:70%; padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.82); color:#5b3a55; font-size:.72rem; font-weight:800; text-align:center; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); pointer-events:none; }
+    .pet-bubble.good { background:rgba(255,236,242,.92); color:#b02a5b; }
+    .feed-btn { position:absolute; z-index:5; right:12px; top:12px; min-height:34px; padding:0 14px; border-radius:999px; background:var(--accent); color:#fff; font-size:.78rem; font-weight:800; box-shadow:0 4px 12px rgba(214,51,108,.35); }
+    .feed-btn:disabled { background:rgba(255,255,255,.65); color:#7a5a74; box-shadow:none; opacity:1; }
+    .mood-names { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:4px 0 2px; }
+    .mood-names span { display:flex; flex-direction:column; align-items:center; }
+    .mood-names b { font-size:.8rem; font-weight:800; }
+    .mood-names small { min-height:1.1em; font-size:.74rem; font-weight:700; opacity:.78; }
+
+    /* Couple portrait */
+    .portrait { position:relative; aspect-ratio:4/5; max-height:440px; width:100%; overflow:hidden; background:linear-gradient(160deg,#ffc9de,#cdc4ff); }
+    .portrait img { display:block; width:100%; height:100%; object-fit:cover; }
+    .portrait-shade { position:absolute; left:0; right:0; bottom:0; height:58%; background:linear-gradient(to top,rgba(36,12,44,.82),rgba(36,12,44,0)); pointer-events:none; }
+    .portrait-days { position:absolute; left:20px; right:20px; bottom:18px; text-align:left; color:#fff; }
+    .days-label { display:block; font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; opacity:.9; }
+    .days-big { display:block; margin:2px 0 3px; font-size:2.7rem; font-weight:900; line-height:1.05; letter-spacing:-.03em; text-shadow:0 2px 14px rgba(0,0,0,.35); }
+    .days-sub { display:block; font-size:.84rem; line-height:1.35; opacity:.95; text-shadow:0 1px 8px rgba(0,0,0,.35); }
+    .portrait-edit { position:absolute; top:14px; right:14px; display:grid; place-items:center; width:42px; height:42px; border-radius:50%; font-size:1.2rem; background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.8); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+
+    /* Who is who: photo avatars with their mood */
+    .who-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; text-align:left; }
+    .who { display:flex; align-items:center; gap:10px; min-width:0; padding:8px 10px; border-radius:18px; background:rgba(255,255,255,.52); border:1px solid rgba(255,255,255,.75); }
+    body.dark .who { background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.16); }
+    .avatar { flex:none; display:grid; place-items:center; width:42px; height:42px; border-radius:50%; overflow:hidden; background:linear-gradient(145deg,#ffd0e1,#d7c9ff); box-shadow:0 2px 8px rgba(120,60,120,.2); }
+    .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .avatar svg { width:30px; height:30px; }
+    .who-text { display:flex; flex-direction:column; min-width:0; }
+    .who-text b { font-size:.85rem; font-weight:800; }
+    .who-text small { font-size:.72rem; opacity:.75; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .feature-photo { background:linear-gradient(135deg,#ffe3c9,#ffc9dd); }
+    body.dark .feature-photo { background:linear-gradient(135deg,#5a3a2a,#4d2646); }
+
+    /* Photos dialog */
+    .photo-slots { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+    .photo-slot { display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
+    .slot-img { display:grid; place-items:center; width:118px; height:118px; border-radius:50%; overflow:hidden; background:var(--surface-2); border:2px dashed var(--line); color:var(--muted); font-size:.8rem; font-weight:700; }
+    .slot-img img { width:100%; height:100%; object-fit:cover; display:block; }
+    .slot-img.filled { border:3px solid var(--pink); }
+    .photo-slot .btn { min-height:40px; padding:0 16px; font-size:.85rem; }
+    .check { display:flex; align-items:flex-start; gap:10px; margin:6px 0 4px; font-size:.88rem; font-weight:600; line-height:1.4; }
+    .check input { flex:none; width:22px; height:22px; margin-top:1px; accent-color:var(--accent); }
+    .fine { margin:6px 0 4px; color:var(--muted); font-size:.76rem; line-height:1.5; }
 
     /* ---- Games hub ------------------------------------------------------------------------------------ */
     .game-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .game-tile { position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-height:150px; padding:16px; border-radius:var(--radius); text-align:left; color:#2a2130; box-shadow:var(--shadow); transition:transform .15s ease; overflow:hidden; }
     .game-tile:active { transform:scale(.97); }
-    .gt-emoji { font-size:2.3rem; line-height:1; margin-bottom:6px; }
+    .gt-art { display:block; margin-bottom:6px; }
+    .gt-art svg { display:block; width:60px; height:60px; filter:drop-shadow(0 6px 8px rgba(80,30,70,.18)); }
     .gt-title { font-size:1rem; font-weight:800; line-height:1.2; }
     .gt-sub { font-size:.76rem; line-height:1.35; opacity:.78; }
     .gt-trivia { background:linear-gradient(145deg,#ffe0ec,#ffc9dd); }
@@ -369,6 +502,22 @@
 <body>
   <script>try { var savedDark = localStorage.getItem("ty-dark-mode"); if (savedDark === "1" || (savedDark === null && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark"); } catch (error) {}</script>
 
+  <!-- Shared drawing parts for the two heart characters -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="gPink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff86b0"/><stop offset="1" stop-color="#ff4f86"/></linearGradient>
+      <linearGradient id="gLilac" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bba3ff"/><stop offset="1" stop-color="#8d6cf0"/></linearGradient>
+      <linearGradient id="gRose" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffa889"/><stop offset="1" stop-color="#ff3f7f"/></linearGradient>
+      <linearGradient id="gPeach" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd2a8"/><stop offset="1" stop-color="#ff9a7a"/></linearGradient>
+      <linearGradient id="gSun" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe29a"/><stop offset="1" stop-color="#ffa63d"/></linearGradient>
+      <linearGradient id="gSky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9d7ff"/><stop offset="1" stop-color="#5b86ff"/></linearGradient>
+      <linearGradient id="gMint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a6edc9"/><stop offset="1" stop-color="#2fb583"/></linearGradient>
+      <linearGradient id="gFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6bf"/><stop offset="1" stop-color="#ffc990"/></linearGradient>
+      <path id="heartBody" d="M0 -30C0 -78 -78 -82 -82 -26C-86 26 -32 56 0 88C32 56 86 26 82 -26C78 -82 0 -78 0 -30Z"/>
+      <path id="miniHeart" d="M0 9C-15 -2 -13 -13 -5 -13C-2 -13 0 -11 0 -8C0 -11 2 -13 5 -13C13 -13 15 -2 0 9Z"/>
+    </defs>
+  </svg>
+
   <!-- Opening splash: stays until we know whether you are signed in, so the sign-in card never flashes -->
   <div id="splash" class="splash" role="status" aria-live="polite">
     <img class="splash-logo" src="icon.svg" alt="" width="112" height="112">
@@ -428,50 +577,86 @@
 
     <div class="views">
       <section id="home" class="view active" aria-label="Home">
-        <header class="greeting"><h1 id="greetingTitle">Hi love 💗</h1><p class="muted" id="greetingSub"></p></header>
+        <header class="greeting"><h1 id="greetingTitle">Good evening</h1><p class="muted" id="greetingSub"></p></header>
 
-        <article class="card hero-card">
-          <div class="pair-chars" id="pairChars">
-            <div class="char-col"><span class="mood-bubble hidden" id="youMood"></span><button class="pair-char" id="youFace" type="button" aria-label="Give your character a squish">🧸</button><span class="char-name">You</span></div>
-            <div class="char-col"><span class="mood-bubble hidden" id="themMood"></span><button class="pair-char" id="themFace" type="button" aria-label="Give your partner’s character a squish">🐰</button><span class="char-name">Partner</span></div>
+        <div class="scene mode-world" id="scene">
+          <div class="scene-bg" aria-hidden="true"><i class="h"></i><i class="s"></i><i class="h"></i><i class="s"></i><i class="h"></i><i class="s"></i></div>
+          <div class="hero-toggle hidden" id="heroToggle" role="group" aria-label="What to show here"><button type="button" class="active" data-hero="world">Our world</button><button type="button" data-hero="portrait">Us</button></div>
+
+          <!-- Our little world: grows with your love level, follows the time of day -->
+          <div class="world" id="world" data-sky="day">
+            <div class="world-art" id="worldArt" aria-hidden="true"></div>
+            <div class="world-days">
+              <span class="days-label" id="worldDaysLabel">Together for</span>
+              <button class="world-days-btn" id="worldDaysBtn" type="button" aria-label="Set the day you got together"><span class="days-big" id="worldDaysBig">Set your day</span></button>
+              <span class="days-sub" id="worldDaysSub"></span>
+            </div>
+            <div class="pair-chars" id="pairChars">
+              <div class="char-col"><button class="pair-char" id="youFace" type="button" aria-label="Give your character a squish"></button></div>
+              <div class="char-col"><button class="pair-char" id="themFace" type="button" aria-label="Give your partner’s character a squish"></button></div>
+            </div>
+            <button class="pet" id="petBtn" type="button" aria-label="Pet Mochi"></button>
+            <div class="pet-bubble" id="petBubble"></div>
+            <button class="feed-btn" id="feedBtn" type="button">Feed Mochi</button>
           </div>
-          <p class="mood-line" id="moodLine">Tap your characters — they love attention.</p>
-          <p class="section-label">Send a little moment</p>
-          <div class="moments" role="group" aria-label="Send a little moment">
-            <button class="moment" type="button" data-moment="hug"><span aria-hidden="true">🤗</span>Hug</button>
-            <button class="moment" type="button" data-moment="kiss"><span aria-hidden="true">😘</span>Kiss</button>
-            <button class="moment" type="button" data-moment="miss"><span aria-hidden="true">🥺</span>Miss you</button>
-            <button class="moment" type="button" data-moment="proud"><span aria-hidden="true">💪</span>Proud</button>
-            <button class="moment" type="button" data-moment="cheer"><span aria-hidden="true">🎉</span>Cheer</button>
+
+          <!-- Shown when you have a couple portrait and pick “Us” -->
+          <div class="portrait" id="portrait">
+            <img id="portraitImg" alt="Our couple portrait" draggable="false">
+            <div class="portrait-shade" aria-hidden="true"></div>
+            <button class="portrait-days" id="daysBtn" type="button" aria-label="Set the day you got together">
+              <span class="days-label" id="daysLabel">Together for</span>
+              <span class="days-big" id="daysBig">Set your day</span>
+              <span class="days-sub" id="daysSub"></span>
+            </button>
+            <button class="portrait-edit" id="portraitEdit" type="button" aria-label="Edit our photos and portrait"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-4.4L16.5 4.3a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.4 18.8Z"/><path d="M14 6.8l3.2 3.2"/></svg></button>
           </div>
-          <button class="btn soft wide" id="approach" type="button" aria-pressed="false">Come closer</button>
-        </article>
 
-        <article class="card">
-          <h2>How are you feeling?</h2>
-          <p class="lead">Your partner will see it on your character.</p>
-          <div class="mood-row" id="moodRow" role="group" aria-label="How are you feeling?"></div>
-        </article>
-
-        <div class="stat-grid">
-          <button class="card stat-card" id="sinceBtn" type="button">
-            <span class="stat-label">Together</span>
-            <span class="stat-num" id="sinceNum">💞</span>
-            <span class="stat-sub" id="sinceSub">Tap to set your day</span>
-          </button>
-          <article class="card stat-card">
-            <span class="stat-label">Love level</span>
-            <span class="stat-num"><span id="effortCount">0</span> <small>pts</small></span>
-            <span class="level-name" id="levelName">Just started</span>
-            <div class="level-bar" role="progressbar" aria-label="Progress to the next love level" aria-valuemin="0" aria-valuemax="100" id="levelBar"><span id="levelFill"></span></div>
-            <span class="stat-sub" id="levelNext"></span>
-          </article>
+          <div class="scene-body">
+            <div class="who-row hidden" id="whoRow">
+              <div class="who"><span class="avatar" id="youAvatar"></span><span class="who-text"><b>You</b><small id="youMoodLabel2"></small></span></div>
+              <div class="who"><span class="avatar" id="themAvatar"></span><span class="who-text"><b>Partner</b><small id="themMoodLabel2"></small></span></div>
+            </div>
+            <div class="mood-names" id="moodNames"><span><b>You</b><small id="youMoodLabel"></small></span><span><b>Partner</b><small id="themMoodLabel"></small></span></div>
+            <p class="mood-line" id="moodLine"></p>
+            <div class="scene-pills">
+              <div class="glass-pill"><span class="pill-ico" data-ico="pill-level" aria-hidden="true"></span><span class="pill-text"><b id="levelName">Just started</b><small>Level <span id="levelNum">1</span> · <span id="effortCount">0</span> pts · <span id="levelNext"></span></small><span class="level-bar" role="progressbar" aria-label="Progress to the next love level" aria-valuemin="0" aria-valuemax="100" id="levelBar"><span id="levelFill"></span></span></span></div>
+              <button class="glass-pill" id="sinceBtn" type="button"><span class="pill-ico" data-ico="pill-days" aria-hidden="true"></span><span class="pill-text"><b id="sinceNum">Set your day</b><small id="sinceSub">Count your days together</small></span></button>
+            </div>
+            <button class="glass-pill come-closer" id="approach" type="button" aria-pressed="false">Come closer</button>
+          </div>
         </div>
 
-        <article class="card">
+        <section class="home-section hidden" id="photoPrompt">
+          <button class="feature feature-photo" id="featPhotos" type="button"><span class="feat-emoji" data-ico="feat-photos" aria-hidden="true"></span><span class="feat-text"><b id="featPhotosTitle">Add your photos</b><small id="featPhotosSub">Get a cute couple portrait for your home screen</small></span><span class="feat-go" aria-hidden="true">›</span></button>
+        </section>
+
+        <section class="home-section">
+          <h2>Send a little moment</h2>
+          <div class="moments" role="group" aria-label="Send a little moment">
+            <button class="moment" type="button" data-moment="hug"><span class="m-art" data-ico="moment-hug" aria-hidden="true"></span>Hug</button>
+            <button class="moment" type="button" data-moment="kiss"><span class="m-art" data-ico="moment-kiss" aria-hidden="true"></span>Kiss</button>
+            <button class="moment" type="button" data-moment="miss"><span class="m-art" data-ico="moment-miss" aria-hidden="true"></span>Miss you</button>
+            <button class="moment" type="button" data-moment="proud"><span class="m-art" data-ico="moment-proud" aria-hidden="true"></span>Proud</button>
+            <button class="moment" type="button" data-moment="cheer"><span class="m-art" data-ico="moment-cheer" aria-hidden="true"></span>Cheer</button>
+          </div>
+        </section>
+
+        <section class="home-section">
+          <h2>How are you feeling?</h2>
+          <div class="mood-row" id="moodRow" role="group" aria-label="How are you feeling?"></div>
+        </section>
+
+        <section class="home-section">
+          <h2>Today, together</h2>
+          <button class="feature feature-play" id="featPlay" type="button"><span class="feat-emoji" id="featPlayEmoji" data-ico="feat-play" aria-hidden="true"></span><span class="feat-text"><b id="featPlayTitle">Play a game</b><small id="featPlaySub">Pick one and have some fun</small></span><span class="feat-go" aria-hidden="true">›</span></button>
+          <button class="feature feature-task" id="featTask" type="button"><span class="feat-emoji" data-ico="feat-task" aria-hidden="true"></span><span class="feat-text"><b id="featTaskTitle">Today’s snap task</b><small id="featTaskText">…</small></span><span class="feat-go" aria-hidden="true">›</span></button>
+        </section>
+
+        <section class="home-section">
           <h2>Recent activity</h2>
-          <div class="activity-feed" id="activityFeed"></div>
-        </article>
+          <div class="card activity-card"><div class="activity-feed" id="activityFeed"></div></div>
+        </section>
       </section>
 
       <section id="chat" class="view chat-view" aria-label="Chat">
@@ -535,12 +720,12 @@
         <div id="gameHub">
           <header class="greeting"><h1>Games</h1><p class="muted">Play together — every win earns love points 💗</p></header>
           <div class="game-grid">
-            <button class="game-tile gt-trivia" type="button" data-game="trivia"><span class="gt-emoji" aria-hidden="true">🧠</span><span class="gt-title">Couple Trivia</span><span class="gt-sub">How well do you know each other?</span><span class="gt-badge hidden" id="badgeTrivia"></span></button>
-            <button class="game-tile gt-wyr" type="button" data-game="wyr"><span class="gt-emoji" aria-hidden="true">🤔</span><span class="gt-title">Would You Rather</span><span class="gt-sub">Same brain, or opposites?</span><span class="gt-badge hidden" id="badgeWyr"></span></button>
-            <button class="game-tile gt-tap" type="button" data-game="tap"><span class="gt-emoji" aria-hidden="true">💗</span><span class="gt-title">Tap Together</span><span class="gt-sub">10 seconds. One heart. Go!</span><span class="gt-badge hidden" id="badgeTap"></span></button>
-            <button class="game-tile gt-memory" type="button" data-game="memory"><span class="gt-emoji" aria-hidden="true">🃏</span><span class="gt-title">Memory Match</span><span class="gt-sub">Take turns, find the pairs</span><span class="gt-badge hidden" id="badgeMemory"></span></button>
-            <button class="game-tile gt-wheel" type="button" data-game="wheel"><span class="gt-emoji" aria-hidden="true">🎡</span><span class="gt-title">Spin the Wheel</span><span class="gt-sub">Truth, dare, dates & compliments</span><span class="gt-badge hidden" id="badgeWheel"></span></button>
-            <button class="game-tile gt-rate" type="button" data-game="rate"><span class="gt-emoji" aria-hidden="true">🌟</span><span class="gt-title">Rate the Effort</span><span class="gt-sub">Give each other hearts</span></button>
+            <button class="game-tile gt-trivia" type="button" data-game="trivia"><span class="gt-art" data-ico="game-trivia" aria-hidden="true"></span><span class="gt-title">Couple Trivia</span><span class="gt-sub">How well do you know each other?</span><span class="gt-badge hidden" id="badgeTrivia"></span></button>
+            <button class="game-tile gt-wyr" type="button" data-game="wyr"><span class="gt-art" data-ico="game-wyr" aria-hidden="true"></span><span class="gt-title">Would You Rather</span><span class="gt-sub">Same brain, or opposites?</span><span class="gt-badge hidden" id="badgeWyr"></span></button>
+            <button class="game-tile gt-tap" type="button" data-game="tap"><span class="gt-art" data-ico="game-tap" aria-hidden="true"></span><span class="gt-title">Tap Together</span><span class="gt-sub">10 seconds. One heart. Go!</span><span class="gt-badge hidden" id="badgeTap"></span></button>
+            <button class="game-tile gt-memory" type="button" data-game="memory"><span class="gt-art" data-ico="game-memory" aria-hidden="true"></span><span class="gt-title">Memory Match</span><span class="gt-sub">Take turns, find the pairs</span><span class="gt-badge hidden" id="badgeMemory"></span></button>
+            <button class="game-tile gt-wheel" type="button" data-game="wheel"><span class="gt-art" data-ico="game-wheel" aria-hidden="true"></span><span class="gt-title">Spin the Wheel</span><span class="gt-sub">Truth, dare, dates & compliments</span><span class="gt-badge hidden" id="badgeWheel"></span></button>
+            <button class="game-tile gt-rate" type="button" data-game="rate"><span class="gt-art" data-ico="game-rate" aria-hidden="true"></span><span class="gt-title">Rate the Effort</span><span class="gt-sub">Give each other hearts</span></button>
           </div>
         </div>
 
@@ -659,11 +844,11 @@
     </div>
 
     <nav class="tabbar" id="tabbar" aria-label="Main navigation">
-      <button class="tab active" type="button" data-view="home" aria-current="page"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M5.5 9.8V20h13V9.8"/></svg></span>Home<span class="dot hidden"></span></button>
-      <button class="tab" type="button" data-view="chat"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/></svg></span>Chat<span class="dot hidden"></span></button>
-      <button class="tab" type="button" data-view="send"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2C19.5 15.4 12 20 12 20Z"/></svg></span>Send<span class="dot hidden"></span></button>
-      <button class="tab" type="button" data-view="play"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8.5h10a4 4 0 0 1 3.9 4.6l-.5 3.2a2.6 2.6 0 0 1-4.5 1.3L14.5 16h-5l-1.4 1.6a2.6 2.6 0 0 1-4.5-1.3l-.5-3.2A4 4 0 0 1 7 8.5Z"/><path d="M8.5 11v3M7 12.5h3"/><circle cx="15.6" cy="11.8" r=".7" fill="currentColor"/><circle cx="17.4" cy="13.6" r=".7" fill="currentColor"/></svg></span>Games<span class="dot hidden"></span></button>
-      <button class="tab" type="button" data-view="snaps"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3V19H4Z"/><circle cx="12" cy="13.5" r="3.3"/></svg></span>Snaps<span class="dot hidden"></span></button>
+      <button class="tab active" type="button" data-view="home" aria-current="page"><span class="pill" data-ico="tab-home"></span>Home<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="chat"><span class="pill" data-ico="tab-chat"></span>Chat<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="send"><span class="pill" data-ico="tab-send"></span>Send<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="play"><span class="pill" data-ico="tab-play"></span>Games<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="snaps"><span class="pill" data-ico="tab-snaps"></span>Snaps<span class="dot hidden"></span></button>
     </nav>
   </main>
 
@@ -676,7 +861,7 @@
       <div class="setting"><span id="notifyStatusLabel">Browser notifications: not enabled yet</span><button class="btn soft" id="enableNotify" type="button" style="min-height:38px;padding:0 14px">Enable</button></div>
       <div class="setting"><span>Our connection code</span><span class="code-chip" id="settingsCode">—</span></div>
       <div class="sheet-actions">
-        <button class="btn soft wide" id="downloadBtn" type="button">📲 Install the app</button>
+        <button class="btn soft wide" id="downloadBtn" type="button">Install the app</button>
         <button class="btn soft wide" id="codeBtn" type="button">Change connection code</button>
         <button class="btn danger wide" id="logoutBtn" type="button">Log out</button>
       </div>
@@ -689,6 +874,35 @@
     <p id="confirmText"></p>
     <div class="row"><button class="btn ghost" id="confirmCancel" type="button">Cancel</button><button class="btn" id="confirmOk" type="button">OK</button></div>
   </dialog>
+  <!-- Our photos and couple portrait -->
+  <dialog id="photoDialog" class="sheet" aria-labelledby="photoTitle">
+    <div class="sheet-head"><h2 id="photoTitle">Our couple portrait</h2><button class="icon-btn" id="closePhotos" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body">
+      <p class="lead muted">Add a photo of each of you. They’ll sit together on your home screen — or let AI draw you both as a cute couple.</p>
+      <div class="photo-slots">
+        <div class="photo-slot">
+          <div class="slot-img" id="slotYou">No photo yet</div>
+          <b>You</b>
+          <button class="btn soft" id="photoPick" type="button">Add my photo</button>
+          <input type="file" accept="image/*" id="photoFile" class="hidden" aria-label="Choose your photo">
+        </div>
+        <div class="photo-slot">
+          <div class="slot-img" id="slotThem">Waiting…</div>
+          <b>Partner</b>
+          <span class="muted" id="slotThemNote" style="font-size:.8rem">Hasn’t added one yet</span>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="aiConsent"> <span>Let AI use my photo to draw our couple portrait</span></label>
+      <p class="fine">Your photos are only visible to the two of you. If you tap “Draw our AI portrait”, both photos are sent once to Google’s Gemini to create the picture. They aren’t kept by the AI service through TW.</p>
+      <div class="sheet-actions">
+        <button class="btn wide" id="makeAiPortrait" type="button">Draw our AI couple portrait</button>
+        <button class="btn soft wide" id="makeCollage" type="button">Use a simple collage instead</button>
+        <button class="btn danger wide" id="removePhoto" type="button">Remove my photo</button>
+      </div>
+      <div class="status center" id="photoStatus"></div>
+    </div>
+  </dialog>
+
   <dialog id="sinceDialog" class="confirm" aria-labelledby="sinceTitle">
     <h2 id="sinceTitle" style="margin-bottom:6px;font-size:1.15rem">When did you get together?</h2>
     <p class="muted" style="margin-bottom:14px;font-size:.9rem">We’ll count the days for you both.</p>
@@ -737,14 +951,14 @@
     // ---- State -------------------------------------------------------------------------------------------
     let authUser=null, coupleId=null, partnerUid=null, members=[], coupleUnsubs=[];
     // Each flag flips after a listener's first snapshot, so only changes that arrive after that can notify.
-    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1 };
+    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"" };
+    let assignedForMe=null, worldLevel=0, lastPet=null;
     let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
     let lastPresence={};
     let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapData=null;
     let currentSnap=null, openingSnap=false, deferredInstallPrompt=null, swipeStartX=0, swipeStartY=0, swipeBlocked=false, toastTimer=null;
     const genderCache={}, genderTried={}, purging=new Set(), scoring=new Set(), celebratedTrivia=new Set();
     const MESSAGE_LIMIT=100, SNAP_LIMIT=60, PRESENCE_TTL_MS=50000;
-    const defaultFaces = { you: { girl:"👧", boy:"👦" }, them: { girl:"👩", boy:"👨" } };
     const tabOrder = ["home","chat","send","play","snaps"];
     const coupleRef = () => doc(db,"couples",coupleId);
 
@@ -971,6 +1185,7 @@
       clearTimeout(typingTimer); typingSentAt=0; currentSnap=null; openingSnap=false;
       clearInterval(tapTimer); tapTimer=null; tapRun=null; tapState=null; memoryState=null; memoryTimers.clear();
       lastWyrSig=""; lastSpinId=""; spinning=false; memoryCelebrated=""; showHub();
+      photos={}; portraitDoc=null; collageCache={ key:"", url:"" }; collageToken++; worldKey=""; lastPet=null;
     }
     onAuthStateChanged(auth,user=>{
       authUser=user; teardown(); closeDialog($("settingsDialog"));
@@ -981,7 +1196,7 @@
     async function openCouple(id){
       teardown();
       coupleId=id;
-      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1 };
+      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"" };
       surpriseShown=false; bouquetShown=false; sharedApproach=false; prevApproach=false; lastTriviaSig="";
       celebratedTrivia.clear(); scoring.clear(); purging.clear();
       $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show"); setActiveTab("home");
@@ -989,6 +1204,8 @@
       const listenError = name => error => console.warn("TW: could not listen to "+name,error?.code||error);
       coupleUnsubs.push(onSnapshot(coupleRef(),onCoupleSnapshot,error=>{ if(coupleId===id) showStatus("We couldn't open your space ("+(error?.code||"error")+").",true); }));
       coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"messages"),orderBy("createdAt","desc"),limit(MESSAGE_LIMIT)),onMessagesSnapshot,listenError("messages")));
+      coupleUnsubs.push(onSnapshot(collection(db,"couples",id,"photos"),onPhotosSnapshot,listenError("photos")));
+      coupleUnsubs.push(onSnapshot(doc(db,"couples",id,"portraits","current"),onPortraitSnapshot,listenError("portrait")));
       coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"snaps"),orderBy("createdAt","desc"),limit(SNAP_LIMIT)),onSnapsSnapshot,listenError("snaps")));
       heartbeat();
     }
@@ -1050,6 +1267,8 @@
       const moment=shared.lastMoment, momentKey=moment?moment.emoji+"|"+millis(moment.at):"";
       if(live && moment && moment.by!==me && momentKey!==seen.moment){ confettiBurst([moment.emoji],16); playAnim($("themFace"),"wiggle",800); playChime("pop"); }
       seen.moment=momentKey;
+      lastPet=shared.pet||null; renderPet(lastPet,live);
+      renderHero(); renderFeatured();
       lastPresence=shared.presence||{}; renderPresence();
 
       const task=shared.customTask;
@@ -1080,7 +1299,7 @@
     }
     // Re-check now and then so "Online now" fades when the partner's heartbeats stop.
     setInterval(()=>{ if(coupleId) renderPresence(); },10000);
-    const activityIcons={poke:"👆",note:"💌",chat:"💬"};
+    const activityIcons={poke:"act-poke",note:"act-note",chat:"act-chat"};
     function renderActivity(items){
       const box=$("activityFeed"); box.innerHTML="";
       if(!items.length){
@@ -1090,7 +1309,7 @@
       }
       items.forEach(m=>{
         const row=document.createElement("div"); row.className="activity-item";
-        const icon=document.createElement("span"); icon.className="activity-icon"; icon.setAttribute("aria-hidden","true"); icon.textContent=activityIcons[m.type]||"💗";
+        const icon=document.createElement("span"); icon.className="activity-icon"; icon.setAttribute("aria-hidden","true"); icon.innerHTML=ico(activityIcons[m.type]||"act-chat");
         const textWrap=document.createElement("div");
         const who=m.authorId===authUser.uid?"You":"Your partner";
         const snippet=m.text&&m.text.length>60?m.text.slice(0,60)+"…":(m.text||"");
@@ -1104,7 +1323,7 @@
       try { await updateDoc(doc(db,"couples",coupleId,"messages",msgId),{[`reactions.${emoji}`]: alreadyReacted?arrayRemove(authUser.uid):arrayUnion(authUser.uid)}); } catch(error){}
     }
     const clock = ms => new Date(ms).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
-    const kindLabels={poke:"👆 Poke",note:"💌 Love note"};
+    const kindLabels={poke:"Poke",note:"Love note"};
     function renderBubble(id,m,container){
       const mine=m.authorId===authUser.uid;
       const wrap=document.createElement("div"); wrap.className="bubble-wrap"+(mine?" mine":"");
@@ -1188,10 +1407,9 @@
     }
     async function updateChars(){
       if(!authUser) return;
-      const yourType=(await loadGender(authUser.uid)) || $("genderSelect").value || "girl";
-      const themGender=partnerUid ? await loadGender(partnerUid) : null;
-      $("youFace").textContent=defaultFaces.you[yourType]||defaultFaces.you.girl;
-      $("themFace").textContent=themGender ? (defaultFaces.them[themGender]||defaultFaces.them.girl) : "💞";
+      charState.youGender=(await loadGender(authUser.uid)) || $("genderSelect").value || "girl";
+      charState.themGender=partnerUid ? await loadGender(partnerUid) : null;
+      renderCharacters();
     }
 
     // ---- Tabs --------------------------------------------------------------------------------------------
@@ -1302,10 +1520,11 @@
     // Both partners compute the same day-of-year index locally, so no sync is needed for this part.
     const dailyTasks=["Send a snap of what you're having for breakfast today 🍳","Take a snap of the view outside your window right now 🌤️","Snap something that reminded you of your partner today 💭","Send a selfie with your best smile 😊","Snap your cozy spot right now 🛋️","Take a photo of your shoes — wherever you are 👟","Snap something you're grateful for today 🌸","Send a photo of your hands doing something right now ✋","Snap your favorite drink of the day ☕","Take a photo of the sky where you are right now 🌌","Snap something silly near you right now 🤪","Send a photo that shows your mood today 🎭","Snap a little corner of your room 🏠","Take a photo of something colorful near you 🎨"];
     function dayIndex(){ const now=new Date(), start=new Date(now.getFullYear(),0,0); return Math.floor((now-start)/86400000); }
-    function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
+    function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; renderFeaturedTask(); $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
     renderDailyTask();
-    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); } });
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); renderWorld(false); } });
     function renderAssignedTask(task){
+      assignedForMe=task && authUser && task.forUid===authUser.uid ? task : null; renderFeaturedTask();
       const box=$("assignedTaskView");
       if(!task || !authUser){ box.textContent=""; return; }
       if(task.forUid===authUser.uid) box.textContent=`💌 Your partner's task for you: "${task.text}"`;
@@ -1540,13 +1759,13 @@
     }
     const shuffle = list => { const copy=list.slice(); for(let i=copy.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]]; } return copy; };
     const randomId = () => Math.random().toString(36).slice(2,10);
-    const setBadge = (id,text) => { const el=$(id); el.textContent=text||""; el.classList.toggle("hidden",!text); };
+    const setBadge = (id,text) => { const el=$(id), changed=el.textContent!==(text||""); el.textContent=text||""; el.classList.toggle("hidden",!text); if(changed) renderFeatured(); };
 
     // ---- Home: greeting, characters, moments, moods, days together, love level -----------------------------
     function renderGreeting(){
       const hour=new Date().getHours();
       const hello=hour<5?"Up late, love?":hour<12?"Good morning":hour<17?"Good afternoon":hour<22?"Good evening":"Sweet dreams";
-      $("greetingTitle").textContent=hello+" 💗";
+      $("greetingTitle").textContent=hello;
       $("greetingSub").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
     }
     renderGreeting();
@@ -1573,22 +1792,25 @@
 
     const moods=[{key:"happy",emoji:"😊",label:"Happy"},{key:"loved",emoji:"🥰",label:"Loved"},{key:"tired",emoji:"😴",label:"Tired"},{key:"sad",emoji:"😢",label:"Sad"},{key:"stressed",emoji:"😤",label:"Stressed"},{key:"sick",emoji:"🤒",label:"Unwell"}];
     const MOOD_FRESH_MS=24*3600*1000;
-    moods.forEach(mood=>{
-      const chip=document.createElement("button"); chip.type="button"; chip.className="mood-chip"; chip.dataset.mood=mood.key; chip.setAttribute("aria-pressed","false");
-      const icon=document.createElement("span"); icon.setAttribute("aria-hidden","true"); icon.textContent=mood.emoji;
-      chip.appendChild(icon); chip.appendChild(document.createTextNode(mood.label));
-      chip.onclick=async()=>{
-        if(!coupleId) return;
-        try { await updateDoc(coupleRef(),{[`shared.moods.${authUser.uid}`]:{key:mood.key,emoji:mood.emoji,label:mood.label,at:serverTimestamp()}}); toast(`Feeling ${mood.label.toLowerCase()} ${mood.emoji} — your partner can see it`); }
-        catch(error){ toast("Couldn't save that — try again"); }
-      };
-      $("moodRow").appendChild(chip);
-    });
+    function buildMoodChips(){
+      moods.forEach(mood=>{
+        const chip=document.createElement("button"); chip.type="button"; chip.className="mood-chip"; chip.dataset.mood=mood.key; chip.setAttribute("aria-pressed","false");
+        const icon=document.createElement("span"); icon.className="mood-face"; icon.setAttribute("aria-hidden","true"); icon.innerHTML=moodIcon(mood.key);
+        chip.appendChild(icon); chip.appendChild(document.createTextNode(mood.label));
+        chip.onclick=async()=>{
+          if(!coupleId) return;
+          try { await updateDoc(coupleRef(),{[`shared.moods.${authUser.uid}`]:{key:mood.key,emoji:mood.emoji,label:mood.label,at:serverTimestamp()}}); toast(`Feeling ${mood.label.toLowerCase()} — your partner can see it`); }
+          catch(error){ toast("Couldn't save that — try again"); }
+        };
+        $("moodRow").appendChild(chip);
+      });
+    }
     const freshMood = entry => entry && entry.key && (!millis(entry.at) || Date.now()-millis(entry.at)<MOOD_FRESH_MS) ? entry : null;
     function renderMoods(all,live){
       const mine=freshMood(all[authUser.uid]), theirs=partnerUid?freshMood(all[partnerUid]):null;
-      $("youMood").textContent=mine?mine.emoji:""; $("youMood").classList.toggle("hidden",!mine);
-      $("themMood").textContent=theirs?theirs.emoji:""; $("themMood").classList.toggle("hidden",!theirs);
+      charState.youMood=mine?mine.key:"happy"; charState.themMood=theirs?theirs.key:"happy"; renderCharacters();
+      const label=entry=>entry?entry.label:"";
+      ["youMoodLabel","youMoodLabel2"].forEach(id=>$(id).textContent=label(mine)); ["themMoodLabel","themMoodLabel2"].forEach(id=>$(id).textContent=label(theirs));
       document.querySelectorAll(".mood-chip").forEach(chip=>{ const on=!!mine && chip.dataset.mood===mine.key; chip.classList.toggle("selected",on); chip.setAttribute("aria-pressed",String(on)); });
       let line="Tap your characters — they love attention.";
       if(!partnerUid) line="Your partner’s mood will show up here once they join.";
@@ -1596,25 +1818,432 @@
         const hint=["sad","stressed","tired","sick"].includes(theirs.key)?" Maybe send a hug? 🤗":"";
         line=`Your partner is feeling ${theirs.label.toLowerCase()} ${theirs.emoji}${millis(theirs.at)?" · "+timeAgo(millis(theirs.at)):""}.${hint}`;
       }
-      $("moodLine").textContent=line;
+      $("moodLine").textContent=line; $("moodLine").classList.toggle("idle",!theirs && !!partnerUid);
       const key=theirs?theirs.key+"|"+millis(theirs.at):"";
       if(live && theirs && key!==seen.partnerMood){ playAnim($("themFace"),"wiggle",800); toast(`Your partner is feeling ${theirs.label.toLowerCase()} ${theirs.emoji}`); }
       seen.partnerMood=key;
     }
 
+    // ---- The two heart characters, drawn as SVG so their faces follow your moods -----------------------
+    const INK="#43284a";
+    const stroke = (d,width=4.6) => `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    const eyePair = (rx,ry,y=4) => `<ellipse cx="-27" cy="${y}" rx="${rx}" ry="${ry}" fill="${INK}"/><ellipse cx="27" cy="${y}" rx="${rx}" ry="${ry}" fill="${INK}"/><circle cx="-24" cy="${y-4}" r="3.2" fill="#fff"/><circle cx="30" cy="${y-4}" r="3.2" fill="#fff"/>`;
+    const faces={
+      happy:{ eyes:eyePair(8,11), mouth:stroke("M-11 24Q0 37 11 24"), blush:true },
+      loved:{ eyes:`<use href="#miniHeart" transform="translate(-27 4) scale(1.5)" fill="#ff3b6b"/><use href="#miniHeart" transform="translate(27 4) scale(1.5)" fill="#ff3b6b"/>`, mouth:`<path d="M-13 22Q0 43 13 22Z" fill="#ff6b8a" stroke="${INK}" stroke-width="3.2" stroke-linejoin="round"/>`, blush:true },
+      tired:{ eyes:stroke("M-37 8Q-27 -2 -17 8")+stroke("M17 8Q27 -2 37 8"), mouth:stroke("M-8 30H8"), blush:true, extra:`<text x="50" y="-40" font-size="26" font-weight="900" fill="#8d6cf0" font-family="system-ui,sans-serif">z</text><text x="68" y="-62" font-size="19" font-weight="900" fill="#8d6cf0" font-family="system-ui,sans-serif">z</text>` },
+      sad:{ eyes:eyePair(8,11,6)+stroke("M-39 -10L-17 -18",4)+stroke("M39 -10L17 -18",4), mouth:stroke("M-11 35Q0 22 11 35"), blush:true, extra:`<path d="M-42 20c-6 9-6 15 0 15s6-6 0-15Z" fill="#7ac7ff"/>` },
+      stressed:{ eyes:eyePair(6,8,6)+stroke("M-40 -16L-16 -8",4.4)+stroke("M40 -16L16 -8",4.4), mouth:stroke("M-14 31q4-7 7 0t7 0t7 0"), blush:false, extra:`<path d="M64 -34c-6 9-6 15 0 15s6-6 0-15Z" fill="#7ac7ff"/>` },
+      sick:{ eyes:stroke("M-36 6Q-27 14 -18 6")+stroke("M18 6Q27 14 36 6"), mouth:stroke("M-9 31Q0 26 9 31"), blush:false, tint:true, extra:`<g transform="translate(14 28) rotate(-18)"><rect x="0" y="-3.5" width="32" height="7" rx="3.5" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="-2" cy="0" r="5.5" fill="#ff5a6e" stroke="${INK}" stroke-width="2"/></g>` }
+    };
+    const accessories={
+      girl:`<g transform="translate(-46 -66) rotate(-18)"><path d="M0 0L-24 -14L-24 14Z" fill="#ffc2d9"/><path d="M0 0L24 -14L24 14Z" fill="#ffc2d9"/><circle r="7.5" fill="#ff7fab"/></g>`,
+      boy:`<path d="M-40 -56Q-30 -102 0 -102Q30 -102 40 -56Z" fill="#7aa2ff"/><path d="M28 -62Q60 -64 68 -52Q46 -50 28 -52Z" fill="#5a82ee"/><circle cx="0" cy="-102" r="5" fill="#fff"/>`
+    };
+    function charSvg(kind,mood,gender){
+      if(kind==="ghost") return `<svg class="char-svg" viewBox="-100 -116 200 232" aria-hidden="true"><use href="#heartBody" fill="rgba(255,255,255,.35)" stroke="currentColor" stroke-width="5" stroke-dasharray="10 10" opacity=".7"/><text x="0" y="22" text-anchor="middle" font-size="64" font-weight="900" fill="currentColor" opacity=".7" font-family="system-ui,sans-serif">?</text></svg>`;
+      const face=faces[mood]||faces.happy, fill=kind==="you"?"url(#gPink)":"url(#gLilac)";
+      return `<svg class="char-svg" viewBox="-100 -116 200 232" aria-hidden="true">
+        <ellipse cx="0" cy="106" rx="54" ry="8" fill="#8d6cf0" opacity=".2"/>
+        <use href="#heartBody" fill="${fill}"/>${face.tint?`<use href="#heartBody" fill="#9de3b5" opacity=".4"/>`:""}
+        <ellipse cx="-46" cy="-44" rx="16" ry="9" fill="#fff" opacity=".5" transform="rotate(-30 -46 -44)"/>
+        ${accessories[gender]||""}${face.eyes}${face.blush?`<ellipse cx="-47" cy="24" rx="13" ry="8" fill="#ffc2d8" opacity=".85"/><ellipse cx="47" cy="24" rx="13" ry="8" fill="#ffc2d8" opacity=".85"/>`:""}${face.mouth}${face.extra||""}
+      </svg>`;
+    }
+    // ---- Icons and illustrations (drawn for TW, so nothing here depends on the phone's emoji) ----------------
+    // Small line icons use the current text colour (and a soft fill when active); the bigger illustrations use the
+    // brand gradients defined once in the page.
+    const mk = (box,inner) => `<svg viewBox="${box}" aria-hidden="true" focusable="false">${inner}</svg>`;
+    const star = (cx,cy,r,fill) => `<path d="M${cx} ${cy-r}l${r*.3} ${r*.62} ${r*.7}.1-${r*.52} ${r*.46} ${r*.17} ${r*.7}-${r*.65}-${r*.36}-${r*.65} ${r*.36} ${r*.17}-${r*.7}-${r*.52}-${r*.46} ${r*.7}-.1Z" fill="${fill}"/>`;
+    const heartPath = (cx,cy,s) => `M${cx} ${cy+s*.62}C${cx-s*1.15} ${cy-s*.1} ${cx-s*.55} ${cy-s*.95} ${cx} ${cy-s*.4}C${cx+s*.55} ${cy-s*.95} ${cx+s*1.15} ${cy-s*.1} ${cx} ${cy+s*.62}Z`;
+    const ICONS = {
+      // tab bar (24px line icons, duotone when active)
+      "tab-home": mk("0 0 24 24",`<path class="duo" d="M5.5 10v9.5h13V10L12 4.5Z"/><path d="M3.5 11.2 12 4l8.5 7.2M5.5 9.8v9.7h13V9.8"/><path d="M12 17s-2.5-1.5-2.5-3.2a1.4 1.4 0 0 1 2.5-.7 1.4 1.4 0 0 1 2.5.7C14.5 15.5 12 17 12 17Z" fill="currentColor" stroke="none"/>`),
+      "tab-chat": mk("0 0 24 24",`<path class="duo" d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/><circle cx="9" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="12.5" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.1" fill="currentColor" stroke="none"/>`),
+      "tab-send": mk("0 0 24 24",`<rect class="duo" x="3.5" y="6" width="17" height="12.5" rx="3"/><rect x="3.5" y="6" width="17" height="12.5" rx="3"/><path d="m4.4 8.2 7.6 5.3 7.6-5.3"/>`),
+      "tab-play": mk("0 0 24 24",`<path class="duo" d="M7 8.5h10a4 4 0 0 1 3.9 4.6l-.5 3.2a2.6 2.6 0 0 1-4.5 1.3L14.5 16h-5l-1.4 1.6a2.6 2.6 0 0 1-4.5-1.3l-.5-3.2A4 4 0 0 1 7 8.5Z"/><path d="M7 8.5h10a4 4 0 0 1 3.9 4.6l-.5 3.2a2.6 2.6 0 0 1-4.5 1.3L14.5 16h-5l-1.4 1.6a2.6 2.6 0 0 1-4.5-1.3l-.5-3.2A4 4 0 0 1 7 8.5Z"/><path d="M8.5 11v3M7 12.5h3"/><circle cx="15.6" cy="11.8" r=".8" fill="currentColor" stroke="none"/><circle cx="17.4" cy="13.6" r=".8" fill="currentColor" stroke="none"/>`),
+      "tab-snaps": mk("0 0 24 24",`<path class="duo" d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3V19H4Z"/><path d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3V19H4Z"/><circle cx="12" cy="13.5" r="3.3"/>`),
+      // small activity icons
+      "act-poke": mk("0 0 24 24",`<circle class="duo" cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7" opacity=".5"/>`),
+      "act-note": mk("0 0 24 24",`<rect class="duo" x="3.5" y="6" width="17" height="12.5" rx="3"/><rect x="3.5" y="6" width="17" height="12.5" rx="3"/><path d="m4.4 8.2 7.6 5.3 7.6-5.3"/>`),
+      "act-chat": mk("0 0 24 24",`<path class="duo" d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/>`),
+      // moments (64px illustrations)
+      "moment-hug": mk("0 0 64 64",`<path d="${heartPath(32,30,24)}" fill="url(#gRose)"/><path d="M9 30c3 14 14 22 25 21" fill="none" stroke="url(#gPeach)" stroke-width="8" stroke-linecap="round"/><path d="M55 30c-3 14-14 22-25 21" fill="none" stroke="url(#gPeach)" stroke-width="8" stroke-linecap="round"/><circle cx="34" cy="51" r="5" fill="#ffc7a3"/><circle cx="30" cy="51" r="5" fill="#ffb98f"/>`),
+      "moment-kiss": mk("0 0 64 64",`<path d="M8 33c7-9 16-10 24-4 8-6 17-5 24 4-5 13-13 20-24 20S13 46 8 33Z" fill="url(#gRose)"/><path d="M8 33c8 3 16 3 24-1 8 4 16 4 24 1" fill="none" stroke="#b81f57" stroke-width="2.6" stroke-linecap="round"/><path d="M14 38c6 5 13 7 18 7" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/><path d="${heartPath(50,14,7)}" fill="url(#gLilac)"/>`),
+      "moment-miss": mk("0 0 64 64",`<path d="${heartPath(30,32,24)}" fill="url(#gLilac)"/><path d="M48 38c-6 9-6 14 0 14s6-5 0-14Z" fill="#7ac7ff"/><path d="M46 43c-1 3-1 5 1 6" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/><path d="M22 28q3-3 6 0M36 28q3-3 6 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`),
+      "moment-proud": mk("0 0 64 64",`<path d="M22 6h9l5 22h-9Z" fill="url(#gRose)"/><path d="M42 6h-9l-5 22h9Z" fill="url(#gLilac)"/><circle cx="32" cy="42" r="17" fill="url(#gSun)"/><circle cx="32" cy="42" r="12" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>${star(32,42,9,"#fff")}`),
+      "moment-cheer": mk("0 0 64 64",`<path d="M9 56 22 24l18 18Z" fill="url(#gPeach)"/><path d="M15 43l9 9M20 31l14 14" fill="none" stroke="#ff4f86" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/><path d="M30 15c4-1 6-5 6-9M40 26c5-1 9 1 12 5M26 28c-5-3-6-8-4-12" fill="none" stroke="url(#gLilac)" stroke-width="3.4" stroke-linecap="round"/><circle cx="46" cy="14" r="3.4" fill="#ffc15c"/><circle cx="54" cy="40" r="3" fill="#ff6f9c"/><circle cx="14" cy="12" r="3" fill="#7ac7ff"/><rect x="42" y="42" width="8" height="4" rx="2" transform="rotate(30 46 44)" fill="#7a58ee"/>`),
+      // games (64px illustrations)
+      "game-trivia": mk("0 0 64 64",`<path d="M14 11h36a8 8 0 0 1 8 8v19a8 8 0 0 1-8 8H35L22 57V46h-8a8 8 0 0 1-8-8V19a8 8 0 0 1 8-8Z" fill="url(#gLilac)"/><path d="M26 25c0-4 3-7 7-7s7 3 7 6.5c0 5-7 5-7 10" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="33" cy="39.5" r="3" fill="#fff"/><path d="${heartPath(52,12,6)}" fill="url(#gRose)"/>`),
+      "game-wyr": mk("0 0 64 64",`<g transform="rotate(-9 22 36)"><rect x="6" y="14" width="30" height="40" rx="8" fill="url(#gRose)"/><text x="21" y="42" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="system-ui,sans-serif">A</text></g><g transform="rotate(9 44 34)"><rect x="29" y="10" width="30" height="40" rx="8" fill="url(#gLilac)"/><text x="44" y="38" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="system-ui,sans-serif">B</text></g>`),
+      "game-tap": mk("0 0 64 64",`<circle cx="32" cy="34" r="27" fill="none" stroke="url(#gRose)" stroke-opacity=".35" stroke-width="3"/><circle cx="32" cy="34" r="19" fill="none" stroke="url(#gRose)" stroke-opacity=".6" stroke-width="3"/><path d="${heartPath(32,33,15)}" fill="url(#gRose)"/><path d="M24 29q3-4 7-2" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>`),
+      "game-memory": mk("0 0 64 64",`<g transform="rotate(-10 22 36)"><rect x="6" y="14" width="30" height="40" rx="7" fill="url(#gSky)"/><circle cx="21" cy="34" r="3" fill="#fff" opacity=".7"/><circle cx="14" cy="26" r="2" fill="#fff" opacity=".5"/><circle cx="28" cy="43" r="2" fill="#fff" opacity=".5"/></g><g transform="rotate(10 44 34)"><rect x="29" y="10" width="30" height="40" rx="7" fill="#fff" stroke="#ffd2de" stroke-width="2"/><path d="${heartPath(44,29,9)}" fill="url(#gRose)"/></g>`),
+      "game-wheel": mk("0 0 64 64",`<circle cx="32" cy="34" r="27" fill="#fff"/><path d="M32 34V7a27 27 0 0 1 27 27Z" fill="url(#gRose)"/><path d="M32 34h27a27 27 0 0 1-27 27Z" fill="url(#gLilac)"/><path d="M32 34v27A27 27 0 0 1 5 34Z" fill="url(#gMint)"/><path d="M32 34H5A27 27 0 0 1 32 7Z" fill="url(#gSun)"/><circle cx="32" cy="34" r="8" fill="#fff"/><path d="${heartPath(32,33,5)}" fill="#ff4f86"/><path d="M26 3h12l-6 9Z" fill="#2b1733"/>`),
+      "game-rate": mk("0 0 64 64",`${star(30,32,24,"url(#gSun)")}${star(50,16,9,"url(#gRose)")}${star(50,50,7,"url(#gLilac)")}<path d="M22 26q4-6 10-5" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>`),
+      // home cards
+      "pill-days": mk("0 0 32 32",`<path d="${heartPath(16,15,11)}" fill="url(#gRose)"/><path d="M9 21q7 6 14 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>`),
+      "pill-level": mk("0 0 32 32",`<path d="M9 6h14v6a7 7 0 0 1-14 0Z" fill="url(#gSun)"/><path d="M9 8H5.5a3 3 0 0 0 3.2 4.6M23 8h3.5a3 3 0 0 1-3.2 4.6" fill="none" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/><path d="M13 19h6v3h-6zM10.5 25h11" fill="#ffb347" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/>`),
+      "feat-play": mk("0 0 48 48",`<path d="M13 15h22a8 8 0 0 1 7.8 9.3l-1 6a5 5 0 0 1-8.7 2.6L30 30H18l-3.1 2.9a5 5 0 0 1-8.7-2.6l-1-6A8 8 0 0 1 13 15Z" fill="url(#gLilac)"/><path d="M16 21v6M13 24h6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="31" cy="22.5" r="2" fill="#fff"/><circle cx="35" cy="26.5" r="2" fill="#fff"/>`),
+      "feat-task": mk("0 0 48 48",`<path d="M7 17h7l3-5h14l3 5h7v22H7Z" fill="url(#gRose)"/><circle cx="24" cy="28" r="8" fill="#fff"/><circle cx="24" cy="28" r="5" fill="url(#gSky)"/><circle cx="37" cy="22" r="1.8" fill="#fff"/>`),
+      "feat-photos": mk("0 0 48 48",`<rect x="6" y="8" width="36" height="32" rx="7" fill="url(#gSun)"/><rect x="10.5" y="12.5" width="27" height="23" rx="4" fill="url(#gSky)"/><circle cx="31" cy="19" r="3.4" fill="#fff" opacity=".9"/><path d="${heartPath(21,27,7)}" fill="#fff"/>`)
+    };
+    const ico = name => ICONS[name] || "";
+    function paintIcons(root=document){ root.querySelectorAll("[data-ico]").forEach(el=>{ el.innerHTML=ico(el.dataset.ico); }); }
+    // little round faces for the mood buttons, built from the same face parts as the heart characters
+    function moodIcon(key){
+      const face=faces[key]||faces.happy;
+      return `<svg viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"><circle r="56" fill="url(#gFace)"/>${face.tint?`<circle r="56" fill="#9de3b5" opacity=".42"/>`:""}${face.eyes}${face.blush?`<ellipse cx="-44" cy="22" rx="12" ry="7" fill="#ff9fbd" opacity=".6"/><ellipse cx="44" cy="22" rx="12" ry="7" fill="#ff9fbd" opacity=".6"/>`:""}${face.mouth}${face.extra||""}</svg>`;
+    }
+    buildMoodChips(); paintIcons();
+
+    const charState={ youGender:"girl", themGender:null, youMood:"happy", themMood:"happy" };
+    function renderCharacters(){
+      $("youFace").innerHTML=charSvg("you",charState.youMood,charState.youGender);
+      $("themFace").innerHTML=partnerUid?charSvg("them",charState.themMood,charState.themGender):charSvg("ghost");
+    }
+
+    // ---- Our little world: a scene that follows the time of day and grows as you level up --------------------
+    const skies={
+      dawn:{ sky:["#ffd9c7","#f8b4cd","#cbb9ff"], rock:["#d7b3ee","#9a74d4"], grass:["#9be3bb","#5fc79a"], hill:["#e9b6d8","#d79fcc"], light:true },
+      day:{ sky:["#a6d8ff","#d8eeff","#fff3e4"], rock:["#cfa9ee","#8f68cf"], grass:["#9ee6bf","#52c391"], hill:["#bfe5da","#a2d8c9"], light:true },
+      dusk:{ sky:["#ffb39a","#ff86ab","#9577ee"], rock:["#c79ae0","#7f55c4"], grass:["#8fd9b0","#49b88a"], hill:["#e79bb6","#c985b8"], light:true },
+      night:{ sky:["#1c0f31","#38194f","#5a2f7d"], rock:["#8a68b8","#5a3e8c"], grass:["#4fae88","#2f8b6b"], hill:["#3f2a63","#33224f"], light:false }
+    };
+    const skyFor = hour => hour>=5&&hour<8 ? "dawn" : hour>=8&&hour<17 ? "day" : hour>=17&&hour<20 ? "dusk" : "night";
+    const starSpots=[[30,34],[74,92],[128,26],[170,70],[214,38],[262,96],[318,30],[336,84],[56,150],[300,140],[196,120],[110,112],[240,22],[16,100]];
+    const flowerSpots=[[104,222,"#ff7fa8"],[142,236,"#ffd35c"],[214,238,"#ffffff"],[262,224,"#c3a8ff"],[168,246,"#ff7fa8"],[236,246,"#ffd35c"],[92,214,"#ffffff"],[280,216,"#ff7fa8"]];
+    function worldSvg(level,hour){
+      const key=skyFor(hour), p=skies[key], night=key==="night";
+      let svg=`<svg viewBox="0 0 360 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="wSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.sky[0]}"/><stop offset=".55" stop-color="${p.sky[1]}"/><stop offset="1" stop-color="${p.sky[2]}"/></linearGradient>
+          <linearGradient id="wRock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.rock[0]}"/><stop offset="1" stop-color="${p.rock[1]}"/></linearGradient>
+          <linearGradient id="wGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.grass[0]}"/><stop offset="1" stop-color="${p.grass[1]}"/></linearGradient>
+          <radialGradient id="wGlow"><stop offset="0" stop-color="#fff6cf" stop-opacity=".95"/><stop offset="1" stop-color="#fff6cf" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="360" height="300" fill="url(#wSky)"/>`;
+      if(night){
+        svg+=starSpots.map(([x,y],i)=>`<circle class="twinkle" style="animation-delay:${(i%5)*.5}s" cx="${x}" cy="${y}" r="${i%3?1.4:2}" fill="#fff"/>`).join("");
+        svg+=`<circle cx="290" cy="64" r="44" fill="url(#wGlow)" opacity=".5"/><circle cx="290" cy="64" r="21" fill="#fff3d6"/><circle cx="299" cy="58" r="19" fill="${p.sky[0]}" opacity=".9"/>`;
+      } else {
+        const sun={dawn:[64,176,24],day:[292,62,24],dusk:[258,160,30]}[key];
+        svg+=`<circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]*2.4}" fill="url(#wGlow)"/><circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]}" fill="#fff3c4"/>`;
+      }
+      if(level>=4) svg+=`<g opacity=".5" fill="none" stroke-width="7" stroke-linecap="round"><path d="M40 230A150 150 0 0 1 320 230" stroke="#ff9aa8"/><path d="M52 230A138 138 0 0 1 308 230" stroke="#ffd37a"/><path d="M64 230A126 126 0 0 1 296 230" stroke="#9fe0b8"/><path d="M76 230A114 114 0 0 1 284 230" stroke="#a9c7ff"/></g>`;
+      const cloud=night?.22:.88;
+      svg+=`<g class="cloud c1" fill="#fff" opacity="${cloud}"><ellipse cx="62" cy="66" rx="30" ry="11"/><ellipse cx="82" cy="58" rx="20" ry="11"/><ellipse cx="46" cy="60" rx="16" ry="9"/></g>
+        <g class="cloud c2" fill="#fff" opacity="${cloud}"><ellipse cx="248" cy="104" rx="26" ry="9"/><ellipse cx="266" cy="97" rx="17" ry="9"/></g>
+        <path d="M0 226C50 186 110 204 168 214 232 190 300 184 360 224V300H0Z" fill="${p.hill[0]}" opacity=".75"/>
+        <path d="M0 250C70 222 130 238 190 246 250 230 310 226 360 250V300H0Z" fill="${p.hill[1]}" opacity=".8"/>
+        <g class="island"><ellipse cx="180" cy="288" rx="92" ry="9" fill="#2b1733" opacity=".14"/>
+        <path d="M78 220Q180 266 282 220L262 250Q246 276 214 292Q196 306 180 318Q164 306 146 292Q114 276 98 250Z" fill="url(#wRock)"/>
+        <path d="M118 244q6 16 18 24M206 266q12-8 20-22M170 280q6 10 10 22" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="5" stroke-linecap="round"/><path d="M92 228q10 6 18 18M262 228q-8 8-14 20" fill="none" stroke="#000" stroke-opacity=".08" stroke-width="6" stroke-linecap="round"/>
+        <ellipse cx="180" cy="218" rx="104" ry="27" fill="url(#wGrass)"/><ellipse cx="164" cy="212" rx="62" ry="10" fill="#fff" opacity=".14"/>`;
+      const count=Math.min(flowerSpots.length,2+level*2);
+      svg+=flowerSpots.slice(0,count).map(([x,y,c])=>`<g><path d="M${x} ${y}v-8" stroke="#3aa575" stroke-width="2" stroke-linecap="round"/><circle cx="${x}" cy="${y-10}" r="3.6" fill="${c}"/><circle cx="${x}" cy="${y-10}" r="1.4" fill="#fff4c4"/></g>`).join("");
+      // the tree grows with your level
+      const tx=112, ty=214;
+      svg+=`<g class="sway"><rect x="${tx-5}" y="${ty-(level>=1?46:20)}" width="10" height="${level>=1?48:22}" rx="5" fill="#9a6a52"/>`;
+      if(level===0) svg+=`<ellipse cx="${tx-8}" cy="${ty-24}" rx="9" ry="5" transform="rotate(-30 ${tx-8} ${ty-24})" fill="#5fcf98"/><ellipse cx="${tx+8}" cy="${ty-26}" rx="9" ry="5" transform="rotate(30 ${tx+8} ${ty-26})" fill="#79dcaa"/>`;
+      else {
+        const r=level===1?20:level===2?27:30;
+        svg+=`<circle cx="${tx}" cy="${ty-58}" r="${r}" fill="#58c892"/><circle cx="${tx-r*.7}" cy="${ty-44}" r="${r*.74}" fill="#4cbc86"/><circle cx="${tx+r*.7}" cy="${ty-44}" r="${r*.74}" fill="#63d29c"/><circle cx="${tx-r*.3}" cy="${ty-66}" r="${r*.34}" fill="#fff" opacity=".18"/>`;
+        if(level>=3) svg+=[[-14,-62],[10,-72],[18,-50],[-22,-46],[2,-52]].map(([dx,dy])=>`<circle cx="${tx+dx}" cy="${ty+dy}" r="3.4" fill="#ffb3c9"/>`).join("");
+        if(level>=4) svg+=[[-16,-40],[20,-44]].map(([dx,dy])=>`<path d="M${tx+dx} ${ty+dy+5}c-6-4-5-8-2-8 1 0 2 1 2 2 0-1 1-2 2-2 3 0 4 4-2 8Z" fill="#ff5d8f"/>`).join("");
+      }
+      svg+=`</g>`;
+      // a cottage once you reach level 3
+      if(level>=2){
+        const hx=258, hy=212, lit=night||key==="dusk";
+        svg+=`<g><rect x="${hx-22}" y="${hy-34}" width="44" height="34" rx="3" fill="#fff4e8"/><path d="M${hx-28} ${hy-32}L${hx} ${hy-58}L${hx+28} ${hy-32}Z" fill="#ff7fa8"/><rect x="${hx-5}" y="${hy-20}" width="11" height="20" rx="3" fill="#7a4a5a"/><rect x="${hx-18}" y="${hy-28}" width="10" height="10" rx="2" fill="${lit?"#ffe28a":"#cfe7ff"}"/>${lit?`<circle cx="${hx-13}" cy="${hy-23}" r="14" fill="#ffe28a" opacity=".25"/>`:""}<rect x="${hx+10}" y="${hy-54}" width="7" height="14" rx="2" fill="#e8607f"/></g>`;
+      }
+      if(level>=5) svg+=[[96,170],[150,150],[220,160],[272,178],[186,128]].map(([x,y],i)=>`<circle class="twinkle" style="animation-delay:${i*.4}s" cx="${x}" cy="${y}" r="2.6" fill="#fff6b0"/>`).join("");
+      return svg+`</g></svg>`;
+    }
+    let worldKey="";
+    const hourNow = () => (typeof window.__fakeHour=="number") ? window.__fakeHour : new Date().getHours();
+    function renderWorld(force){
+      const hour=hourNow(), key=skyFor(hour)+":"+worldLevel;
+      if(!force && key===worldKey) return;
+      worldKey=key; $("worldArt").innerHTML=worldSvg(worldLevel,hour);
+      $("world").dataset.sky=skyFor(hour);
+    }
+    setInterval(()=>renderWorld(false),60000);
+
+    // ---- The shared pet ----------------------------------------------------------------------------------
+    const dayKey = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+    function petSvg(state,level,night){
+      const eyes=state==="hungry"
+        ? `<path d="M-15 -2q5 4 10 0M5 -2q5 4 10 0" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`
+        : `<ellipse cx="-11" cy="-2" rx="3.6" ry="5" fill="${INK}"/><ellipse cx="11" cy="-2" rx="3.6" ry="5" fill="${INK}"/><circle cx="-10" cy="-4" r="1.4" fill="#fff"/><circle cx="12" cy="-4" r="1.4" fill="#fff"/>`;
+      const mouth=state==="hungry" ? `<path d="M-4 10q4-3 8 0" fill="none" stroke="${INK}" stroke-width="2.8" stroke-linecap="round"/>`
+        : state==="full" ? `<path d="M-6 7Q0 18 6 7Z" fill="#ff7f9d" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/>`
+        : `<path d="M-5 8q2.5 4 5 0q2.5 4 5 0" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+      const bow=level>=1?`<g transform="translate(20 -30) rotate(18)"><path d="M0 0L-11 -7V7ZM0 0L11 -7V7Z" fill="url(#gRose)"/><circle r="3.6" fill="#ff7fab"/></g>`:"";
+      const crown=level>=4?`<path d="M-13 -34l4-12 9 8 9-8 4 12Z" fill="url(#gSun)" stroke="#ffb347" stroke-width="1.4" stroke-linejoin="round"/>`:"";
+      return `<svg class="pet-svg" viewBox="-58 -52 116 104" aria-hidden="true" focusable="false">
+        <ellipse cx="0" cy="40" rx="34" ry="5" fill="#2b1733" opacity=".16"/>
+        <path d="M30 16q24-2 20-22" fill="none" stroke="#fff3e6" stroke-width="10" stroke-linecap="round"/>
+        <path d="M-26 -14L-31 -40-9 -25Z" fill="#fff6ee"/><path d="M26 -14L31 -40 9 -25Z" fill="#fff6ee"/><path d="M-24 -19L-27 -33-15 -25Z" fill="#ffc2d4"/><path d="M24 -19L27 -33 15 -25Z" fill="#ffc2d4"/>
+        <ellipse cx="0" cy="8" rx="35" ry="31" fill="#fffaf3" stroke="#f1dccd" stroke-width="2"/><ellipse cx="-13" cy="-8" rx="12" ry="6" fill="#fff" opacity=".7" transform="rotate(-22 -13 -8)"/>
+        <ellipse cx="0" cy="18" rx="20" ry="14" fill="#fff" opacity=".55"/>
+        ${eyes}<ellipse cx="-22" cy="6" rx="6.5" ry="4" fill="#ffb3c9" opacity=".8"/><ellipse cx="22" cy="6" rx="6.5" ry="4" fill="#ffb3c9" opacity=".8"/>${mouth}${bow}${crown}
+        ${night&&state!=="full"?`<text x="30" y="-30" font-size="16" font-weight="900" fill="#8d6cf0" font-family="system-ui,sans-serif">z</text>`:""}
+      </svg>`;
+    }
+    let petFed={};
+    function renderPet(pet,live){
+      if(!authUser) return;
+      const me=authUser.uid, today=dayKey(), fed=(pet&&pet.fed)||{};
+      const fedMe=fed[me]===today, fedThem=!!partnerUid && fed[partnerUid]===today;
+      const state=fedMe&&fedThem?"full":(fedMe||fedThem?"happy":"hungry"), night=skyFor(hourNow())==="night";
+      $("petBtn").innerHTML=petSvg(state,worldLevel,night); $("petBtn").dataset.state=state;
+      $("feedBtn").textContent=fedMe?"Fed today":"Feed Mochi"; $("feedBtn").disabled=fedMe;
+      const bubble=$("petBubble");
+      const text=state==="hungry"?"Mochi is hungry…":state==="full"?"Mochi is full and happy!":(fedMe?"Waiting for your partner to feed Mochi":"Your partner fed Mochi — your turn!");
+      bubble.textContent=text; bubble.classList.toggle("hidden",false); bubble.classList.toggle("good",state==="full");
+      const key=fedThem?today:"";
+      if(live && fedThem && key!==seen.petFed){ playAnim($("petBtn"),"squish",500); floatHeart($("petBtn"),"♥"); toast("Your partner fed Mochi"); }
+      seen.petFed=key;
+      if(state==="full" && (pet?.awarded)!==today) awardPet(today);
+    }
+    // Feeding together earns love points once a day (one transaction, so it can't be counted twice).
+    async function awardPet(today){
+      if(scoring.has("pet:"+today)) return; scoring.add("pet:"+today);
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=coupleRef(), snap=await transaction.get(ref), pet=snap.data()?.shared?.pet||{}, fed=pet.fed||{};
+          const both=(snap.data().members||[]).every(uid=>fed[uid]===today);
+          if(!both || pet.awarded===today) return;
+          transaction.update(ref,{"shared.pet.awarded":today,effort:increment(2)});
+        });
+      } catch(error){}
+    }
+    $("feedBtn").onclick=async()=>{
+      if(!coupleId || $("feedBtn").disabled) return;
+      $("feedBtn").disabled=true; floatHeart($("petBtn"),"♥"); playAnim($("petBtn"),"squish",500); playChime("pop");
+      try { await updateDoc(coupleRef(),{[`shared.pet.fed.${authUser.uid}`]:dayKey()}); }
+      catch(error){ $("feedBtn").disabled=false; toast("Couldn't feed Mochi — try again"); }
+    };
+    $("petBtn").onclick=()=>{ playAnim($("petBtn"),"squish",500); floatHeart($("petBtn"),"♥"); playChime("pop"); };
+
+    renderWorld(true);
+
+    // ---- Photos and the couple portrait --------------------------------------------------------------------
+    // Each of you adds a photo (stored in your private couple space). The home screen shows an AI drawing of you both
+    // if one exists, otherwise a collage of the two photos, otherwise the heart characters.
+    const AI_PORTRAIT_ENDPOINT="/api/couple-portrait";
+    let photos={}, portraitDoc=null, collageCache={ key:"", url:"" }, collageToken=0;
+    const photoOf = uid => (uid && photos[uid] && photos[uid].data) ? photos[uid] : null;
+
+    function loadImage(src){ return new Promise((resolve,reject)=>{ const img=new Image(); img.onload=()=>resolve(img); img.onerror=()=>reject(new Error("image failed")); img.src=src; }); }
+    // Shrink a photo until it fits comfortably in one document (and stays quick to download).
+    async function preparePhoto(file,limitChars,sizes){
+      for(const [maxDim,quality] of sizes){
+        const dataUrl=await blobToDataUrl(await compressImage(file,maxDim,quality));
+        if(dataUrl.length<=limitChars) return dataUrl;
+      }
+      throw new Error("photo too large");
+    }
+    async function shrinkDataUrl(dataUrl,limitChars){
+      const img=await loadImage(dataUrl);
+      for(const [maxDim,quality] of [[1024,.82],[900,.74],[760,.66],[600,.58]]){
+        const scale=Math.min(1,maxDim/Math.max(img.width,img.height)), canvas=document.createElement("canvas");
+        canvas.width=Math.round(img.width*scale); canvas.height=Math.round(img.height*scale);
+        canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+        const out=canvas.toDataURL("image/jpeg",quality);
+        if(out.length<=limitChars) return out;
+      }
+      throw new Error("portrait too large");
+    }
+    // A simple, free portrait: both photos in heart-shaped frames on a soft gradient.
+    async function buildCollage(youData,themData){
+      const [a,b]=await Promise.all([loadImage(youData),loadImage(themData)]);
+      const W=960,H=1200, canvas=document.createElement("canvas"); canvas.width=W; canvas.height=H; const g=canvas.getContext("2d");
+      const bg=g.createLinearGradient(0,0,W,H); bg.addColorStop(0,"#ffc9de"); bg.addColorStop(.55,"#f0c8ff"); bg.addColorStop(1,"#cdc4ff"); g.fillStyle=bg; g.fillRect(0,0,W,H);
+      const heartPath=(cx,cy,s)=>{ const p=new Path2D(); p.moveTo(cx,cy-30*s); p.bezierCurveTo(cx,cy-78*s,cx-78*s,cy-82*s,cx-82*s,cy-26*s); p.bezierCurveTo(cx-86*s,cy+26*s,cx-32*s,cy+56*s,cx,cy+88*s); p.bezierCurveTo(cx+32*s,cy+56*s,cx+86*s,cy+26*s,cx+82*s,cy-26*s); p.bezierCurveTo(cx+78*s,cy-82*s,cx,cy-78*s,cx,cy-30*s); p.closePath(); return p; };
+      const drawFramed=(img,cx,cy,s,ring,tilt)=>{
+        g.save(); g.translate(cx,cy); g.rotate(tilt); g.translate(-cx,-cy);
+        g.shadowColor="rgba(120,40,100,.35)"; g.shadowBlur=36; g.shadowOffsetY=18; g.fillStyle="#fff"; g.fill(heartPath(cx,cy,s*1.06)); g.shadowColor="transparent";
+        g.fillStyle=ring; g.fill(heartPath(cx,cy,s*1.03));
+        g.save(); g.clip(heartPath(cx,cy,s*.97));
+        const box=s*172, scale=Math.max(box/img.width,box/img.height); g.drawImage(img,cx-img.width*scale/2,cy-img.height*scale/2+s*6,img.width*scale,img.height*scale); g.restore(); g.restore();
+      };
+      drawFramed(a,350,560,3.1,"#ff7fab",-.1); drawFramed(b,620,720,3.1,"#a78bfa",.1);
+      g.fillStyle="#fff"; g.globalAlpha=.9; for(const [x,y,r] of [[120,150,26],[830,120,20],[880,980,24],[90,1010,18],[480,150,14]]){ g.beginPath(); g.moveTo(x,y-r); g.quadraticCurveTo(x,y,x+r,y); g.quadraticCurveTo(x,y,x,y+r); g.quadraticCurveTo(x,y,x-r,y); g.quadraticCurveTo(x,y,x,y-r); g.fill(); }
+      return canvas.toDataURL("image/jpeg",.86);
+    }
+    async function currentPortraitSource(){
+      if(portraitDoc && portraitDoc.data) return portraitDoc.data;
+      const mine=photoOf(authUser?.uid), theirs=photoOf(partnerUid);
+      if(!mine || !theirs) return null;
+      const key=mine.data.length+":"+theirs.data.length+":"+mine.data.slice(-24)+theirs.data.slice(-24);
+      if(collageCache.key===key) return collageCache.url;
+      const url=await buildCollage(mine.data,theirs.data); collageCache={ key, url }; return url;
+    }
+    function setAvatar(el,photo,kind){
+      el.innerHTML="";
+      if(photo){ const img=document.createElement("img"); img.src=photo.data; img.alt=""; el.appendChild(img); }
+      else el.innerHTML=charSvg(kind,"happy",null).replace('class="char-svg"','');
+    }
+    async function renderHero(){
+      if(!authUser) return;
+      const token=++collageToken, mine=photoOf(authUser.uid), theirs=photoOf(partnerUid);
+      let source=null; try { source=await currentPortraitSource(); } catch(error){ source=null; }
+      if(token!==collageToken) return;
+      const scene=$("scene"), hasPortrait=!!source;
+      const mode=hasPortrait && store.get("ty-hero")==="portrait" ? "portrait" : "world";
+      scene.classList.toggle("has-portrait",hasPortrait);
+      scene.classList.toggle("mode-portrait",mode==="portrait"); scene.classList.toggle("mode-world",mode==="world");
+      $("heroToggle").classList.toggle("hidden",!hasPortrait);
+      document.querySelectorAll("[data-hero]").forEach(btn=>btn.classList.toggle("active",btn.dataset.hero===mode));
+      if(hasPortrait && $("portraitImg").getAttribute("src")!==source) $("portraitImg").src=source;
+      $("whoRow").classList.toggle("hidden",mode!=="portrait");
+      setAvatar($("youAvatar"),mine,"you"); setAvatar($("themAvatar"),partnerUid?theirs:null,partnerUid?"them":"ghost");
+      // Home prompt: ask for the photos until there is a portrait
+      const prompt=$("photoPrompt");
+      prompt.classList.toggle("hidden",hasPortrait && !!portraitDoc);
+      if(!mine) { $("featPhotosTitle").textContent="Add your photo"; $("featPhotosSub").textContent=partnerUid?(theirs?"Your partner added theirs — now add yours for a couple portrait":"Then your partner adds theirs, and you get a couple portrait"):"Get a cute couple portrait for your home screen"; }
+      else if(!partnerUid) { $("featPhotosTitle").textContent="Your photo is in"; $("featPhotosSub").textContent="Your portrait appears once your partner joins and adds theirs"; }
+      else if(!theirs) { $("featPhotosTitle").textContent="Waiting for your partner’s photo"; $("featPhotosSub").textContent="Nudge them to add one — then we’ll make your portrait"; }
+      else if(!portraitDoc) { $("featPhotosTitle").textContent="Draw our couple portrait"; $("featPhotosSub").textContent="Both photos are in — try the AI drawing, or keep the collage"; }
+      renderPhotoDialog();
+    }
+    function renderPhotoDialog(){
+      if(!authUser) return;
+      const mine=photoOf(authUser.uid), theirs=photoOf(partnerUid);
+      const fill=(el,photo,empty)=>{ el.innerHTML=""; el.classList.toggle("filled",!!photo); if(photo){ const img=document.createElement("img"); img.src=photo.data; img.alt=""; el.appendChild(img); } else el.textContent=empty; };
+      fill($("slotYou"),mine,"No photo yet"); fill($("slotThem"),theirs,partnerUid?"Waiting…":"Not joined");
+      $("slotThemNote").textContent=!partnerUid?"Hasn’t joined yet":(theirs?"Added ✓":"Hasn’t added one yet");
+      $("photoPick").textContent=mine?"Change my photo":"Add my photo";
+      if(mine) $("aiConsent").checked=!!mine.aiOk;
+      $("removePhoto").classList.toggle("hidden",!mine);
+      const bothReady=!!(mine && theirs);
+      $("makeAiPortrait").disabled=!bothReady; $("makeCollage").classList.toggle("hidden",!(bothReady && portraitDoc));
+      $("makeAiPortrait").textContent=portraitDoc&&portraitDoc.kind==="ai"?"Draw it again":"Draw our AI couple portrait";
+      const hints=["The AI portrait unlocks when you both have a photo.","Add your photo to get started."];
+      if(!bothReady) $("photoStatus").textContent=mine?hints[0]:hints[1];
+      else if(hints.includes($("photoStatus").textContent)) $("photoStatus").textContent="";
+    }
+    function onPhotosSnapshot(snap){
+      const before=photos; photos={};
+      snap.forEach(item=>{ photos[item.id]={ ...item.data(), id:item.id }; });
+      if(seen.photos && partnerUid && photoOf(partnerUid) && !(before[partnerUid]&&before[partnerUid].data)) toast("📷 Your partner added their photo!",()=>openDialog($("photoDialog")));
+      seen.photos=true;
+      renderHero();
+    }
+    function onPortraitSnapshot(snap){
+      const next=snap.exists()?snap.data():null;
+      if(seen.portrait && next && next.by!==authUser.uid && next.createdAt && (!portraitDoc || millis(next.createdAt)!==millis(portraitDoc.createdAt))){ confettiBurst(["🖼️","💗","✨"],22); playChime("success"); toast("✨ Your partner made a new couple portrait!"); }
+      portraitDoc=next; seen.portrait=true;
+      renderHero();
+    }
+    document.querySelectorAll("[data-hero]").forEach(btn=>btn.onclick=()=>{ store.set("ty-hero",btn.dataset.hero); renderHero(); });
+    $("featPhotos").onclick=()=>openDialog($("photoDialog"));
+    $("portraitEdit").onclick=()=>openDialog($("photoDialog"));
+    $("closePhotos").onclick=()=>closeDialog($("photoDialog"));
+    $("photoDialog").addEventListener("click",event=>{ if(event.target===$("photoDialog")) closeDialog($("photoDialog")); });
+    $("photoPick").onclick=()=>$("photoFile").click();
+    $("photoFile").addEventListener("change",async event=>{
+      const file=event.target.files[0]; event.target.value=""; if(!file || !coupleId) return;
+      $("photoStatus").textContent="Saving your photo…";
+      try {
+        const data=await preparePhoto(file,420000,[[720,.78],[600,.7],[480,.62],[360,.55]]);
+        await setDoc(doc(db,"couples",coupleId,"photos",authUser.uid),{authorId:authUser.uid,data,aiOk:$("aiConsent").checked,createdAt:serverTimestamp()});
+        $("photoStatus").textContent="Photo saved 💗";
+      } catch(error){ $("photoStatus").textContent="Couldn’t save that photo — try another one."; }
+    });
+    $("aiConsent").onchange=async()=>{
+      if(!coupleId || !photoOf(authUser.uid)) return;
+      try { await updateDoc(doc(db,"couples",coupleId,"photos",authUser.uid),{aiOk:$("aiConsent").checked}); } catch(error){ $("photoStatus").textContent="Couldn’t save that choice."; }
+    };
+    $("removePhoto").onclick=async()=>{
+      if(!coupleId || !(await askConfirm("Remove your photo? Your couple portrait will go back to the collage or hearts.",{ok:"Remove"}))) return;
+      try { await deleteDoc(doc(db,"couples",coupleId,"photos",authUser.uid)); $("photoStatus").textContent="Photo removed."; } catch(error){ $("photoStatus").textContent="Couldn’t remove it — try again."; }
+    };
+    $("makeCollage").onclick=async()=>{
+      if(!coupleId) return;
+      try { await deleteDoc(doc(db,"couples",coupleId,"portraits","current")); $("photoStatus").textContent="Back to the collage."; } catch(error){ $("photoStatus").textContent="Couldn’t switch — try again."; }
+    };
+    $("makeAiPortrait").onclick=()=>busy($("makeAiPortrait"),async()=>{
+      const mine=photoOf(authUser.uid), theirs=photoOf(partnerUid), status=$("photoStatus");
+      if(!mine || !theirs){ status.textContent="You both need a photo first."; return; }
+      if(!mine.aiOk || !theirs.aiOk){ status.textContent=!mine.aiOk?"Tick “Let AI use my photo” first.":"Your partner hasn’t allowed AI to use their photo yet."; return; }
+      if(!(await askConfirm("Your two photos will be sent once to Google’s Gemini to draw your couple portrait. Continue?",{ok:"Draw it"}))) return;
+      status.textContent="Drawing your portrait… this can take up to a minute ✨";
+      try {
+        const token=await authUser.getIdToken();
+        const response=await fetch(AI_PORTRAIT_ENDPOINT,{ method:"POST", headers:{"Content-Type":"application/json",Authorization:"Bearer "+token}, body:JSON.stringify({images:[mine.data,theirs.data]}) });
+        if(response.status===503){ status.textContent="AI portraits aren’t switched on yet, so you’re keeping the collage for now."; return; }
+        if(response.status===429){ status.textContent="Too many tries — wait a minute and try again."; return; }
+        const body=await response.json().catch(()=>({}));
+        if(!response.ok || !body.image) throw new Error(body.error||"failed");
+        const data=await shrinkDataUrl(body.image,760000);
+        await setDoc(doc(db,"couples",coupleId,"portraits","current"),{data,kind:"ai",by:authUser.uid,createdAt:serverTimestamp()});
+        status.textContent="Your portrait is ready! 💞"; confettiBurst(["💗","✨","🖼️"],24); playChime("success"); closeDialog($("photoDialog"));
+      } catch(error){ status.textContent="The AI couldn’t draw it this time — you still have the collage. Try again in a bit."; }
+    });
+
+    // ---- Days together (from the day your story started) -------------------------------------------------
     const milestones=[7,14,30,50,100,150,200,300,365,500,730,1000,1500,2000,3000];
     let currentSince="";
-    function renderSince(since){
-      currentSince=since||"";
-      if(!since){ $("sinceNum").textContent="💞"; $("sinceSub").textContent="Tap to set your day"; return; }
-      const [y,m,d]=since.split("-").map(Number), start=new Date(y,m-1,d), today=new Date();
-      const days=Math.round((new Date(today.getFullYear(),today.getMonth(),today.getDate())-start)/86400000);
-      if(days<0){ $("sinceNum").textContent="Soon 💞"; $("sinceSub").textContent=`in ${-days} day${-days===1?"":"s"}`; return; }
-      $("sinceNum").textContent=days===0?"Day 1":`${days.toLocaleString()} days`;
-      const next=milestones.find(n=>n>days);
-      $("sinceSub").textContent=days===0?"Your story starts today":(next?`Next: ${next} days, in ${next-days}`:"Still going strong 💞");
+    const startOfDay = d => new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    function parts(start,today){
+      let y=today.getFullYear()-start.getFullYear(), m=today.getMonth()-start.getMonth(), d=today.getDate()-start.getDate();
+      if(d<0){ m--; d+=new Date(today.getFullYear(),today.getMonth(),0).getDate(); }
+      if(m<0){ y--; m+=12; }
+      return {y,m,d};
     }
-    $("sinceBtn").onclick=()=>{ $("sinceInput").value=currentSince; $("sinceInput").max=new Date().toISOString().slice(0,10); openDialog($("sinceDialog")); };
+    const plural = (n,word) => `${n} ${word}${n===1?"":"s"}`;
+    function renderSince(since){
+      renderSinceCore(since);
+      $("worldDaysLabel").textContent=$("daysLabel").textContent; $("worldDaysBig").textContent=$("daysBig").textContent; $("worldDaysSub").textContent=$("daysSub").textContent.split(" · ")[0];
+    }
+    function renderSinceCore(since){
+      currentSince=since||"";
+      const pill={ num:$("sinceNum"), sub:$("sinceSub") };
+      if(!since){
+        pill.num.textContent="Set your day"; pill.sub.textContent="Count your days together";
+        $("daysLabel").textContent="Your story"; $("daysBig").textContent="Set your day"; $("daysSub").textContent="Tap to count your days together 💞"; return;
+      }
+      const [y,m,d]=since.split("-").map(Number), start=new Date(y,m-1,d), today=startOfDay(new Date());
+      const days=Math.round((today-start)/86400000);
+      if(days<0){
+        const text=`in ${plural(-days,"day")}`;
+        pill.num.textContent="Soon 💞"; pill.sub.textContent=text; $("daysLabel").textContent="Your story starts"; $("daysBig").textContent=text; $("daysSub").textContent=""; return;
+      }
+      const p=parts(start,today), breakdown=[p.y&&plural(p.y,"year"),p.m&&plural(p.m,"month"),p.d&&plural(p.d,"day")].filter(Boolean).join(", ");
+      const nextMilestone=milestones.find(n=>n>days), toMilestone=nextMilestone?nextMilestone-days:Infinity;
+      let anniversary=new Date(today.getFullYear(),m-1,d); if(anniversary<=today) anniversary=new Date(today.getFullYear()+1,m-1,d);
+      const toAnniversary=Math.round((anniversary-today)/86400000), nextAge=anniversary.getFullYear()-y;
+      const upcoming=toAnniversary<=toMilestone?`${nextAge}-year anniversary in ${plural(toAnniversary,"day")}`:`${nextMilestone}-day milestone in ${plural(toMilestone,"day")}`;
+      const big=days===0?"Day one":days.toLocaleString();
+      pill.num.textContent=days===0?"Day one 💞":`${days.toLocaleString()} days`; pill.sub.textContent=days===0?"Your story starts today":"Next: "+upcoming;
+      $("daysLabel").textContent=days===0?"Today":"Together for"; $("daysBig").textContent=days===0?"Day one":`${big} days`;
+      $("daysSub").textContent=days===0?"Your story starts today 💞":`${breakdown} · ${upcoming}`;
+    }
+    const openSince=()=>{ $("sinceInput").value=currentSince; $("sinceInput").max=new Date().toISOString().slice(0,10); openDialog($("sinceDialog")); };
+    $("sinceBtn").onclick=openSince; $("daysBtn").onclick=openSince; $("worldDaysBtn").onclick=openSince;
+
+
+    // ---- "Today, together" cards --------------------------------------------------------------------------
+    const gamePicks=[["wyr","🤔","Would You Rather","Same brain, or opposites?"],["tap","💗","Tap Together","10 seconds. One heart. Go!"],["memory","🃏","Memory Match","Take turns and find the pairs"],["wheel","🎡","Spin the Wheel","Truth, dare, date ideas & sweet words"],["trivia","🧠","Couple Trivia","How well do you know each other?"]];
+    const hotGames=[["badgeTap","tap","💗","Tap Together","Your partner is live — join in!"],["badgeMemory","memory","🃏","Memory Match","It’s your turn!"],["badgeWheel","wheel","🎡","Spin the Wheel","Your partner spun — see what came up"],["badgeWyr","wyr","🤔","Would You Rather","Your partner picked — your turn"],["badgeTrivia","trivia","🧠","Couple Trivia","Your partner answered — your turn"]];
+    let featuredGame="wyr";
+    function renderFeatured(){
+      const hot=hotGames.find(([badge])=>!$(badge).classList.contains("hidden"));
+      const daily=gamePicks[dayIndex()%gamePicks.length];
+      const pick=hot?{game:hot[1],emoji:hot[2],title:hot[3],sub:hot[4]}:{game:daily[0],emoji:daily[1],title:"Play "+daily[2],sub:daily[3]};
+      featuredGame=pick.game; $("featPlayEmoji").innerHTML=ico("game-"+pick.game); $("featPlayTitle").textContent=pick.title; $("featPlaySub").textContent=pick.sub;
+      $("featPlay").classList.toggle("hot",!!hot);
+    }
+    function renderFeaturedTask(){
+      $("featTaskTitle").textContent=assignedForMe?"Your partner’s task for you":"Today’s snap task";
+      $("featTaskText").textContent=assignedForMe?assignedForMe.text:$("dailyTaskText").textContent;
+    }
+    $("featPlay").onclick=()=>{ openTab("play"); openGame(featuredGame); };
+    $("featTask").onclick=()=>openTab("snaps");
+
     $("sinceCancel").onclick=()=>closeDialog($("sinceDialog"));
     $("sinceSave").onclick=async()=>{
       const value=$("sinceInput").value;
@@ -1624,15 +2253,15 @@
     };
     $("sinceClear").onclick=async()=>{ closeDialog($("sinceDialog")); try { await updateDoc(coupleRef(),{"shared.since":""}); } catch(error){} };
 
-    const levels=[{min:0,name:"Just started 🌱"},{min:15,name:"Sweethearts 💕"},{min:40,name:"Cuddle Bugs 🧸"},{min:80,name:"Lovebirds 🕊️"},{min:150,name:"Soulmates ✨"},{min:300,name:"Forever Duo 👑"}];
+    const levels=[{min:0,name:"Just started"},{min:15,name:"Sweethearts"},{min:40,name:"Cuddle Bugs"},{min:80,name:"Lovebirds"},{min:150,name:"Soulmates"},{min:300,name:"Forever Duo"}];
     function renderLevel(points,live){
       let index=levels.length-1; while(index>0 && points<levels[index].min) index--;
       const current=levels[index], next=levels[index+1], percent=next?Math.min(100,Math.round((points-current.min)/(next.min-current.min)*100)):100;
-      $("effortCount").textContent=points; $("levelName").textContent=current.name;
+      $("effortCount").textContent=points; $("levelName").textContent=current.name; $("levelNum").textContent=index+1;
       $("levelFill").style.width=percent+"%"; $("levelBar").setAttribute("aria-valuenow",String(percent));
-      $("levelNext").textContent=next?`${next.min-points} more for ${next.name}`:"Top level — wow! 🎉";
+      $("levelNext").textContent=next?`${next.min-points} to go`:"top level 🎉";
       if(live && seen.level>=0 && index>seen.level){ confettiBurst(["🎉","💗","✨","👑"],26); playChime("success"); toast(`Level up! You’re ${current.name}`); }
-      seen.level=index;
+      seen.level=index; worldLevel=index; renderWorld(false); if(authUser) renderPet(lastPet,false);
     }
 
     // ---- Games hub ----------------------------------------------------------------------------------------
