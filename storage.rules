@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isMember(coupleId) {
+      return request.auth != null
+        && request.auth.uid in firestore.get(/databases/(default)/documents/couples/$(coupleId)).data.members;
+    }
+
+    // Snaps are uploaded by the app as compressed JPEGs named <uid>_<timestamp>.jpg.
+    match /couples/{coupleId}/snaps/{fileName} {
+      allow read: if isMember(coupleId);
+      allow create: if isMember(coupleId)
+        && fileName.matches(request.auth.uid + '_[0-9]+[.]jpg')
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if isMember(coupleId);
+    }
+  }
+}

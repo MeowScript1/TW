@@ -2,29 +2,77 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function memberOf(coupleId) {
-      return signedIn() && request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.members;
+    function membersOf(coupleId) {
+      return get(/databases/$(database)/documents/couples/$(coupleId)).data.members;
+    }
+    function memberOf(coupleId) { return signedIn() && request.auth.uid in membersOf(coupleId); }
+    function onlyChanges(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
     }
 
     match /users/{userId} {
-      allow read, create, update: if signedIn() && request.auth.uid == userId;
+      // You can always read your own profile; you can read your partner's (gender) once you
+      // are both members of the couple named in their profile. Membership is decided by the
+      // couple document, so nobody can read a stranger's profile by editing their own coupleId.
+      allow read: if signedIn() && (
+        request.auth.uid == userId || (
+          resource.data.get('coupleId', null) is string &&
+          request.auth.uid in membersOf(resource.data.coupleId) &&
+          userId in membersOf(resource.data.coupleId)
+        )
+      );
+      allow create, update: if signedIn() && request.auth.uid == userId
+        && (!('gender' in request.resource.data) || request.resource.data.gender in ['girl', 'boy']);
     }
 
     match /couples/{coupleId} {
-      allow create: if signedIn() && request.resource.data.members.size() == 1 && request.auth.uid in request.resource.data.members;
+      allow create: if signedIn()
+        && request.resource.data.members.size() == 1
+        && request.auth.uid in request.resource.data.members
+        && request.resource.data.createdBy == request.auth.uid;
+
+      // A couple with one member is open to whoever holds its code (that is how joining works).
       allow get: if signedIn() && (request.auth.uid in resource.data.members || resource.data.members.size() == 1);
+
       allow update: if signedIn() && (
-        request.auth.uid in resource.data.members ||
-        (resource.data.members.size() == 1 &&
-         request.resource.data.members.size() == 2 &&
-         resource.data.members[0] in request.resource.data.members &&
-         request.auth.uid in request.resource.data.members &&
-         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']))
+        // Members can change anything except who is in the couple.
+        (request.auth.uid in resource.data.members
+          && request.resource.data.members == resource.data.members
+          && request.resource.data.createdBy == resource.data.createdBy) ||
+        // A second person joins: only `members` changes, the first member stays, joiner is last.
+        (resource.data.members.size() == 1
+          && request.resource.data.members.size() == 2
+          && resource.data.members[0] == request.resource.data.members[0]
+          && request.resource.data.members[1] == request.auth.uid
+          && onlyChanges(['members']))
       );
 
       match /messages/{messageId} {
         allow read: if memberOf(coupleId);
-        allow create: if memberOf(coupleId) && request.resource.data.authorId == request.auth.uid;
+        allow create: if memberOf(coupleId)
+          && request.resource.data.keys().hasOnly(['type', 'text', 'authorId', 'createdAt'])
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.type in ['chat', 'poke', 'note']
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000
+          && request.resource.data.createdAt == request.time;
+        // Reactions are the only thing that can change on a message.
+        allow update: if memberOf(coupleId) && onlyChanges(['reactions']);
+      }
+
+      match /snaps/{snapId} {
+        allow read: if memberOf(coupleId);
+        allow create: if memberOf(coupleId)
+          && request.resource.data.keys().hasOnly(['authorId', 'url', 'storagePath', 'caption', 'viewOnce', 'viewed', 'createdAt'])
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.createdAt == request.time;
+        // The receiver marks a snap as viewed.
+        allow update: if memberOf(coupleId)
+          && resource.data.authorId != request.auth.uid
+          && onlyChanges(['viewed']);
+        // Either of you can delete a snap (the receiver does it after a view-once snap is closed).
+        allow delete: if memberOf(coupleId);
       }
     }
   }

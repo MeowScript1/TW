@@ -2,23 +2,1075 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#ff7da5">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="TY — a private little world for two.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="TY">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>TY</title>
+  <style>
+    :root { --ink:#382938; --muted:#806d7b; --paper:#fff9fb; --pink:#ff7da5; --pink-strong:#d6336c; --pink-soft:#ffe0eb; --purple:#7b5cbd; --mint:#e3f7ed; --line:#f2d7e1; --shadow:0 12px 30px rgba(128,68,95,.14); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif; color:var(--ink); background:radial-gradient(circle at 14% 8%,rgba(255,191,214,.85),transparent 25%),radial-gradient(circle at 88% 28%,rgba(204,185,255,.62),transparent 27%),linear-gradient(150deg,#fff4f8 0%,#f7f1ff 52%,#effcf5 100%); min-height:100vh; }
+    button,input,textarea,select { font:inherit; }
+    button { cursor:pointer; border:0; }
+    .app { width:min(100%,760px); min-height:100vh; min-height:100dvh; margin:auto; background:rgba(255,255,255,.46); padding:max(16px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left)); }
+    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }.account-actions { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; }
+    .heart { width:38px; height:38px; display:grid; place-items:center; border-radius:14px; background:var(--pink); color:white; box-shadow:0 6px 14px #ff9bbb; }
+    .lock { background:white; color:var(--purple); padding:9px 12px; border-radius:12px; font-size:.84rem; box-shadow:var(--shadow); }
+    .hero { position:relative; overflow:hidden; background:rgba(255,255,255,.66); border:1px solid rgba(255,255,255,.9); border-radius:18px; padding:14px 14px 12px; box-shadow:var(--shadow); }
+    .eyebrow { color:var(--purple); font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { font-size:clamp(1.35rem,4vw,1.8rem); margin:4px 0 2px; line-height:1.1; letter-spacing:-.03em; }
+    .sub { color:var(--muted); margin:0; }
+    .connection-row { display:flex; align-items:center; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    .connection-row .alias-pill { background:#f4ecf2; color:#5a3f56; border-color:transparent; }
+    .countdown { margin-left:auto; font-size:.74rem; color:var(--muted); }
+    .hero-chars { position:absolute; right:10px; bottom:10px; display:flex; gap:8px; }
+    .hero-char { position:relative; width:74px; height:74px; border-radius:22px; display:grid; place-items:center; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 20px rgba(128,68,95,.08); }
+    .hero-char .face { font-size:2rem; line-height:1; }
+    .hero-char .sparkle { position:absolute; font-size:.72rem; color:#ff7da5; }
+    .hero-char .sparkle.left { top:8px; left:8px; }
+    .hero-char .sparkle.right { top:9px; right:9px; color:#7b5cbd; }
+    .hero-copy { padding-right:172px; }
+    .nav { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:12px 0 14px; }
+    .nav button { color:var(--muted); background:transparent; padding:9px 2px; border-radius:999px; font-size:.72rem; font-weight:750; }
+    .nav button.active { color:var(--purple); background:white; box-shadow:0 7px 16px rgba(93,65,126,.12); }
+    .nav-swipe { touch-action:pan-y; }
+    .view { display:none; } .view.active { display:block; }
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:13px; }
+    .card { border-radius:20px; padding:15px; background:rgba(255,255,255,.82); border:1px solid rgba(255,255,255,.86); box-shadow:var(--shadow); transition:transform .2s ease,box-shadow .2s ease; }.card:hover { transform:translateY(-2px); box-shadow:0 16px 33px rgba(128,68,95,.12); }
+    .card h2 { margin:0 0 5px; font-size:1.04rem; } .card p { margin:0; color:var(--muted); font-size:.87rem; line-height:1.45; }
+    .wide { grid-column:1/-1; }
+    .button { background:var(--pink); color:white; padding:10px 14px; border-radius:13px; font-weight:800; margin-top:12px; box-shadow:0 5px 10px #ffc3d4; }
+    .button.alt { background:var(--purple); box-shadow:none; }.button.soft { background:var(--pink-soft); color:#a23b62; box-shadow:none; }
+    .icon { display:grid; place-items:center; width:42px; height:42px; font-size:1.55rem; margin-bottom:9px; border-radius:15px; background:linear-gradient(135deg,#fff0f5,#f0eaff); }.tiny { font-size:.75rem; color:var(--muted); }
+    .note-maker { display:grid; gap:9px; margin-top:10px; }.moods { display:flex; gap:7px; flex-wrap:wrap; }.mood { padding:7px 10px; border-radius:99px; background:#fff1f5; color:#a23b62; font-size:.82rem; }.mood.selected { background:var(--pink); color:#fff; }
+    textarea { width:100%; resize:vertical; min-height:76px; padding:11px; border:1px solid var(--line); border-radius:13px; color:var(--ink); background:white; }.result { margin-top:11px; display:none; text-align:center; background:linear-gradient(120deg,#fff0f5,#f0eaff); padding:15px; border-radius:16px; line-height:1.45; }.result.show { display:block; }
+    .poke { width:100%; padding:17px 9px; border-radius:17px; background:var(--mint); color:#32735a; font-weight:900; font-size:1rem; }.poke:active { transform:scale(.97); }.poke-status { min-height:21px; text-align:center; margin-top:8px; color:#32735a; font-size:.83rem; font-weight:700; }.poke-input { width:100%; margin-top:10px; padding:10px 11px; border:1px solid var(--line); border-radius:12px; color:var(--ink); background:white; }
+    .game-action { width:100%; background:#f0eaff; color:#604499; padding:11px 9px; border-radius:13px; font-weight:800; margin-top:10px; }
+    .quiz-q { text-align:center; font-weight:800; color:var(--purple); font-size:1.05rem; min-height:44px; margin:6px 0 12px; }
+    .quiz-options { display:grid; gap:9px; }
+    .quiz-option { width:100%; text-align:left; padding:12px 14px; border-radius:14px; background:#fff; border:2px solid var(--line); color:var(--ink); font-weight:700; transition:.15s; }
+    .quiz-option:hover { border-color:var(--pink); }
+    .quiz-option.picked { border-color:var(--purple); background:#f0eaff; }
+    .quiz-option.correct { border-color:#32735a; background:var(--mint); }
+    .quiz-option.wrong { border-color:#bd355f; background:#ffe6ec; }
+    .quiz-option:disabled { cursor:default; opacity:.85; }
+    .quiz-status { text-align:center; min-height:22px; margin-top:11px; font-weight:750; color:var(--muted); }
+    .quiz-score { display:flex; justify-content:center; gap:18px; margin-top:10px; font-size:.85rem; color:var(--muted); font-weight:700; }
+    .quiz-score b { color:var(--purple); font-size:1.1rem; }
+    .chat { min-height:260px; display:flex; flex-direction:column; gap:10px; }.bubble { max-width:78%; padding:10px 12px; border-radius:15px 15px 15px 4px; background:white; box-shadow:0 3px 10px rgba(99,55,75,.08); font-size:.9rem; }.bubble.mine { align-self:flex-end; border-radius:15px 15px 4px 15px; background:var(--pink); color:white; }.chat-form { display:flex; gap:8px; margin-top:14px; }.chat-form input { min-width:0; flex:1; padding:10px 11px; border:1px solid var(--line); border-radius:12px; }.send { background:var(--purple); color:white; border-radius:12px; padding:0 14px; font-weight:800; }
+    .privacy { background:linear-gradient(130deg,#f0edff,#fff); }.setting { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #eae5f8; font-size:.91rem; }.setting:last-child { border:0; }.switch { appearance:none; width:42px; height:24px; border-radius:99px; background:#ddd; position:relative; transition:.2s; }.switch:checked { background:var(--purple); }.switch:before { content:""; width:18px; height:18px; background:#fff; border-radius:50%; position:absolute; left:3px; top:3px; transition:.2s; }.switch:checked:before { transform:translateX(18px); }
+    .aliases { display:flex; align-items:center; gap:8px; font-weight:800; flex-wrap:wrap; }.alias-pill { background:rgba(255,255,255,.72); color:#a23b62; border:1px solid #ffd5e4; border-radius:99px; padding:7px 10px; font-size:.84rem; }
+    .hidden { display:none!important; } .notice { text-align:center; color:#32735a; margin:8px 0 0; min-height:19px; font-size:.82rem; font-weight:700; }.effort-number { font-size:2.35rem; line-height:1; margin:8px 0 4px; font-weight:900; background:linear-gradient(90deg,#ff5c91,#8256c2); -webkit-background-clip:text; background-clip:text; color:transparent; }.rating-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }.rating-row label { color:var(--muted); font-size:.78rem; font-weight:700; }.rating-row select { width:100%; margin-top:4px; padding:9px; background:#fff; border:1px solid var(--line); border-radius:11px; color:var(--ink); }
+    .view.active { animation:viewIn .35s ease; } @keyframes viewIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .presence-dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:#d8cfe0; margin-right:5px; transition:.2s; } .presence-dot.online { background:#32c48d; box-shadow:0 0 0 4px rgba(50,196,141,.22); }
+    .presence-row { display:flex; align-items:center; gap:5px; font-size:.79rem; color:var(--muted); font-weight:700; margin-top:2px; }
+    .typing-indicator { font-size:.79rem; color:var(--muted); font-style:italic; min-height:18px; padding:2px 2px 6px; }
+    .reactions { display:flex; gap:5px; margin-top:5px; flex-wrap:wrap; } .reaction-pill { background:#fff; border:1px solid var(--line); border-radius:99px; padding:2px 8px; font-size:.76rem; font-weight:700; color:var(--ink); } .reaction-pill.mine { border-color:var(--pink); background:#fff0f5; }
+    .reaction-picker { display:flex; gap:2px; margin-top:4px; } .reaction-picker button { background:transparent; font-size:.92rem; padding:2px 5px; border-radius:8px; opacity:.55; transition:.15s; } .reaction-picker button:hover { background:#f5eefc; opacity:1; transform:scale(1.15); }
+    .bubble-wrap { max-width:78%; display:flex; flex-direction:column; } .bubble-wrap.mine { align-self:flex-end; align-items:flex-end; }
+    .activity-feed { display:grid; gap:2px; margin-top:6px; } .activity-item { display:flex; gap:9px; align-items:flex-start; font-size:.83rem; padding:8px 0; border-bottom:1px solid #f2eaf7; } .activity-item:last-child { border:0; } .activity-icon { font-size:1.05rem; } .activity-text { display:block; color:var(--ink); font-weight:600; } .activity-time { display:block; color:var(--muted); font-size:.72rem; margin-top:1px; }
+    .confetti-layer { position:fixed; inset:0; pointer-events:none; z-index:60; overflow:hidden; } .confetti-piece { position:absolute; top:-24px; animation:confetti-fall linear forwards; } @keyframes confetti-fall { to { transform:translateY(112vh) rotate(540deg); opacity:.25; } }
+    .bouquet-art { display:flex; justify-content:center; align-items:flex-end; margin:8px 0 2px; } .bouquet-art span { display:inline-block; margin:0 -8px; } .bouquet-art span:nth-child(1){ font-size:2rem; transform:rotate(-18deg); } .bouquet-art span:nth-child(2){ font-size:2.3rem; transform:rotate(10deg); } .bouquet-art span:nth-child(3){ font-size:2.7rem; transform:rotate(-4deg); } .bouquet-art span:nth-child(4){ font-size:2.2rem; transform:rotate(16deg); } .bouquet-art span:nth-child(5){ font-size:1.9rem; transform:rotate(-8deg); }
+    .ai-badge { display:inline-block; font-size:.68rem; font-weight:800; color:var(--purple); background:#f0eaff; padding:3px 8px; border-radius:99px; margin-left:6px; vertical-align:middle; }
+    .snap-preview { width:100%; border-radius:16px; margin:10px 0; max-height:240px; object-fit:cover; display:block; }
+    .snap-mode-row { display:flex; gap:14px; margin:10px 0; font-size:.82rem; color:var(--muted); font-weight:700; flex-wrap:wrap; } .snap-mode-row label { display:flex; align-items:center; gap:5px; }
+    .snap-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
+    .snap-thumb { position:relative; border-radius:12px; overflow:hidden; aspect-ratio:1; background:#f4eef8; cursor:pointer; }
+    .snap-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .snap-thumb.unseen:after { content:"NEW"; position:absolute; top:4px; right:4px; background:var(--pink); color:#fff; font-size:.6rem; font-weight:900; padding:2px 6px; border-radius:99px; }
+    .snap-view-img { width:100%; border-radius:16px; max-height:60vh; object-fit:contain; background:#000; }
+    .task-text { text-align:center; font-weight:800; color:var(--purple); font-size:1.02rem; line-height:1.4; margin:6px 0 2px; }
+    #authScreen,#surpriseScreen,#bouquetScreen,#snapViewScreen { position:fixed; inset:0; z-index:8; display:grid; place-items:center; padding:20px; background:linear-gradient(145deg,#ffe4ee,#eae0ff); }.authbox { width:min(100%,370px); text-align:center; background:#fff; padding:28px; border-radius:28px; box-shadow:var(--shadow); }.authbox .heart { margin:auto auto 16px; }.authbox h2 { margin:0 0 6px; }.authbox input { width:100%; padding:12px; border-radius:13px; border:1px solid var(--line); margin-top:10px; }.authbox .button { width:100%; }.authbox .button.soft { margin-top:8px; }.pair-code { margin:14px 0; padding:12px; border-radius:13px; background:#fff0f5; color:#a23b62; font-weight:900; letter-spacing:.12em; }.auth-message { min-height:20px; margin:9px 0 0; color:#a23b62; font-size:.82rem; }.surprise-text { margin:16px 0; padding:16px; border-radius:16px; background:linear-gradient(120deg,#fff0f5,#f0eaff); line-height:1.5; white-space:pre-wrap; }
+    @media(max-width:440px) { .app { padding:max(12px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(22px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }.grid { gap:10px; }.card { padding:14px; }.countdown { width:100%; margin-left:0; } }
+    body.dark { --ink:#e9e2e8; --muted:#afa1ab; --line:#40323d; --pink-soft:#2c1d27; --mint:#1f332d; background:#111012; }
+    body.dark .app { background:#151015; } body.dark .hero { background:#1c171c; border-color:#2f242d; }
+    body.dark .card, body.dark .authbox, body.dark .lockbox { background:#1d171d; border-color:#322530; box-shadow:none; }
+    body.dark .lock { background:#221b22; color:#eadfee; box-shadow:none; } body.dark textarea, body.dark input, body.dark select, body.dark .chat-form input { background:#241d24; color:#f1e8ef; border-color:#40323d; }
+    body.dark .bubble { background:#272027; color:#f1e8ef; } body.dark .nav button.active { background:#241d24; }
+    body.dark .hero-char { background:linear-gradient(145deg,#241c24,#2a2233); border-color:#35293a; }
+    .profile-strip { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+    .profile-card { background:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.9); border-radius:16px; padding:10px; min-height:80px; }
+    .profile-head { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+    .profile-avatar { width:30px; height:30px; display:grid; place-items:center; border-radius:10px; background:#f4ecf2; font-size:1rem; }
+    .profile-name { font-weight:800; font-size:.82rem; }
+    .profile-meta { color:var(--muted); font-size:.72rem; line-height:1.35; }
+    body.dark .profile-card { background:#1d171d; border-color:#322530; }
+    body.dark .profile-avatar { background:#241d24; }
+    .install-help { margin-top:8px; font-size:.75rem; color:var(--muted); }
+
+    /* Accessibility, focus and touch comfort */
+    :focus-visible { outline:3px solid var(--purple); outline-offset:2px; }
+    button:disabled { cursor:default; opacity:.6; }
+    .visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+    .link-btn { background:none; color:var(--purple); font-weight:700; font-size:.82rem; padding:8px; text-decoration:underline; }
+    .reaction-picker button { padding:4px 7px; }
+    .button, .bubble.mine, .mood.selected, .snap-thumb.unseen:after { background:var(--pink-strong); }
+    .button.alt { background:var(--purple); } .button.soft { background:var(--pink-soft); }
+    .authbox { margin:auto; }
+    #authScreen,#surpriseScreen,#bouquetScreen,#snapViewScreen { overflow-y:auto; }
+
+    /* Hero characters: the "Come closer" button slides them together */
+    .hero-char { transition:transform .65s cubic-bezier(.2,.8,.2,1); }
+    .hero-chars.together .hero-char:first-child { transform:translateX(7px); }
+    .hero-chars.together .hero-char:last-child { transform:translateX(-7px); }
+    .hero-chars.together:after { content:"💞"; position:absolute; left:50%; top:-16px; font-size:1.2rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
+    @keyframes heartFloat { 50% { transform:translateX(-50%) translateY(-5px); } }
+    .invite-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px; padding:8px 10px; border-radius:14px; background:var(--pink-soft); color:#a23b62; font-size:.8rem; font-weight:700; }
+    .invite-row b { letter-spacing:.12em; font-size:.92rem; }
+    .invite-row .lock { margin-left:auto; padding:6px 10px; font-size:.78rem; }
+    @media(max-width:520px) { .hero-copy { padding-right:0; } .hero-chars { position:relative; right:auto; bottom:auto; justify-content:center; margin-top:18px; } .hero-chars.together:after { top:-18px; } }
+
+    /* Snaps, trivia and misc states */
+    .snap-thumb { display:block; width:100%; padding:0; border:0; }
+    .snap-thumb.unseen { display:grid; place-items:center; font-size:1.6rem; }
+    .snap-thumb.opened img { opacity:.45; }
+    .snap-thumb.opened:after { content:"OPENED"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(56,41,56,.75); color:#fff; font-size:.6rem; font-weight:900; padding:3px 8px; border-radius:99px; }
+    .quiz-option.partner-pick { border-style:dashed; border-color:var(--purple); }
+    .quiz-option .pick-tag { float:right; font-size:.7rem; font-weight:800; color:var(--muted); }
+    .snap-view-actions { display:grid; gap:8px; }
+
+    /* Dark mode: components that had light-only colours */
+    body.dark .quiz-option { background:#241d24; color:var(--ink); border-color:#40323d; }
+    body.dark .quiz-option:hover { border-color:var(--pink); }
+    body.dark .quiz-option.picked { background:#2a2233; border-color:#a58be0; }
+    body.dark .quiz-option.correct { background:#1f332d; border-color:#4fb98f; }
+    body.dark .quiz-option.wrong { background:#3a1f29; border-color:#e0607f; }
+    body.dark .reaction-pill { background:#241d24; color:var(--ink); }
+    body.dark .reaction-pill.mine { background:#3a2230; border-color:var(--pink); }
+    body.dark .reaction-picker button:hover { background:#2a2233; }
+    body.dark .surprise-text, body.dark .result { background:linear-gradient(120deg,#2c1d27,#251f33); color:var(--ink); }
+    body.dark .pair-code, body.dark .invite-row, body.dark .mood { background:#2c1d27; color:#ffb3cd; }
+    body.dark .mood.selected { background:var(--pink-strong); color:#fff; }
+    body.dark .alias-pill { background:#241d24; border-color:#40323d; color:#ffb3cd; }
+    body.dark .connection-row .alias-pill { background:#2a2230; color:#e9dff0; }
+    body.dark .button.soft { background:#2c1d27; color:#ffb3cd; }
+    body.dark .bubble.mine { background:var(--pink-strong); color:#fff; }
+    body.dark .poke, body.dark .poke-status, body.dark .notice { color:#7fd9b3; }
+    body.dark .eyebrow, body.dark .quiz-q, body.dark .task-text, body.dark .quiz-score b, body.dark .nav button.active, body.dark .ai-badge, body.dark .link-btn { color:#c4aef7; }
+    body.dark .ai-badge { background:#2a2233; }
+    body.dark .game-action { background:#2a2233; color:#c4aef7; }
+    body.dark .icon { background:linear-gradient(135deg,#2c1d27,#251f33); }
+    body.dark .setting, body.dark .activity-item { border-color:#322530; }
+    body.dark .snap-thumb { background:#241d24; }
+    body.dark #authScreen, body.dark #surpriseScreen, body.dark #bouquetScreen, body.dark #snapViewScreen { background:linear-gradient(145deg,#1a1119,#1c1730); }
+    body.dark .switch { background:#4a3d48; } body.dark .switch:checked { background:var(--purple); }
+
+    @media (prefers-reduced-motion:reduce) {
+      *, *:before, *:after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+      .confetti-layer { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <script>try { var savedDark = localStorage.getItem("ty-dark-mode"); if (savedDark === "1" || (savedDark === null && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark"); } catch (error) {}</script>
+  <div id="surpriseScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="authbox"><div class="heart">♥</div><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="button" id="closeSurprise" type="button">Open TY</button></div></div>
+  <div id="bouquetScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="authbox"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="button" id="closeBouquet" type="button">Open TY</button></div></div>
+  <div id="snapViewScreen" class="hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="authbox"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="button" id="closeSnapView" type="button">Close</button><button class="button soft hidden" id="deleteSnap" type="button">Delete this snap</button></div></div></div>
+  <div id="authScreen">
+    <div class="authbox">
+      <div class="heart">♥</div>
+      <section id="loginPanel"><h2>Welcome to TY</h2><p class="sub">Sign in to find your person.</p>
+        <form id="loginForm" onsubmit="return false" novalidate>
+          <input id="authEmail" type="email" autocomplete="email" placeholder="Your email" aria-label="Email">
+          <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password (at least 6 characters)" aria-label="Password">
+          <button class="button" id="signIn" type="submit" disabled>Sign in</button>
+          <button class="button soft" id="signUp" type="button" disabled>Create my account</button>
+          <button class="link-btn" id="forgotBtn" type="button">Forgot password?</button>
+          <div class="auth-message" id="authMessage">Loading…</div>
+        </form>
+      </section>
+      <section id="pairPanel" class="hidden"><h2>Connect your hearts</h2><p class="sub">Create a private code or enter the one your partner sent you.</p><div class="setting"><label for="genderSelect">Your character</label><select id="genderSelect"><option value="girl">Girl</option><option value="boy">Boy</option></select></div><button class="button" id="createPair" type="button">Create our code</button><input id="joinCode" maxlength="8" placeholder="Enter partner’s code" aria-label="Partner’s code" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="button soft" id="joinPair" type="button">Join with code</button><button class="link-btn hidden" id="pairBack" type="button">← Back to our space</button><div class="auth-message" id="pairMessage"></div></section>
+      <section id="statusPanel" class="hidden"><h2>One moment…</h2><p class="sub" id="statusText"></p><button class="button" id="retryBtn" type="button">Try again</button><button class="button soft" id="statusLogout" type="button">Log out</button></section>
+    </div>
+  </div>
+  <main class="app hidden" id="app">
+    <header class="top"><div class="brand"><span class="heart">♥</span> TY</div><div class="account-actions"><button class="lock" id="darkBtn" type="button">🌙 Dark</button><button class="lock" id="downloadBtn" type="button">📲 Install</button><button class="lock" id="codeBtn" type="button">Change code</button><button class="lock" id="logoutBtn" type="button">Log out</button></div></header>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Private space</div><h1>Hi love</h1><p class="sub">A small shared space for two.</p>
+        <div class="connection-row"><span class="alias-pill" id="youAlias">You: Honey Bear</span><span class="alias-pill" id="themAlias">Partner: Moon Bunny</span><span class="countdown" id="countdown">changes in 1:00</span></div>
+        <div class="invite-row hidden" id="inviteRow"><span>Waiting for your partner · code <b id="inviteCode"></b></span><button class="lock" id="shareCode" type="button">Copy</button></div>
+        <div class="profile-strip">
+          <div class="profile-card"><div class="profile-head"><div class="profile-avatar" id="youProfileFace">👧</div><div class="profile-name" id="youProfileName">Your profile</div></div><div class="profile-meta" id="youProfileMeta">Girl character profile</div></div>
+          <div class="profile-card"><div class="profile-head"><div class="profile-avatar" id="themProfileFace">👩</div><div class="profile-name" id="themProfileName">Partner profile</div></div><div class="profile-meta" id="themProfileMeta">Girl character profile</div></div>
+        </div>
+      </div>
+      <div class="hero-chars" aria-hidden="true"><div class="hero-char" id="youChar"><span class="sparkle left">✦</span><span class="sparkle right">✦</span><span class="face" id="youFace">🧸</span></div><div class="hero-char" id="themChar"><span class="sparkle left">✦</span><span class="sparkle right">✦</span><span class="face" id="themFace">🐰</span></div></div>
+    </section>
+    <nav class="nav nav-swipe" aria-label="Main navigation"><button class="active" data-view="home" type="button" aria-current="page">Home</button><button data-view="notes" type="button">Love note</button><button data-view="play" type="button">Play</button><button data-view="task" type="button">Task</button><button data-view="chat" type="button">Chat</button></nav>
+    <section id="home" class="view active"><div class="grid">
+      <article class="card wide"><div class="icon">📣</div><h2>Recent activity</h2><p>What's been happening in your little world.</p><div class="activity-feed" id="activityFeed"></div></article>
+      <article class="card"><div class="icon">🫶</div><h2>Come closer</h2><p>Make your little characters meet in the middle.</p><button class="button" id="approach" type="button" aria-pressed="false">Approach each other</button></article>
+      <article class="card"><div class="icon">👆</div><h2>Magic poke <span class="ai-badge">AI</span></h2><p>Type a thought and turn it into a cute note.</p><input class="poke-input" id="pokeThought" maxlength="140" placeholder="e.g. I miss your smile" aria-label="Your thought"><button class="poke" id="poke" type="button">Make note &amp; poke</button><div class="poke-status" id="pokeStatus"></div></article>
+      <article class="card"><div class="icon">🏆</div><h2>Love effort</h2><p>Grows from the ratings you give each other after games.</p><div class="effort-number" id="effortCount">0</div><span class="tiny">mutual love points</span></article>
+      <article class="card"><div class="icon">🎁</div><h2>Opening surprise <span class="ai-badge">AI</span></h2><p>Set a loving message that appears the next time your partner opens TY.</p><input class="poke-input" id="surpriseInput" maxlength="220" placeholder="e.g. I’m sorry, I miss you so much…" aria-label="Your surprise message"><button class="button" id="setSurprise" type="button">Save opening surprise</button><div class="poke-status" id="surpriseStatus"></div></article>
+      <article class="card"><div class="icon">💐</div><h2>Send a bouquet <span class="ai-badge">AI</span></h2><p>Surprise them with a virtual bouquet and a little AI-written note.</p><input class="poke-input" id="bouquetInput" maxlength="140" placeholder="Optional: what's it for? Leave blank for a surprise" aria-label="What the bouquet is for"><button class="button" id="sendBouquet" type="button">Send a bouquet</button><div class="poke-status" id="bouquetStatus"></div></article>
+      <article class="card wide privacy"><h2>Privacy first</h2><p>Your messages, notes and snaps are stored in your private TY space online. Security rules let only the two of you read them, but they are not end-to-end encrypted, so keep anything truly secret out of here.</p><div class="setting"><label for="notifyToggle">Notify me of pokes, notes &amp; messages</label><input class="switch" id="notifyToggle" type="checkbox" checked></div><div class="setting"><span id="notifyStatusLabel">Browser notifications: not requested yet</span><button class="lock" id="enableNotify" type="button">Enable</button></div></article>
+    </div></section>
+    <section id="notes" class="view"><article class="card"><div class="icon">💌</div><h2>Make a little note <span class="ai-badge">AI</span></h2><p>Choose a feeling, write from your heart, and give it a cute surprise style.</p><div class="note-maker"><div class="moods" id="moods"><button class="mood selected" data-mood="loving" type="button" aria-pressed="true">Loving</button><button class="mood" data-mood="happy" type="button" aria-pressed="false">Happy</button><button class="mood" data-mood="missing you" type="button" aria-pressed="false">Missing you</button><button class="mood" data-mood="sorry" type="button" aria-pressed="false">Sorry</button></div><textarea id="noteText" placeholder="Write something for Moon Bunny…" aria-label="Your note" maxlength="500"></textarea><button class="button" id="makeNote" type="button">Wrap it with love</button></div><div id="noteResult" class="result"></div></article></section>
+    <section id="play" class="view"><div class="grid">
+      <article class="card wide">
+        <div class="icon">🧠</div><h2>Couple Trivia</h2>
+        <p>How well do you know each other? Answer together — matching picks score a point for both of you.</p>
+        <div class="quiz-q" id="quizQ">Loading question…</div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-status" id="quizStatus"></div>
+        <div class="quiz-score"><span>You: <b id="quizScoreYou">0</b></span><span>Together: <b id="quizScoreShared">0</b></span><span>Question <span id="quizProgress">1</span>/<span id="quizTotal">10</span></span></div>
+        <button class="button" id="quizNext" type="button" disabled>Next question</button>
+        <button class="button soft" id="quizReset" type="button">Restart quiz</button>
+      </article>
+      <article class="card wide"><div class="icon">🌟</div><h2>Rate the effort</h2><p>After the quiz, rate how sweet each other was. Your combined hearts add to your Love Effort.</p><div class="rating-row"><label>Rate <span id="rateYouName">Honey Bear</span><select id="rateYou"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label><label>Rate <span id="rateHerName">Moon Bunny</span><select id="rateHer"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label></div><button class="button" id="saveRating" type="button">Add mutual rating</button><div class="notice" id="ratingStatus"></div></article>
+    </div></section>
+    <section id="task" class="view"><div class="grid">
+      <article class="card wide">
+        <div class="icon">📅</div><h2>Today's task</h2>
+        <p class="tiny" id="dailyTaskDate"></p>
+        <div class="task-text" id="dailyTaskText">Loading today's task…</div>
+      </article>
+      <article class="card wide">
+        <div class="icon">📝</div><h2>Set a task for your partner</h2>
+        <p>Give them something to do — a snap of it is the proof.</p>
+        <input class="poke-input" id="customTaskInput" maxlength="140" placeholder="e.g. Send me a snap of your dinner tonight" aria-label="Task for your partner">
+        <button class="button" id="setCustomTask" type="button">Assign task</button>
+        <div class="poke-status" id="customTaskStatus"></div>
+        <div class="notice" id="assignedTaskView"></div>
+      </article>
+      <article class="card wide">
+        <div class="icon">📸</div><h2>Send a snap</h2>
+        <p>Complete a task and send proof — you choose how it disappears.</p>
+        <input type="file" accept="image/*" id="snapFile" class="hidden" aria-label="Choose a photo">
+        <button class="button" id="snapPickBtn" type="button">Take / choose a photo</button>
+        <div id="snapPreviewWrap" class="hidden">
+          <img id="snapPreview" class="snap-preview" alt="Preview of your snap">
+          <input class="poke-input" id="snapCaption" maxlength="120" placeholder="Add a little caption (optional)" aria-label="Caption">
+          <div class="snap-mode-row">
+            <label><input type="radio" name="snapMode" value="once" checked> View once (disappears)</label>
+            <label><input type="radio" name="snapMode" value="keep"> Keep in gallery</label>
+          </div>
+          <button class="button" id="snapSendBtn" type="button">Send snap</button>
+          <button class="button soft" id="snapCancelBtn" type="button">Cancel</button>
+        </div>
+        <div class="poke-status" id="snapStatus"></div>
+      </article>
+      <article class="card wide">
+        <div class="icon">🖼️</div><h2>Snap gallery</h2>
+        <p>New view-once snaps show a NEW badge — tap once and they're gone. Keep-forever snaps stay here always.</p>
+        <div class="snap-gallery" id="snapGallery"></div>
+      </article>
+    </div></section>
+    <section id="chat" class="view"><article class="card"><h2>Private chat</h2><div class="presence-row"><span class="presence-dot" id="presenceDot"></span><span id="presenceLabel">Checking presence…</span></div><p>Live messages for your connected pair.</p><div class="chat" id="chatMessages" role="log" aria-live="polite" aria-label="Messages"></div><div class="typing-indicator hidden" id="typingIndicator"></div><form class="chat-form" id="chatForm"><input id="message" autocomplete="off" placeholder="Send a little message…" aria-label="Message" maxlength="1000"><button class="send" type="submit">Send</button></form></article></section>
+  </main>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager, doc, setDoc, getDoc, updateDoc, addDoc, deleteDoc, collection, query, orderBy, onSnapshot, serverTimestamp, runTransaction, increment, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
+    const firebaseConfig = { apiKey:"AIzaSyBeBde2ro0vYt3XADcdmbuu56HdylpajQA", authDomain:"aytt-677b4.firebaseapp.com", projectId:"aytt-677b4", storageBucket:"aytt-677b4.firebasestorage.app", messagingSenderId:"366976601638", appId:"1:366976601638:web:c6d9689f098251844b20e7", measurementId:"G-42VV7B6HYR" };
+    const firebaseApp = initializeApp(firebaseConfig), auth = getAuth(firebaseApp), storage = getStorage(firebaseApp);
+    // The local cache keeps chat history readable offline and queues writes made while offline.
+    let db;
+    try { db = initializeFirestore(firebaseApp, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }); } catch(error){ db = getFirestore(firebaseApp); }
+
+    const $ = id => document.getElementById(id);
+    const store = {
+      get(key){ try { return localStorage.getItem(key); } catch(error){ return null; } },
+      set(key,value){ try { localStorage.setItem(key,value); } catch(error){} }
+    };
+    const withTimeout = (promise,ms) => Promise.race([promise, new Promise((_,reject)=>setTimeout(()=>reject(new Error("timeout")),ms))]);
+    const pick = list => list[Math.floor(Math.random()*list.length)];
+    const millis = ts => ts && ts.toMillis ? ts.toMillis() : 0;
+    document.querySelectorAll(".poke-status,.notice,.quiz-status,.auth-message").forEach(el=>{ el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); });
+
+    function setDarkMode(enabled,persist){
+      document.body.classList.toggle("dark",enabled);
+      $("darkBtn").textContent=enabled?"☀️ Light":"🌙 Dark";
+      document.querySelector('meta[name="theme-color"]').content=enabled?"#151015":"#ff7da5";
+      if(persist) store.set("ty-dark-mode",enabled?"1":"0");
+    }
+    setDarkMode(document.body.classList.contains("dark"),false);
+    $("darkBtn").onclick=()=>setDarkMode(!document.body.classList.contains("dark"),true);
+
+    // ---- State -------------------------------------------------------------------------------------------
+    let authUser=null, coupleId=null, partnerUid=null, members=[], coupleUnsubs=[];
+    // Each flag flips after a listener's first snapshot, so only changes that arrive after that can notify.
+    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"" };
+    let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
+    let lastPresence={}, aliasIndex=0, aliasSetAtMs=Date.now(), aliasAdvancedAt=0;
+    let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapBlob=null, selectedSnapUrl=null;
+    let currentSnap=null, openingSnap=false, deferredInstallPrompt=null, swipeStartX=0, swipeStartY=0;
+    const genderCache={}, genderTried={}, purging=new Set(), scoring=new Set(), celebratedTrivia=new Set();
+    const MESSAGE_LIMIT=100, SNAP_LIMIT=60, PRESENCE_TTL_MS=50000, ALIAS_PERIOD_MS=60000;
+    const defaultFaces = { you: { girl:"👧", boy:"👦" }, them: { girl:"👩", boy:"👨" } };
+    const tabOrder = ["home","notes","play","task","chat"];
+    const coupleRef = () => doc(db,"couples",coupleId);
+
+    // ---- Small helpers -----------------------------------------------------------------------------------
+    const CODE_ALPHABET="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const code = () => Array.from(crypto.getRandomValues(new Uint8Array(8)),byte=>CODE_ALPHABET[byte%CODE_ALPHABET.length]).join("");
+    const cleanCode = value => value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");
+    const setAuthMessage = text => $("authMessage").textContent=text;
+    const setPairMessage = text => $("pairMessage").textContent=text;
+    const errorMessages = {
+      "auth/invalid-email":"That email doesn't look right.",
+      "auth/invalid-credential":"Email or password is incorrect.",
+      "auth/wrong-password":"Email or password is incorrect.",
+      "auth/user-not-found":"Email or password is incorrect.",
+      "auth/email-already-in-use":"That email already has an account — try signing in.",
+      "auth/weak-password":"Pick a password with at least 6 characters.",
+      "auth/too-many-requests":"Too many tries — wait a minute and try again.",
+      "auth/network-request-failed":"No connection — check your internet and try again.",
+      "unavailable":"No connection — check your internet and try again.",
+      "permission-denied":"TY isn't allowed to do that yet — the Firebase security rules may need updating."
+    };
+    const friendlyError = error => errorMessages[error?.code] || (error?.message||"Something went wrong.").replace(/^Firebase: /,"");
+    function timeAgo(ms){ const s=Math.floor((Date.now()-ms)/1000); if(s<45) return "just now"; const m=Math.floor(s/60); if(m<60) return m+"m ago"; const h=Math.floor(m/60); if(h<24) return h+"h ago"; return Math.floor(h/24)+"d ago"; }
+    // Disables a button while its action runs, but never leaves it stuck if the network hangs.
+    async function busy(button,task){
+      if(button.disabled) return;
+      button.disabled=true;
+      const release=setTimeout(()=>{ button.disabled=false; },8000);
+      try { await task(); } finally { clearTimeout(release); button.disabled=false; }
+    }
+    function confettiBurst(emojis=["💗","✨","💕","🌸"],count=18){
+      const layer=document.createElement("div"); layer.className="confetti-layer"; layer.setAttribute("aria-hidden","true"); document.body.appendChild(layer);
+      for(let i=0;i<count;i++){
+        const piece=document.createElement("span"); piece.className="confetti-piece"; piece.textContent=pick(emojis);
+        piece.style.left=Math.random()*100+"vw"; piece.style.fontSize=(1+Math.random()*1.1)+"rem";
+        piece.style.animationDuration=(2.2+Math.random()*1.4)+"s"; piece.style.animationDelay=(Math.random()*.3)+"s";
+        layer.appendChild(piece);
+      }
+      setTimeout(()=>layer.remove(),3800);
+    }
+    function playChime(type="pop"){
+      try {
+        audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+        if(audioCtx.state==="suspended") audioCtx.resume();
+        const now=audioCtx.currentTime, notes = type==="success" ? [523.25,659.25,783.99] : [660];
+        notes.forEach((freq,i)=>{
+          const osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+          osc.type="sine"; osc.frequency.value=freq; osc.connect(gain); gain.connect(audioCtx.destination);
+          const start=now+i*0.09;
+          gain.gain.setValueAtTime(0.0001,start); gain.gain.exponentialRampToValueAtTime(0.18,start+0.02); gain.gain.exponentialRampToValueAtTime(0.0001,start+0.28);
+          osc.start(start); osc.stop(start+0.3);
+        });
+      } catch(error){}
+    }
+    // AI_ENDPOINT should point at your own small serverless proxy (e.g. a Firebase Cloud Function) that holds your
+    // Anthropic API key on the server side and forwards { prompt } to Claude. Never call api.anthropic.com directly
+    // from this client-side code — that would expose your API key to anyone who opens the browser dev tools.
+    // Until AI_ENDPOINT is set, every AI-flavored feature below quietly falls back to its built-in template text,
+    // so the app is fully usable out of the box.
+    const AI_ENDPOINT = "";
+    async function generateAIText(prompt,fallback){ if(!AI_ENDPOINT) return fallback; try{ const res=await fetch(AI_ENDPOINT,{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({prompt}) }); if(!res.ok) throw new Error("bad response"); const data=await res.json(); return (data.text||"").trim()||fallback; } catch(error){ return fallback; } }
+
+    // ---- Notifications -----------------------------------------------------------------------------------
+    function updateNotifyLabel(){
+      const label=$("notifyStatusLabel"), button=$("enableNotify");
+      if(!("Notification" in window)){ label.textContent="Browser notifications: not supported here"; button.style.display="none"; return; }
+      if(Notification.permission==="granted"){ label.textContent="Browser notifications: on"; button.style.display="none"; }
+      else if(Notification.permission==="denied"){ label.textContent="Browser notifications: blocked — allow them in your browser's site settings"; button.style.display="none"; }
+      else { label.textContent="Browser notifications: not enabled yet"; button.style.display="inline-block"; }
+    }
+    async function requestNotifyPermission(){
+      if(!("Notification" in window)){ updateNotifyLabel(); return; }
+      if(Notification.permission==="default"){ try { await Notification.requestPermission(); } catch(error){} }
+      updateNotifyLabel();
+    }
+    // Only fires while TY is in the background; when it's open the change is already on screen.
+    async function notifyMe(title,body){
+      if(!$("notifyToggle").checked || !document.hidden) return;
+      if(!("Notification" in window) || Notification.permission!=="granted") return;
+      const options={ body, icon:"icon-192.png", badge:"icon-192.png" };
+      try {
+        const registration = "serviceWorker" in navigator ? await navigator.serviceWorker.getRegistration() : null;
+        if(registration) await registration.showNotification(title,options); else new Notification(title,options);
+      } catch(error){}
+    }
+    $("notifyToggle").checked=store.get("ty-notify")!=="0";
+    $("notifyToggle").onchange=()=>store.set("ty-notify",$("notifyToggle").checked?"1":"0");
+    $("enableNotify").onclick=requestNotifyPermission;
+    updateNotifyLabel();
+
+    // ---- Screens -----------------------------------------------------------------------------------------
+    function showPanel(name){
+      $("authScreen").classList.remove("hidden"); $("app").classList.add("hidden");
+      ["login","pair","status"].forEach(panel=>$(panel+"Panel").classList.toggle("hidden",panel!==name));
+      if(name==="pair") $("pairBack").classList.toggle("hidden",!coupleId);
+    }
+    function showApp(){ $("authScreen").classList.add("hidden"); $("app").classList.remove("hidden"); }
+    function showStatus(text,failed){
+      showPanel("status");
+      $("statusText").textContent=text;
+      $("retryBtn").classList.toggle("hidden",!failed); $("statusLogout").classList.toggle("hidden",!failed);
+    }
+
+    // ---- Sign in / sign up -------------------------------------------------------------------------------
+    function setAuthBusy(isBusy){ $("signIn").disabled=isBusy; $("signUp").disabled=isBusy; }
+    async function login(create){
+      const email=$("authEmail").value.trim(), password=$("authPassword").value;
+      if(!email||password.length<6){ setAuthMessage("Enter an email and a password with 6+ characters."); return; }
+      setAuthBusy(true); setAuthMessage("One little moment…");
+      try {
+        if(create) await createUserWithEmailAndPassword(auth,email,password); else await signInWithEmailAndPassword(auth,email,password);
+        setAuthMessage("");
+      } catch(error){ setAuthMessage(friendlyError(error)); }
+      finally { setAuthBusy(false); }
+    }
+    $("loginForm").addEventListener("submit",event=>{ event.preventDefault(); login(false); });
+    $("signUp").onclick=()=>login(true);
+    $("forgotBtn").onclick=async()=>{
+      const email=$("authEmail").value.trim();
+      if(!email){ setAuthMessage("Type your email above first, then tap “Forgot password?”."); return; }
+      try { await sendPasswordResetEmail(auth,email); setAuthMessage("If that email has an account, a reset link is on its way."); }
+      catch(error){ setAuthMessage(friendlyError(error)); }
+    };
+    $("logoutBtn").onclick=()=>signOut(auth);
+    $("statusLogout").onclick=()=>signOut(auth);
+    $("retryBtn").onclick=()=>enterApp();
+
+    // ---- Pairing -----------------------------------------------------------------------------------------
+    async function enterApp(){
+      const uid=authUser.uid;
+      showStatus("Opening your space…",false);
+      try {
+        // Not awaited: a write made while offline only completes once you're back online.
+        setDoc(doc(db,"users",uid),{email:authUser.email},{merge:true}).catch(()=>{});
+        const data=(await getDoc(doc(db,"users",uid))).data()||{};
+        if(authUser?.uid!==uid) return;
+        if(data.gender) genderCache[uid]=data.gender;
+        if(data.coupleId) await openCouple(data.coupleId); else showPanel("pair");
+      } catch(error){ if(authUser?.uid===uid) showStatus(friendlyError(error),true); }
+    }
+    async function createPair(){
+      const id=code(), gender=$("genderSelect").value;
+      try {
+        await setDoc(doc(db,"couples",id),{members:[authUser.uid],createdBy:authUser.uid,effort:0,createdAt:serverTimestamp(),shared:{aliasIndex:0,aliasSetAt:serverTimestamp()}});
+        await setDoc(doc(db,"users",authUser.uid),{email:authUser.email,coupleId:id,gender},{merge:true});
+        genderCache[authUser.uid]=gender;
+        setPairMessage("");
+        await openCouple(id);
+      } catch(error){ setPairMessage(friendlyError(error)); }
+    }
+    async function joinPair(){
+      const id=cleanCode($("joinCode").value), gender=$("genderSelect").value;
+      if(!id){ setPairMessage("Enter the code your partner sent you."); return; }
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=doc(db,"couples",id), snap=await transaction.get(ref);
+          if(!snap.exists()) throw new Error("That code was not found.");
+          const list=snap.data().members||[];
+          if(!list.includes(authUser.uid)){
+            if(list.length>=2) throw new Error("This couple space is already full.");
+            transaction.update(ref,{members:[...list,authUser.uid]});
+          }
+          transaction.set(doc(db,"users",authUser.uid),{email:authUser.email,coupleId:id,gender},{merge:true});
+        });
+        genderCache[authUser.uid]=gender;
+        setPairMessage("");
+        await openCouple(id);
+      } catch(error){
+        setPairMessage(error.code==="permission-denied" ? "That code isn't available — check it, or ask your partner for a fresh one." : friendlyError(error));
+      }
+    }
+    $("createPair").onclick=()=>busy($("createPair"),createPair);
+    $("joinPair").onclick=()=>busy($("joinPair"),joinPair);
+    $("joinCode").addEventListener("keydown",event=>{ if(event.key==="Enter") $("joinPair").click(); });
+    // Nothing is lost by opening this screen: your current space only changes once you create or join a new one.
+    $("codeBtn").onclick=()=>{ showPanel("pair"); setPairMessage("Creating or joining a new code leaves your current space behind."); };
+    $("pairBack").onclick=()=>{ showApp(); setPairMessage(""); };
+    $("shareCode").textContent = navigator.share ? "Share" : "Copy";
+    $("shareCode").onclick=async()=>{
+      if(!coupleId) return;
+      const button=$("shareCode"), text=`Join me on TY 💗 Our code is ${coupleId} — ${location.origin}/`;
+      try {
+        if(navigator.share){ await navigator.share({ title:"TY", text }); return; }
+        await navigator.clipboard.writeText(coupleId);
+        button.textContent="Copied ✓"; setTimeout(()=>{ button.textContent="Copy"; },1500);
+      } catch(error){ if(error?.name!=="AbortError") prompt("Copy this code and send it to your partner:",coupleId); }
+    };
+
+    function teardown(){
+      coupleUnsubs.forEach(stop=>{ try { stop(); } catch(error){} });
+      coupleUnsubs=[]; coupleId=null; partnerUid=null; members=[]; lastPresence={};
+      clearTimeout(typingTimer); typingSentAt=0; currentSnap=null; openingSnap=false;
+    }
+    onAuthStateChanged(auth,user=>{
+      authUser=user; teardown();
+      if(!user){ $("authPassword").value=""; showPanel("login"); return; }
+      enterApp();
+    });
+
+    async function openCouple(id){
+      teardown();
+      coupleId=id;
+      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"" };
+      surpriseShown=false; bouquetShown=false; sharedApproach=false; prevApproach=false; lastTriviaSig="";
+      celebratedTrivia.clear(); scoring.clear(); purging.clear();
+      $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show");
+      showApp();
+      const listenError = name => error => console.warn("TY: could not listen to "+name,error?.code||error);
+      coupleUnsubs.push(onSnapshot(coupleRef(),onCoupleSnapshot,error=>{ if(coupleId===id) showStatus("We couldn't open your space ("+(error?.code||"error")+").",true); }));
+      coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"messages"),orderBy("createdAt","desc"),limit(MESSAGE_LIMIT)),onMessagesSnapshot,listenError("messages")));
+      coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"snaps"),orderBy("createdAt","desc"),limit(SNAP_LIMIT)),onSnapsSnapshot,listenError("snaps")));
+      heartbeat();
+    }
+
+    // ---- The couple document: everything shared lives under `shared` -------------------------------------
+    const changeKey = (text,at) => (text||"")+"|"+millis(at);
+    function renderInvite(id,waiting){ $("inviteRow").classList.toggle("hidden",!waiting); $("inviteCode").textContent=id; }
+    function renderApproach(on,live){
+      sharedApproach=on;
+      $("approach").textContent=on?"Aww, they found each other!":"Approach each other";
+      $("approach").setAttribute("aria-pressed",String(on));
+      document.querySelector(".hero-chars").classList.toggle("together",on);
+      if(on && !prevApproach && live){ confettiBurst(); playChime("success"); }
+      prevApproach=on;
+    }
+    function onCoupleSnapshot(snap){
+      if(!snap.exists()){
+        if(!snap.metadata.fromCache){ teardown(); showPanel("pair"); setPairMessage("That space no longer exists. Create or join a new one."); }
+        return;
+      }
+      const data=snap.data(), shared=data.shared||{}, me=authUser.uid, live=seen.ready, previousPartner=partnerUid;
+      members=data.members||[];
+      partnerUid=members.find(uid=>uid!==me)||null;
+      if(partnerUid!==previousPartner && partnerUid) delete genderTried[partnerUid];
+      $("effortCount").textContent=data.effort||0;
+      renderInvite(snap.id,members.length<2);
+      renderApproach(!!shared.approach,live);
+
+      if(shared.lastPoke) $("pokeStatus").textContent=shared.lastPoke;
+      const pokeKey=changeKey(shared.lastPoke,shared.lastPokeAt);
+      if(live && shared.lastPoke && shared.lastPokeBy && shared.lastPokeBy!==me && pokeKey!==seen.poke) notifyMe("A little poke 💌",shared.lastPoke);
+      seen.poke=pokeKey;
+
+      if(shared.lastNote){ $("noteResult").textContent=shared.lastNote; $("noteResult").classList.add("show"); }
+      const noteKey=changeKey(shared.lastNote,shared.lastNoteAt);
+      if(live && shared.lastNote && shared.lastNoteBy && shared.lastNoteBy!==me && noteKey!==seen.note) notifyMe("A love note 💗",shared.lastNote);
+      seen.note=noteKey;
+
+      const surprise=shared.surprise;
+      if(surprise && surprise.authorId!==me && !surprise.seen && !surpriseShown){
+        surpriseShown=true; $("surpriseText").textContent=surprise.text; $("surpriseScreen").classList.remove("hidden");
+        if(live) notifyMe("A surprise is waiting 🎁","Open TY to see it.");
+        confettiBurst(); playChime("success");
+      }
+      if(surprise && surprise.authorId===me && surprise.seen) $("surpriseStatus").textContent="They opened your surprise 💗";
+      const bouquet=shared.bouquet;
+      if(bouquet && bouquet.authorId!==me && !bouquet.seen && !bouquetShown){
+        bouquetShown=true; $("bouquetNote").textContent=bouquet.note; $("bouquetScreen").classList.remove("hidden");
+        if(live) notifyMe("A bouquet arrived 💐",bouquet.note);
+        confettiBurst(["💐","🌷","🌸","✨"],20); playChime("success");
+      }
+      if(bouquet && bouquet.authorId===me && bouquet.seen) $("bouquetStatus").textContent="They opened your bouquet 💐";
+
+      renderTrivia(shared.trivia||{index:0,answers:{}},shared,live);
+      lastPresence=shared.presence||{}; renderPresence();
+      aliasIndex=shared.aliasIndex||0; aliasSetAtMs=millis(shared.aliasSetAt)||aliasSetAtMs; renderAliases();
+
+      const task=shared.customTask;
+      renderAssignedTask(task);
+      const taskKey=task?task.text+"|"+task.authorId:"";
+      if(live && task && task.forUid===me && task.authorId!==me && taskKey!==seen.task) notifyMe("A new task for you 📝",task.text);
+      seen.task=taskKey;
+
+      updateHeroChars().catch(()=>{});
+      seen.ready=true;
+    }
+
+    // ---- Presence, activity and chat ---------------------------------------------------------------------
+    async function heartbeat(){
+      if(!coupleId || !authUser || document.hidden) return;
+      try { await updateDoc(coupleRef(),{[`shared.presence.${authUser.uid}.at`]:serverTimestamp()}); } catch(error){}
+    }
+    setInterval(heartbeat,20000);
+    function renderPresence(){
+      const dot=$("presenceDot"), label=$("presenceLabel"), typing=$("typingIndicator");
+      if(!coupleId || !partnerUid){ dot.classList.remove("online"); label.textContent="Waiting for your partner to join"; typing.classList.add("hidden"); return; }
+      const info=lastPresence[partnerUid]||{}, atMs=millis(info.at);
+      const online=!!atMs && (Date.now()-atMs)<PRESENCE_TTL_MS;
+      dot.classList.toggle("online",online);
+      label.textContent=online?"Online now":(atMs?"Last seen "+timeAgo(atMs):"Not seen yet");
+      if(info.typing && online){ typing.classList.remove("hidden"); typing.textContent="Your partner is typing…"; } else typing.classList.add("hidden");
+    }
+    // Re-check now and then so "Online now" fades when the partner's heartbeats stop.
+    setInterval(()=>{ if(coupleId) renderPresence(); },10000);
+    const activityIcons={poke:"👆",note:"💌",chat:"💬"};
+    function renderActivity(items){
+      const box=$("activityFeed"); box.innerHTML="";
+      if(!items.length){ const p=document.createElement("p"); p.className="tiny"; p.textContent="Nothing yet — send a poke or note to get started."; box.appendChild(p); return; }
+      items.forEach(m=>{
+        const row=document.createElement("div"); row.className="activity-item";
+        const icon=document.createElement("span"); icon.className="activity-icon"; icon.setAttribute("aria-hidden","true"); icon.textContent=activityIcons[m.type]||"💗";
+        const textWrap=document.createElement("div");
+        const who=m.authorId===authUser.uid?"You":"Your partner";
+        const snippet=m.text&&m.text.length>60?m.text.slice(0,60)+"…":(m.text||"");
+        const line=document.createElement("span"); line.className="activity-text"; line.textContent=`${who}: ${snippet}`;
+        const time=document.createElement("span"); time.className="activity-time"; time.textContent=timeAgo(millis(m.createdAt)||Date.now());
+        textWrap.appendChild(line); textWrap.appendChild(time); row.appendChild(icon); row.appendChild(textWrap); box.appendChild(row);
+      });
+    }
+    async function toggleReaction(msgId,emoji,alreadyReacted){
+      if(!coupleId) return;
+      try { await updateDoc(doc(db,"couples",coupleId,"messages",msgId),{[`reactions.${emoji}`]: alreadyReacted?arrayRemove(authUser.uid):arrayUnion(authUser.uid)}); } catch(error){}
+    }
+    function renderBubble(id,m,container){
+      const mine=m.authorId===authUser.uid;
+      const wrap=document.createElement("div"); wrap.className="bubble-wrap"+(mine?" mine":"");
+      const bubble=document.createElement("div"); bubble.className="bubble"+(mine?" mine":""); bubble.textContent=m.text;
+      if(m.createdAt) bubble.title=new Date(millis(m.createdAt)).toLocaleString();
+      wrap.appendChild(bubble);
+      const reactions=m.reactions||{};
+      const pillRow=document.createElement("div"); pillRow.className="reactions";
+      Object.keys(reactions).forEach(emoji=>{
+        const uids=reactions[emoji]||[]; if(!uids.length) return;
+        const pill=document.createElement("button"); pill.type="button"; pill.className="reaction-pill"+(uids.includes(authUser.uid)?" mine":"");
+        pill.textContent=`${emoji} ${uids.length}`; pill.onclick=()=>toggleReaction(id,emoji,uids.includes(authUser.uid)); pillRow.appendChild(pill);
+      });
+      wrap.appendChild(pillRow);
+      const picker=document.createElement("div"); picker.className="reaction-picker";
+      ["❤️","😂","😮","👍"].forEach(emoji=>{
+        const btn=document.createElement("button"); btn.type="button"; btn.textContent=emoji; btn.setAttribute("aria-label","React with "+emoji);
+        btn.onclick=()=>toggleReaction(id,emoji,(reactions[emoji]||[]).includes(authUser.uid)); picker.appendChild(btn);
+      });
+      wrap.appendChild(picker); container.appendChild(wrap);
+    }
+    // One query feeds both the chat and the "Recent activity" card (newest first).
+    function onMessagesSnapshot(snap){
+      const box=$("chatMessages"), docs=snap.docs, me=authUser.uid;
+      const nearBottom=window.innerHeight+window.scrollY>=document.body.scrollHeight-160;
+      box.innerHTML="";
+      for(let i=docs.length-1;i>=0;i--) renderBubble(docs[i].id,docs[i].data(),box);
+      renderActivity(docs.slice(0,6).map(item=>item.data()));
+      const newest=docs[0]?.data();
+      if($("chat").classList.contains("active") && (nearBottom || newest?.authorId===me)) box.lastElementChild?.scrollIntoView({block:"nearest"});
+      if(seen.chat){
+        snap.docChanges().forEach(change=>{
+          if(change.type!=="added") return;
+          const m=change.doc.data();
+          if(m.authorId!==me && m.type==="chat") notifyMe("New message 💬",m.text);
+        });
+      }
+      seen.chat=true;
+    }
+    async function share(type,text){ if(!coupleId) return; await addDoc(collection(db,"couples",coupleId,"messages"),{type,text,authorId:authUser.uid,createdAt:serverTimestamp()}); }
+    function setTyping(isTyping){ if(coupleId && authUser) updateDoc(coupleRef(),{[`shared.presence.${authUser.uid}.typing`]:isTyping}).catch(()=>{}); }
+    $("chatForm").onsubmit=async event=>{
+      event.preventDefault();
+      const input=$("message"), text=input.value.trim();
+      if(!text || !coupleId) return;
+      input.value=""; clearTimeout(typingTimer); typingSentAt=0; setTyping(false);
+      try { await share("chat",text); input.placeholder="Send a little message…"; }
+      catch(error){ input.value=text; input.placeholder="Could not send — check your connection"; }
+    };
+    $("message").addEventListener("input",()=>{
+      if(!coupleId || !authUser) return;
+      const now=Date.now();
+      if(now-typingSentAt>1500){ typingSentAt=now; setTyping(true); }
+      clearTimeout(typingTimer);
+      typingTimer=setTimeout(()=>{ typingSentAt=0; setTyping(false); },1800);
+    });
+
+    // ---- Characters and nicknames ------------------------------------------------------------------------
+    // Gender lives on each person's profile; the security rules let you read your partner's once you're paired.
+    async function loadGender(uid){
+      if(!uid) return null;
+      if(genderCache[uid]) return genderCache[uid];
+      if(Date.now()-(genderTried[uid]||0)<60000) return null;
+      genderTried[uid]=Date.now();
+      try {
+        const snap=await getDoc(doc(db,"users",uid)), gender=snap.exists()?(snap.data().gender||null):null;
+        if(gender) genderCache[uid]=gender;
+        return gender;
+      } catch(error){ return null; }
+    }
+    async function updateHeroChars(){
+      if(!authUser) return;
+      const yourType=(await loadGender(authUser.uid)) || $("genderSelect").value || "girl";
+      const themGender=partnerUid ? await loadGender(partnerUid) : null;
+      $("youFace").textContent=defaultFaces.you[yourType]||defaultFaces.you.girl;
+      $("themFace").textContent=themGender ? (defaultFaces.them[themGender]||defaultFaces.them.girl) : "💞";
+      $("youProfileFace").textContent=$("youFace").textContent; $("themProfileFace").textContent=$("themFace").textContent;
+      $("youProfileName").textContent=yourType==="boy" ? "Your boy profile" : "Your girl profile";
+      $("youProfileMeta").textContent=yourType==="boy" ? "Man character profile" : "Girl character profile";
+      if(themGender){
+        $("themProfileName").textContent=themGender==="boy" ? "Partner boy profile" : "Partner girl profile";
+        $("themProfileMeta").textContent=themGender==="boy" ? "Man character profile" : "Girl character profile";
+      } else {
+        $("themProfileName").textContent="Partner profile";
+        $("themProfileMeta").textContent=partnerUid ? "Character not shared yet" : "Waiting for your partner";
+      }
+    }
+    const aliases = [["Honey Bear","Moon Bunny"],["Sunshine","Star Girl"],["Cuddle Bug","Sweet Pea"],["Lovebird","Cherry Heart"],["Biscuit","Baby Panda"]];
+    // The first person in the couple always gets the first nickname of the pair, so both of you see the same names.
+    function renderAliases(){
+      const pair=aliases[aliasIndex%aliases.length], myIndex=members.indexOf(authUser.uid)===1?1:0;
+      const mine=pair[myIndex], theirs=pair[1-myIndex];
+      $("youAlias").textContent="You: "+mine; $("themAlias").textContent="Partner: "+theirs;
+      $("rateYouName").textContent=mine; $("rateHerName").textContent=theirs;
+      $("noteText").placeholder=`Write something for ${theirs}…`;
+    }
+    async function maybeAdvanceAlias(){
+      if(!coupleId) return;
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=coupleRef(), snap=await transaction.get(ref);
+          if(!snap.exists()) return;
+          const shared=snap.data().shared||{};
+          if(Date.now()-millis(shared.aliasSetAt)>=ALIAS_PERIOD_MS) transaction.update(ref,{"shared.aliasIndex":((shared.aliasIndex||0)+1)%aliases.length,"shared.aliasSetAt":serverTimestamp()});
+        });
+      } catch(error){}
+    }
+    setInterval(()=>{
+      if(!coupleId || document.hidden) return;
+      const remaining=Math.max(0,ALIAS_PERIOD_MS-(Date.now()-aliasSetAtMs));
+      const m=Math.floor(remaining/60000), s=String(Math.floor((remaining%60000)/1000)).padStart(2,"0");
+      $("countdown").textContent=`changes in ${m}:${s}`;
+      // Only ask Firestore once the timer has run out (and at most every 15s), not on every tick.
+      if(remaining===0 && Date.now()-aliasAdvancedAt>15000){ aliasAdvancedAt=Date.now(); maybeAdvanceAlias(); }
+    },1000);
+
+    // ---- Tabs --------------------------------------------------------------------------------------------
+    function setActiveTab(view){
+      document.querySelectorAll(".nav button").forEach(btn=>{
+        const on=btn.dataset.view===view;
+        btn.classList.toggle("active",on);
+        if(on) btn.setAttribute("aria-current","page"); else btn.removeAttribute("aria-current");
+      });
+      document.querySelectorAll(".view").forEach(panel=>panel.classList.toggle("active",panel.id===view));
+    }
+    function openTab(view){
+      const target=tabOrder.includes(view)?view:"home";
+      setActiveTab(target);
+      if(target==="chat") $("chatMessages").lastElementChild?.scrollIntoView({block:"nearest"});
+    }
+    document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>openTab(b.dataset.view));
+    const nav = document.querySelector(".nav");
+    nav.addEventListener("touchstart",e=>{ const t=e.touches[0]; swipeStartX=t.clientX; swipeStartY=t.clientY; },{passive:true});
+    nav.addEventListener("touchend",e=>{
+      const t=e.changedTouches[0], dx=t.clientX-swipeStartX, dy=t.clientY-swipeStartY;
+      if(Math.abs(dx)<45 || Math.abs(dx)<Math.abs(dy)) return;
+      const active=document.querySelector(".nav button.active")?.dataset.view||"home", index=tabOrder.indexOf(active);
+      openTab(dx<0 ? tabOrder[Math.min(tabOrder.length-1,index+1)] : tabOrder[Math.max(0,index-1)]);
+    },{passive:true});
+
+    // ---- Install -----------------------------------------------------------------------------------------
+    const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
+    if(isStandalone()) $("downloadBtn").classList.add("hidden");
+    window.addEventListener("appinstalled",()=>$("downloadBtn").classList.add("hidden"));
+    window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferredInstallPrompt=e; });
+    $("downloadBtn").onclick=async()=>{
+      if(deferredInstallPrompt){ deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice.catch(()=>{}); deferredInstallPrompt=null; return; }
+      alert("On iPhone, tap Share and choose Add to Home Screen. On Android or desktop Chrome, use the install option in the browser menu.");
+    };
+
+    // ---- Home cards --------------------------------------------------------------------------------------
+    $("approach").onclick=()=>busy($("approach"),async()=>{ try { await updateDoc(coupleRef(),{"shared.approach":!sharedApproach}); } catch(error){} });
+    const pokeStarts=["💌 A tiny note for you:","✨ A little thought from me:","🫶 Just so you know:","🌷 A soft reminder:"];
+    const pokeEnds=["You make my world sweeter.","Sending you a warm little hug.","I hope this makes you smile.","You are loved, always."];
+    $("poke").onclick=()=>busy($("poke"),async()=>{
+      const thought=$("pokeThought").value.trim().replace(/[.!?…]+$/,"")||"I am thinking of you";
+      const fallback=`${pick(pokeStarts)} “${thought}.” ${pick(pokeEnds)} ✨`;
+      $("pokeStatus").textContent="Writing something sweet…";
+      const text=await generateAIText(`Write one short, warm, sincere romantic text message (max 2 sentences, no quotation marks) inspired by this thought from one partner to another: "${thought}". Keep it sweet and simple, end with one fitting emoji.`,fallback);
+      try {
+        await Promise.all([share("poke",text),updateDoc(coupleRef(),{"shared.lastPoke":text,"shared.lastPokeBy":authUser.uid,"shared.lastPokeAt":serverTimestamp()})]);
+        $("pokeThought").value=""; playChime("pop"); confettiBurst(["👆","💌","✨"],10);
+      } catch(error){ $("pokeStatus").textContent="Could not send poke yet."; }
+    });
+    $("saveRating").onclick=()=>busy($("saveRating"),async()=>{
+      const points=Number($("rateYou").value)+Number($("rateHer").value);
+      try { await updateDoc(coupleRef(),{effort:increment(points)}); $("ratingStatus").textContent=`${points} shared hearts added! ✨`; playChime("success"); confettiBurst(["🌟","💗","🏆"],14); }
+      catch(error){ $("ratingStatus").textContent="Could not save the rating yet."; }
+    });
+    $("setSurprise").onclick=()=>busy($("setSurprise"),async()=>{
+      const raw=$("surpriseInput").value.trim();
+      if(!raw){ $("surpriseStatus").textContent="Write a little message first."; return; }
+      $("surpriseStatus").textContent="Wrapping it up…";
+      const text=await generateAIText(`Lightly polish this heartfelt note from one partner to another. Keep their original meaning and voice, just make it warm and well written (max 3 sentences), no quotation marks: "${raw}"`,raw);
+      try { await updateDoc(coupleRef(),{"shared.surprise":{text,authorId:authUser.uid,seen:false}}); $("surpriseInput").value=""; $("surpriseStatus").textContent="Saved — your love will see it the next time they open TY."; }
+      catch(error){ $("surpriseStatus").textContent="Could not save it yet."; }
+    });
+    $("sendBouquet").onclick=()=>busy($("sendBouquet"),async()=>{
+      const context=$("bouquetInput").value.trim();
+      $("bouquetStatus").textContent="Picking flowers…";
+      const fallback="A little bouquet, just because you make everything better. 💐";
+      const prompt=context
+        ? `Write one short, sweet note (max 2 sentences) to go with a surprise virtual bouquet for a partner, inspired by: "${context}". No quotation marks, warm tone, end with one flower emoji.`
+        : `Write one short, sweet, surprising note (max 2 sentences) to go with a virtual bouquet sent to a partner just because. No quotation marks, warm tone, end with one flower emoji.`;
+      const text=await generateAIText(prompt,fallback);
+      try { await updateDoc(coupleRef(),{"shared.bouquet":{note:text,authorId:authUser.uid,seen:false}}); $("bouquetInput").value=""; $("bouquetStatus").textContent="Bouquet sent — they'll see it the next time they open TY. 💐"; playChime("success"); confettiBurst(["💐","🌷","🌸","✨"],16); }
+      catch(error){ $("bouquetStatus").textContent="Could not send the bouquet yet."; }
+    });
+    // Closing the card marks it as seen so it doesn't pop up again on every visit.
+    function closeKeepsake(screenId,field){
+      $(screenId).classList.add("hidden");
+      if(coupleId) updateDoc(coupleRef(),{[`shared.${field}.seen`]:true}).catch(()=>{});
+    }
+    $("closeSurprise").onclick=()=>closeKeepsake("surpriseScreen","surprise");
+    $("closeBouquet").onclick=()=>closeKeepsake("bouquetScreen","bouquet");
+
+    // ---- Love note ---------------------------------------------------------------------------------------
+    let selectedMood="loving";
+    const wraps={loving:["💗 A pocket full of love:","🌙 A little moonlit note:"],happy:["🎈 A happy little surprise:","🌈 A bright note for you:"],"missing you":["🫂 Until I can hug you:","✨ A small piece of my heart:"],sorry:["🌷 A gentle apology:","💌 I want you to know:"]};
+    document.querySelectorAll(".mood").forEach(b=>b.onclick=()=>{
+      document.querySelectorAll(".mood").forEach(x=>{ x.classList.remove("selected"); x.setAttribute("aria-pressed","false"); });
+      b.classList.add("selected"); b.setAttribute("aria-pressed","true"); selectedMood=b.dataset.mood;
+    });
+    $("makeNote").onclick=()=>busy($("makeNote"),async()=>{
+      const t=$("noteText").value.trim()||"You make my world feel warmer.";
+      const fallback=`${pick(wraps[selectedMood])} ${t} ✨`;
+      $("noteResult").textContent="Writing something sweet…"; $("noteResult").classList.add("show");
+      const text=await generateAIText(`Write one short, warm romantic love note (2-3 sentences max) with a "${selectedMood}" tone, inspired by this idea: "${t}". No quotation marks, end with one fitting emoji.`,fallback);
+      try {
+        await Promise.all([share("note",text),updateDoc(coupleRef(),{"shared.lastNote":text,"shared.lastNoteBy":authUser.uid,"shared.lastNoteAt":serverTimestamp()})]);
+        $("noteText").value="";
+      } catch(error){ $("noteResult").textContent="Could not send the note yet."; }
+    });
+
+    // ---- Daily and custom tasks --------------------------------------------------------------------------
+    // Both partners compute the same day-of-year index locally, so no sync is needed for this part.
+    const dailyTasks=["Send a snap of what you're having for breakfast today 🍳","Take a snap of the view outside your window right now 🌤️","Snap something that reminded you of your partner today 💭","Send a selfie with your best smile 😊","Snap your cozy spot right now 🛋️","Take a photo of your shoes — wherever you are 👟","Snap something you're grateful for today 🌸","Send a photo of your hands doing something right now ✋","Snap your favorite drink of the day ☕","Take a photo of the sky where you are right now 🌌","Snap something silly near you right now 🤪","Send a photo that shows your mood today 🎭","Snap a little corner of your room 🏠","Take a photo of something colorful near you 🎨"];
+    function dayIndex(){ const now=new Date(), start=new Date(now.getFullYear(),0,0); return Math.floor((now-start)/86400000); }
+    function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
+    renderDailyTask();
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); } });
+    function renderAssignedTask(task){
+      const box=$("assignedTaskView");
+      if(!task || !authUser){ box.textContent=""; return; }
+      if(task.forUid===authUser.uid) box.textContent=`💌 Your partner's task for you: "${task.text}"`;
+      else if(task.authorId===authUser.uid) box.textContent=`You assigned: "${task.text}" — waiting for their snap.`;
+      else box.textContent="";
+    }
+    $("setCustomTask").onclick=()=>busy($("setCustomTask"),async()=>{
+      if(!coupleId || !partnerUid){ $("customTaskStatus").textContent="Waiting for your partner to join first."; return; }
+      const text=$("customTaskInput").value.trim();
+      if(!text){ $("customTaskStatus").textContent="Write a task first."; return; }
+      try { await updateDoc(coupleRef(),{"shared.customTask":{text,authorId:authUser.uid,forUid:partnerUid}}); $("customTaskInput").value=""; $("customTaskStatus").textContent="Task assigned! They'll see it here."; }
+      catch(error){ $("customTaskStatus").textContent="Could not assign it yet."; }
+    });
+
+    // ---- Snaps -------------------------------------------------------------------------------------------
+    // Compress on-device before upload so a full-res camera photo doesn't turn into a slow, huge upload.
+    function compressImage(file,maxDim,quality){
+      return new Promise((resolve,reject)=>{
+        const img=new Image(), url=URL.createObjectURL(file);
+        img.onload=()=>{
+          let w=img.width, h=img.height;
+          if(w>h && w>maxDim){ h=Math.round(h*maxDim/w); w=maxDim; } else if(h>=w && h>maxDim){ w=Math.round(w*maxDim/h); h=maxDim; }
+          const canvas=document.createElement("canvas"); canvas.width=w; canvas.height=h; canvas.getContext("2d").drawImage(img,0,0,w,h);
+          canvas.toBlob(blob=>{ URL.revokeObjectURL(url); blob?resolve(blob):reject(new Error("compress failed")); },"image/jpeg",quality);
+        };
+        img.onerror=()=>{ URL.revokeObjectURL(url); reject(new Error("could not load image")); };
+        img.src=url;
+      });
+    }
+    function clearSnapSelection(){
+      selectedSnapBlob=null;
+      if(selectedSnapUrl){ URL.revokeObjectURL(selectedSnapUrl); selectedSnapUrl=null; }
+      $("snapPreview").removeAttribute("src"); $("snapFile").value=""; $("snapCaption").value=""; $("snapPreviewWrap").classList.add("hidden");
+    }
+    $("snapPickBtn").onclick=()=>$("snapFile").click();
+    $("snapFile").addEventListener("change",async event=>{
+      const file=event.target.files[0]; if(!file) return;
+      $("snapStatus").textContent="Preparing photo…";
+      try {
+        selectedSnapBlob=await compressImage(file,900,0.72);
+        if(selectedSnapUrl) URL.revokeObjectURL(selectedSnapUrl);
+        selectedSnapUrl=URL.createObjectURL(selectedSnapBlob);
+        $("snapPreview").src=selectedSnapUrl; $("snapPreviewWrap").classList.remove("hidden"); $("snapStatus").textContent="";
+      } catch(error){ $("snapStatus").textContent="Could not read that photo."; }
+    });
+    $("snapCancelBtn").onclick=clearSnapSelection;
+    $("snapSendBtn").onclick=()=>busy($("snapSendBtn"),async()=>{
+      if(!selectedSnapBlob || !coupleId) return;
+      const viewOnce=document.querySelector('input[name="snapMode"]:checked').value==="once", caption=$("snapCaption").value.trim();
+      $("snapStatus").textContent="Sending your snap…";
+      try {
+        const path=`couples/${coupleId}/snaps/${authUser.uid}_${Date.now()}.jpg`, fileRef=storageRef(storage,path);
+        await uploadBytes(fileRef,selectedSnapBlob,{contentType:"image/jpeg"});
+        const url=await getDownloadURL(fileRef);
+        await addDoc(collection(db,"couples",coupleId,"snaps"),{authorId:authUser.uid,url,storagePath:path,caption,viewOnce,viewed:false,createdAt:serverTimestamp()});
+        $("snapStatus").textContent="Snap sent! 📸"; playChime("pop"); confettiBurst(["📸","💗","✨"],10);
+        clearSnapSelection();
+      } catch(error){ $("snapStatus").textContent="Could not send — check Firebase Storage is enabled and its rules are deployed."; }
+    });
+    // A view-once snap is "expired" for the receiver as soon as it has been opened.
+    const isExpired = item => item.viewOnce && item.viewed && item.authorId!==authUser.uid;
+    async function purgeSnap(item){
+      if(!coupleId || purging.has(item.id)) return;
+      purging.add(item.id);
+      if(item.storagePath){ try { await deleteObject(storageRef(storage,item.storagePath)); } catch(error){} }
+      try { await deleteDoc(doc(db,"couples",coupleId,"snaps",item.id)); } catch(error){ purging.delete(item.id); }
+    }
+    function renderSnapGallery(items){
+      const box=$("snapGallery"); box.innerHTML="";
+      if(!items.length){ const p=document.createElement("p"); p.className="tiny"; p.textContent="No snaps yet — send one from Today's task!"; box.appendChild(p); return; }
+      items.forEach(item=>{
+        const mine=item.authorId===authUser.uid, unseen=item.viewOnce && !mine && !item.viewed;
+        const tile=document.createElement("button"); tile.type="button";
+        tile.className="snap-thumb"+(unseen?" unseen":"")+(item.viewOnce&&mine&&item.viewed?" opened":"");
+        tile.setAttribute("aria-label",unseen?"New view-once snap":(mine?"Snap you sent":"Snap from your partner"));
+        if(unseen) tile.textContent="📸";
+        else { const img=document.createElement("img"); img.src=item.url; img.alt=item.caption||"Snap"; img.loading="lazy"; tile.appendChild(img); }
+        tile.onclick=()=>openSnap(item);
+        box.appendChild(tile);
+      });
+    }
+    function onSnapsSnapshot(snap){
+      const me=authUser.uid, items=snap.docs.map(d=>({id:d.id,...d.data()}));
+      items.filter(isExpired).filter(item=>item.id!==currentSnap?.item.id).forEach(purgeSnap);
+      renderSnapGallery(items.filter(item=>!isExpired(item)));
+      if(seen.snaps){
+        snap.docChanges().forEach(change=>{
+          if(change.type!=="added") return;
+          const m=change.doc.data();
+          if(m.authorId!==me && !(m.viewOnce && m.viewed)) notifyMe("A snap arrived 📸",m.caption||"Tap to view it.");
+        });
+      }
+      seen.snaps=true;
+    }
+    async function openSnap(item){
+      if(openingSnap || currentSnap) return;
+      const mine=item.authorId===authUser.uid, consume=item.viewOnce && !mine;
+      if(consume && item.viewed) return;
+      openingSnap=true;
+      // Set before the write: the "viewed" snapshot arrives first and must not clean up the snap we're about to show.
+      currentSnap={item,consume};
+      try {
+        // The snap only opens once Firestore has recorded the view, so it really can't be opened twice.
+        if(consume) await withTimeout(updateDoc(doc(db,"couples",coupleId,"snaps",item.id),{viewed:true}),8000);
+        $("snapViewImg").src=item.url; $("snapViewCaption").textContent=item.caption||"";
+        $("deleteSnap").classList.toggle("hidden",!mine);
+        $("snapViewScreen").classList.remove("hidden");
+      } catch(error){ currentSnap=null; $("snapStatus").textContent="Could not open that snap right now — try again in a moment."; }
+      finally { openingSnap=false; }
+    }
+    function closeSnapView(){
+      $("snapViewScreen").classList.add("hidden"); $("snapViewImg").removeAttribute("src");
+      const finished=currentSnap; currentSnap=null;
+      if(finished?.consume) purgeSnap(finished.item);
+    }
+    $("closeSnapView").onclick=closeSnapView;
+    $("deleteSnap").onclick=()=>{
+      if(!currentSnap || !confirm("Delete this snap for both of you?")) return;
+      const item=currentSnap.item; currentSnap=null;
+      $("snapViewScreen").classList.add("hidden"); $("snapViewImg").removeAttribute("src");
+      purgeSnap(item);
+    };
+    document.addEventListener("keydown",event=>{
+      if(event.key!=="Escape") return;
+      if(!$("snapViewScreen").classList.contains("hidden")) closeSnapView();
+      else if(!$("surpriseScreen").classList.contains("hidden")) closeKeepsake("surpriseScreen","surprise");
+      else if(!$("bouquetScreen").classList.contains("hidden")) closeKeepsake("bouquetScreen","bouquet");
+    });
+
+    // ---- Couple Trivia — both partners answer the same question; matching picks score a point together ----
+    const triviaQuestions=[
+      {q:"Where would your partner rather spend a Friday night?",options:["Cozy movie night","Fancy dinner out","Adventure or hike","Video games together"]},
+      {q:"What's your partner's go-to comfort food?",options:["Pizza","Ice cream","Ramen","Chocolate anything"]},
+      {q:"On a free day, your partner would most want to…",options:["Sleep in late","Take a spontaneous trip","Binge a show together","Cook something new"]},
+      {q:"Your partner's love language is mostly…",options:["Words of affirmation","Quality time","Physical touch","Acts of service"]},
+      {q:"Dream vacation for your partner?",options:["Beach & sun","Mountains & hiking","Big city exploring","Cozy cabin, nowhere to be"]},
+      {q:"Which emoji does your partner use the most?",options:["❤️","😂","✨","🥺"]},
+      {q:"Your partner's ideal pet?",options:["Dog","Cat","Something exotic","No pets, thanks"]},
+      {q:"Best gift for your partner right now?",options:["Something handmade","An experience together","A surprise treat","A thoughtful letter"]},
+      {q:"Your partner's music mood lately?",options:["Chill lo-fi","Pop hits","Old favorites","Whatever's on the radio"]},
+      {q:"If your partner could time travel, they'd go…",options:["Back to a favorite memory","Forward to see the future","Way back in history","Nowhere, they love now"]}
+    ];
+    let quizCurrentIndex=0;
+    // Either of you may award the point; the transaction makes sure it is only counted once per question.
+    async function scoreTrivia(idx){
+      const key=coupleId+":"+idx;
+      if(scoring.has(key)) return;
+      scoring.add(key);
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=coupleRef(), snap=await transaction.get(ref);
+          const t=snap.data()?.shared?.trivia||{}, picks=Object.values(t.answers||{});
+          if((t.index||0)%triviaQuestions.length!==idx || (t.scoredIndexes||[]).includes(idx) || picks.length<2 || picks[0]!==picks[1]) return;
+          transaction.update(ref,{"shared.trivia.scoredIndexes":arrayUnion(idx),"shared.triviaScore":increment(1)});
+        });
+      } catch(error){}
+      finally { scoring.delete(key); }
+    }
+    function renderTrivia(t,shared,live){
+      const idx=(t.index||0)%triviaQuestions.length; quizCurrentIndex=idx;
+      const q=triviaQuestions[idx], answers=t.answers||{}, me=authUser.uid;
+      const myPick=answers[me], partnerPick=partnerUid?answers[partnerUid]:undefined;
+      $("quizScoreYou").textContent=(shared.triviaAnswered||{})[me]||0;
+      if(typeof shared.triviaScore==="number") $("quizScoreShared").textContent=shared.triviaScore;
+      const bothAnswered=myPick!==undefined && partnerPick!==undefined, matched=bothAnswered && myPick===partnerPick;
+      if(matched && !(t.scoredIndexes||[]).includes(idx)) scoreTrivia(idx);
+      if(matched && !celebratedTrivia.has(idx)){ celebratedTrivia.add(idx); if(live){ confettiBurst(["🧠","💗","🎉"],14); playChime("success"); } }
+      const signature=`${idx}|${myPick}|${partnerPick}`;
+      if(signature===lastTriviaSig) return;
+      lastTriviaSig=signature;
+      $("quizProgress").textContent=idx+1; $("quizTotal").textContent=triviaQuestions.length; $("quizQ").textContent=q.q;
+      const box=$("quizOptions"); box.innerHTML="";
+      q.options.forEach((opt,i)=>{
+        const btn=document.createElement("button"); btn.type="button"; btn.className="quiz-option"; btn.textContent=opt;
+        if(myPick!==undefined){
+          btn.disabled=true;
+          if(i===myPick) btn.classList.add("picked");
+          if(bothAnswered){
+            if(i===myPick && i===partnerPick) btn.classList.add("correct");
+            else if(i===myPick) btn.classList.add("wrong");
+            if(i===partnerPick && i!==myPick){
+              btn.classList.add("partner-pick");
+              const tag=document.createElement("span"); tag.className="pick-tag"; tag.textContent="partner’s pick"; btn.appendChild(tag);
+            }
+          }
+        } else {
+          btn.onclick=async()=>{
+            if(!coupleId) return;
+            box.querySelectorAll("button").forEach(b=>b.disabled=true);
+            try { await updateDoc(coupleRef(),{[`shared.trivia.answers.${me}`]:i,"shared.trivia.index":idx,[`shared.triviaAnswered.${me}`]:increment(1)}); }
+            catch(error){ box.querySelectorAll("button").forEach(b=>b.disabled=false); }
+          };
+        }
+        box.appendChild(btn);
+      });
+      if(myPick===undefined){ $("quizStatus").textContent="Pick your answer!"; $("quizNext").disabled=true; }
+      else if(partnerPick===undefined){ $("quizStatus").textContent="Waiting for your partner to answer…"; $("quizNext").disabled=true; }
+      else { $("quizStatus").textContent=matched?"You matched! 💕 +1 shared point":"Not quite the same pick this time."; $("quizNext").disabled=false; }
+    }
+    $("quizNext").onclick=()=>busy($("quizNext"),async()=>{
+      if(!coupleId) return;
+      const next=(quizCurrentIndex+1)%triviaQuestions.length;
+      // arrayRemove lets a question score again when the quiz comes back around to it.
+      try { await updateDoc(coupleRef(),{"shared.trivia.index":next,"shared.trivia.answers":{},"shared.trivia.scoredIndexes":arrayRemove(next)}); } catch(error){}
+    });
+    $("quizReset").onclick=async()=>{
+      if(!coupleId || !confirm("Restart the trivia quiz and reset your shared score?")) return;
+      try { await updateDoc(coupleRef(),{"shared.trivia":{index:0,answers:{},scoredIndexes:[]},"shared.triviaScore":0,"shared.triviaAnswered":{}}); } catch(error){}
+    };
+
+    // The page is ready: unlock the sign-in buttons (they stay disabled if the Firebase SDK can't load).
+    setAuthBusy(false); setAuthMessage("");
+    window.__tyReady=true;
+  </script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=3").catch(() => {});
+        navigator.serviceWorker.register("./service-worker.js").catch(() => {});
       });
     }
-  </script>
-</head>
-<body>
-  <p>Opening <a href="our-little-world.html">TY</a>…</p>
-  <script>
-    location.replace("our-little-world.html");
+    setTimeout(() => {
+      if (!window.__tyReady) {
+        const message = document.getElementById("authMessage");
+        if (message) message.textContent = "Couldn't load TY — check your connection and reload.";
+      }
+    }, 10000);
   </script>
 </body>
 </html>

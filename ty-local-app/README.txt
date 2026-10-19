@@ -1,7 +1,9 @@
-TY local app
+TY on your Mac
 
-1. Double-click “Start TY.command”.
-2. Your browser opens TY at http://localhost:8765.
-3. In Safari: File > Add to Dock. In Chrome: use the Install icon in the address bar.
+1. Double-click "Start TY.command". It serves this repo's site at http://localhost:8765
+   (only on this computer) and opens your browser. Close the Terminal window to stop it.
+2. In Safari: File > Add to Dock. In Chrome: use the Install icon in the address bar.
 
-The app shell works locally and can be installed. Real-time chat and couple syncing still need an internet connection because they use Firebase.
+This always runs the same files as the website (index.html at the repo root), so there is
+no second copy to keep up to date. Sign-in, chat and couple syncing use Firebase, so they
+need an internet connection; the app shell itself opens offline once it has been loaded.
