@@ -25,20 +25,7 @@
     .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; }
     .heart { width:38px; height:38px; display:grid; place-items:center; border-radius:14px; background:var(--pink); color:white; box-shadow:0 6px 14px #ff9bbb; }
     .lock { background:white; color:var(--purple); padding:9px 12px; border-radius:12px; font-size:.84rem; box-shadow:var(--shadow); }
-    .hero { position:relative; overflow:hidden; background:rgba(255,255,255,.66); border:1px solid rgba(255,255,255,.9); border-radius:18px; padding:14px 14px 12px; box-shadow:var(--shadow); }
-    .eyebrow { color:var(--purple); font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
-    h1 { font-size:clamp(1.35rem,4vw,1.8rem); margin:4px 0 2px; line-height:1.1; letter-spacing:-.03em; }
     .sub { color:var(--muted); margin:0; }
-    .connection-row { display:flex; align-items:center; gap:8px; margin-top:10px; flex-wrap:wrap; }
-    .connection-row .alias-pill { background:#f4ecf2; color:#5a3f56; border-color:transparent; }
-    .countdown { margin-left:auto; font-size:.74rem; color:var(--muted); }
-    .hero-chars { position:absolute; right:10px; bottom:10px; display:flex; gap:8px; }
-    .hero-char { position:relative; width:74px; height:74px; border-radius:22px; display:grid; place-items:center; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 20px rgba(128,68,95,.08); }
-    .hero-char .face { font-size:2rem; line-height:1; }
-    .hero-char .sparkle { position:absolute; font-size:.72rem; color:#ff7da5; }
-    .hero-char .sparkle.left { top:8px; left:8px; }
-    .hero-char .sparkle.right { top:9px; right:9px; color:#7b5cbd; }
-    .hero-copy { padding-right:172px; }
     .nav { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:12px 0 14px; }
     .nav button { color:var(--muted); background:transparent; padding:9px 2px; border-radius:999px; font-size:.72rem; font-weight:750; }
     .nav button.active { color:var(--purple); background:white; box-shadow:0 7px 16px rgba(93,65,126,.12); }
@@ -68,7 +55,6 @@
     .quiz-score b { color:var(--purple); font-size:1.1rem; }
     .chat { min-height:260px; display:flex; flex-direction:column; gap:10px; }.bubble { max-width:78%; padding:10px 12px; border-radius:15px 15px 15px 4px; background:white; box-shadow:0 3px 10px rgba(99,55,75,.08); font-size:.9rem; }.bubble.mine { align-self:flex-end; border-radius:15px 15px 4px 15px; background:var(--pink); color:white; }.chat-form { display:flex; gap:8px; margin-top:14px; }.chat-form input { min-width:0; flex:1; padding:10px 11px; border:1px solid var(--line); border-radius:12px; }.send { background:var(--purple); color:white; border-radius:12px; padding:0 14px; font-weight:800; }
     .privacy { background:linear-gradient(130deg,#f0edff,#fff); }.setting { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #eae5f8; font-size:.91rem; }.setting:last-child { border:0; }.switch { appearance:none; width:42px; height:24px; border-radius:99px; background:#ddd; position:relative; transition:.2s; }.switch:checked { background:var(--purple); }.switch:before { content:""; width:18px; height:18px; background:#fff; border-radius:50%; position:absolute; left:3px; top:3px; transition:.2s; }.switch:checked:before { transform:translateX(18px); }
-    .aliases { display:flex; align-items:center; gap:8px; font-weight:800; flex-wrap:wrap; }.alias-pill { background:rgba(255,255,255,.72); color:#a23b62; border:1px solid #ffd5e4; border-radius:99px; padding:7px 10px; font-size:.84rem; }
     .hidden { display:none!important; } .notice { text-align:center; color:#32735a; margin:8px 0 0; min-height:19px; font-size:.82rem; font-weight:700; }.effort-number { font-size:2.35rem; line-height:1; margin:8px 0 4px; font-weight:900; background:linear-gradient(90deg,#ff5c91,#8256c2); -webkit-background-clip:text; background-clip:text; color:transparent; }.rating-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }.rating-row label { color:var(--muted); font-size:.78rem; font-weight:700; }.rating-row select { width:100%; margin-top:4px; padding:9px; background:#fff; border:1px solid var(--line); border-radius:11px; color:var(--ink); }
     .view.active { animation:viewIn .35s ease; } @keyframes viewIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
     .presence-dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:#d8cfe0; margin-right:5px; transition:.2s; } .presence-dot.online { background:#32c48d; box-shadow:0 0 0 4px rgba(50,196,141,.22); }
@@ -90,21 +76,12 @@
     .snap-view-img { width:100%; border-radius:16px; max-height:60vh; object-fit:contain; background:#000; }
     .task-text { text-align:center; font-weight:800; color:var(--purple); font-size:1.02rem; line-height:1.4; margin:6px 0 2px; }
     #authScreen,#surpriseScreen,#bouquetScreen,#snapViewScreen { position:fixed; inset:0; z-index:8; display:grid; place-items:center; padding:20px; background:linear-gradient(145deg,#ffe4ee,#eae0ff); }.authbox { width:min(100%,370px); text-align:center; background:#fff; padding:28px; border-radius:28px; box-shadow:var(--shadow); }.authbox .heart { margin:auto auto 16px; }.authbox h2 { margin:0 0 6px; }.authbox input { width:100%; padding:12px; border-radius:13px; border:1px solid var(--line); margin-top:10px; }.authbox .button { width:100%; }.authbox .button.soft { margin-top:8px; }.pair-code { margin:14px 0; padding:12px; border-radius:13px; background:#fff0f5; color:#a23b62; font-weight:900; letter-spacing:.12em; }.auth-message { min-height:20px; margin:9px 0 0; color:#a23b62; font-size:.82rem; }.surprise-text { margin:16px 0; padding:16px; border-radius:16px; background:linear-gradient(120deg,#fff0f5,#f0eaff); line-height:1.5; white-space:pre-wrap; }
-    @media(max-width:440px) { .app { padding:max(12px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(22px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }.grid { gap:10px; }.card { padding:14px; }.countdown { width:100%; margin-left:0; } }
+    @media(max-width:440px) { .app { padding:max(12px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(22px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }.grid { gap:10px; }.card { padding:14px; } }
     body.dark { --ink:#e9e2e8; --muted:#afa1ab; --line:#40323d; --pink-soft:#2c1d27; --mint:#1f332d; background:#111012; }
-    body.dark .app { background:#151015; } body.dark .hero { background:#1c171c; border-color:#2f242d; }
+    body.dark .app { background:#151015; }
     body.dark .card, body.dark .authbox, body.dark .lockbox { background:#1d171d; border-color:#322530; box-shadow:none; }
     body.dark .lock { background:#221b22; color:#eadfee; box-shadow:none; } body.dark textarea, body.dark input, body.dark select, body.dark .chat-form input { background:#241d24; color:#f1e8ef; border-color:#40323d; }
     body.dark .bubble { background:#272027; color:#f1e8ef; } body.dark .nav button.active { background:#241d24; }
-    body.dark .hero-char { background:linear-gradient(145deg,#241c24,#2a2233); border-color:#35293a; }
-    .profile-strip { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
-    .profile-card { background:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.9); border-radius:16px; padding:10px; min-height:80px; }
-    .profile-head { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
-    .profile-avatar { width:30px; height:30px; display:grid; place-items:center; border-radius:10px; background:#f4ecf2; font-size:1rem; }
-    .profile-name { font-weight:800; font-size:.82rem; }
-    .profile-meta { color:var(--muted); font-size:.72rem; line-height:1.35; }
-    body.dark .profile-card { background:#1d171d; border-color:#322530; }
-    body.dark .profile-avatar { background:#241d24; }
     .install-help { margin-top:8px; font-size:.75rem; color:var(--muted); }
 
     /* Accessibility, focus and touch comfort */
@@ -118,16 +95,17 @@
     .authbox { margin:auto; }
     #authScreen,#surpriseScreen,#bouquetScreen,#snapViewScreen { overflow-y:auto; }
 
-    /* Hero characters: the "Come closer" button slides them together */
-    .hero-char { transition:transform .65s cubic-bezier(.2,.8,.2,1); }
-    .hero-chars.together .hero-char:first-child { transform:translateX(7px); }
-    .hero-chars.together .hero-char:last-child { transform:translateX(-7px); }
-    .hero-chars.together:after { content:"💞"; position:absolute; left:50%; top:-16px; font-size:1.2rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
+    /* The two characters on the "Come closer" card slide together when you tap the button */
+    .pair-chars { position:relative; display:flex; justify-content:center; gap:8px; margin:12px 0 2px; }
+    .pair-char { width:60px; height:60px; border-radius:20px; display:grid; place-items:center; font-size:1.8rem; line-height:1; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid rgba(255,255,255,.9); box-shadow:0 8px 16px rgba(128,68,95,.08); transition:transform .65s cubic-bezier(.2,.8,.2,1); }
+    .pair-chars.together .pair-char:first-child { transform:translateX(7px); }
+    .pair-chars.together .pair-char:last-child { transform:translateX(-7px); }
+    .pair-chars.together:after { content:"💞"; position:absolute; left:50%; top:-14px; font-size:1.1rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
+    body.dark .pair-char { background:linear-gradient(145deg,#241c24,#2a2233); border-color:#35293a; }
     @keyframes heartFloat { 50% { transform:translateX(-50%) translateY(-5px); } }
-    .invite-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px; padding:8px 10px; border-radius:14px; background:var(--pink-soft); color:#a23b62; font-size:.8rem; font-weight:700; }
+    .invite-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 12px; padding:8px 10px; border-radius:14px; background:var(--pink-soft); color:#a23b62; font-size:.8rem; font-weight:700; }
     .invite-row b { letter-spacing:.12em; font-size:.92rem; }
     .invite-row .lock { margin-left:auto; padding:6px 10px; font-size:.78rem; }
-    @media(max-width:520px) { .hero-copy { padding-right:0; } .hero-chars { position:relative; right:auto; bottom:auto; justify-content:center; margin-top:18px; } .hero-chars.together:after { top:-18px; } }
 
     /* Snaps, trivia and misc states */
     .snap-thumb { display:block; width:100%; padding:0; border:0; }
@@ -150,12 +128,10 @@
     body.dark .surprise-text, body.dark .result { background:linear-gradient(120deg,#2c1d27,#251f33); color:var(--ink); }
     body.dark .pair-code, body.dark .invite-row, body.dark .mood { background:#2c1d27; color:#ffb3cd; }
     body.dark .mood.selected { background:var(--pink-strong); color:#fff; }
-    body.dark .alias-pill { background:#241d24; border-color:#40323d; color:#ffb3cd; }
-    body.dark .connection-row .alias-pill { background:#2a2230; color:#e9dff0; }
     body.dark .button.soft { background:#2c1d27; color:#ffb3cd; }
     body.dark .bubble.mine { background:var(--pink-strong); color:#fff; }
     body.dark .poke, body.dark .poke-status, body.dark .notice { color:#7fd9b3; }
-    body.dark .eyebrow, body.dark .quiz-q, body.dark .task-text, body.dark .quiz-score b, body.dark .nav button.active, body.dark .ai-badge, body.dark .link-btn { color:#c4aef7; }
+    body.dark .quiz-q, body.dark .task-text, body.dark .quiz-score b, body.dark .nav button.active, body.dark .ai-badge, body.dark .link-btn { color:#c4aef7; }
     body.dark .ai-badge { background:#2a2233; }
     body.dark .game-action { background:#2a2233; color:#c4aef7; }
     body.dark .icon { background:linear-gradient(135deg,#2c1d27,#251f33); }
@@ -194,29 +170,18 @@
   </div>
   <main class="app hidden" id="app">
     <header class="top"><div class="brand"><span class="heart">♥</span> TW</div><div class="account-actions"><button class="lock" id="darkBtn" type="button">🌙 Dark</button><button class="lock" id="downloadBtn" type="button">📲 Install</button><button class="lock" id="codeBtn" type="button">Change code</button><button class="lock" id="logoutBtn" type="button">Log out</button></div></header>
-    <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow">Private space</div><h1>Hi love</h1><p class="sub">A small shared space for two.</p>
-        <div class="connection-row"><span class="alias-pill" id="youAlias">You: Honey Bear</span><span class="alias-pill" id="themAlias">Partner: Moon Bunny</span><span class="countdown" id="countdown">changes in 1:00</span></div>
-        <div class="invite-row hidden" id="inviteRow"><span>Waiting for your partner · code <b id="inviteCode"></b></span><button class="lock" id="shareCode" type="button">Copy</button></div>
-        <div class="profile-strip">
-          <div class="profile-card"><div class="profile-head"><div class="profile-avatar" id="youProfileFace">👧</div><div class="profile-name" id="youProfileName">Your profile</div></div><div class="profile-meta" id="youProfileMeta">Girl character profile</div></div>
-          <div class="profile-card"><div class="profile-head"><div class="profile-avatar" id="themProfileFace">👩</div><div class="profile-name" id="themProfileName">Partner profile</div></div><div class="profile-meta" id="themProfileMeta">Girl character profile</div></div>
-        </div>
-      </div>
-      <div class="hero-chars" aria-hidden="true"><div class="hero-char" id="youChar"><span class="sparkle left">✦</span><span class="sparkle right">✦</span><span class="face" id="youFace">🧸</span></div><div class="hero-char" id="themChar"><span class="sparkle left">✦</span><span class="sparkle right">✦</span><span class="face" id="themFace">🐰</span></div></div>
-    </section>
+    <div class="invite-row hidden" id="inviteRow"><span>Waiting for your partner · code <b id="inviteCode"></b></span><button class="lock" id="shareCode" type="button">Copy</button></div>
     <nav class="nav nav-swipe" aria-label="Main navigation"><button class="active" data-view="home" type="button" aria-current="page">Home</button><button data-view="notes" type="button">Love note</button><button data-view="play" type="button">Play</button><button data-view="task" type="button">Task</button><button data-view="chat" type="button">Chat</button></nav>
     <section id="home" class="view active"><div class="grid">
       <article class="card wide"><div class="icon">📣</div><h2>Recent activity</h2><p>What's been happening in your little world.</p><div class="activity-feed" id="activityFeed"></div></article>
-      <article class="card"><div class="icon">🫶</div><h2>Come closer</h2><p>Make your little characters meet in the middle.</p><button class="button" id="approach" type="button" aria-pressed="false">Approach each other</button></article>
+      <article class="card"><div class="icon">🫶</div><h2>Come closer</h2><p>Make your little characters meet in the middle.</p><div class="pair-chars" aria-hidden="true"><div class="pair-char" id="youFace">🧸</div><div class="pair-char" id="themFace">🐰</div></div><button class="button" id="approach" type="button" aria-pressed="false">Approach each other</button></article>
       <article class="card"><div class="icon">👆</div><h2>Magic poke <span class="ai-badge">AI</span></h2><p>Type a thought and turn it into a cute note.</p><input class="poke-input" id="pokeThought" maxlength="140" placeholder="e.g. I miss your smile" aria-label="Your thought"><button class="poke" id="poke" type="button">Make note &amp; poke</button><div class="poke-status" id="pokeStatus"></div></article>
       <article class="card"><div class="icon">🏆</div><h2>Love effort</h2><p>Grows from the ratings you give each other after games.</p><div class="effort-number" id="effortCount">0</div><span class="tiny">mutual love points</span></article>
       <article class="card"><div class="icon">🎁</div><h2>Opening surprise <span class="ai-badge">AI</span></h2><p>Set a loving message that appears the next time your partner opens TW.</p><input class="poke-input" id="surpriseInput" maxlength="220" placeholder="e.g. I’m sorry, I miss you so much…" aria-label="Your surprise message"><button class="button" id="setSurprise" type="button">Save opening surprise</button><div class="poke-status" id="surpriseStatus"></div></article>
       <article class="card"><div class="icon">💐</div><h2>Send a bouquet <span class="ai-badge">AI</span></h2><p>Surprise them with a virtual bouquet and a little AI-written note.</p><input class="poke-input" id="bouquetInput" maxlength="140" placeholder="Optional: what's it for? Leave blank for a surprise" aria-label="What the bouquet is for"><button class="button" id="sendBouquet" type="button">Send a bouquet</button><div class="poke-status" id="bouquetStatus"></div></article>
       <article class="card wide privacy"><h2>Privacy first</h2><p>Your messages, notes and snaps are stored in your private TW space online. Security rules let only the two of you read them, but they are not end-to-end encrypted, so keep anything truly secret out of here.</p><div class="setting"><label for="notifyToggle">Notify me of pokes, notes &amp; messages</label><input class="switch" id="notifyToggle" type="checkbox" checked></div><div class="setting"><span id="notifyStatusLabel">Browser notifications: not requested yet</span><button class="lock" id="enableNotify" type="button">Enable</button></div></article>
     </div></section>
-    <section id="notes" class="view"><article class="card"><div class="icon">💌</div><h2>Make a little note <span class="ai-badge">AI</span></h2><p>Choose a feeling, write from your heart, and give it a cute surprise style.</p><div class="note-maker"><div class="moods" id="moods"><button class="mood selected" data-mood="loving" type="button" aria-pressed="true">Loving</button><button class="mood" data-mood="happy" type="button" aria-pressed="false">Happy</button><button class="mood" data-mood="missing you" type="button" aria-pressed="false">Missing you</button><button class="mood" data-mood="sorry" type="button" aria-pressed="false">Sorry</button></div><textarea id="noteText" placeholder="Write something for Moon Bunny…" aria-label="Your note" maxlength="500"></textarea><button class="button" id="makeNote" type="button">Wrap it with love</button></div><div id="noteResult" class="result"></div></article></section>
+    <section id="notes" class="view"><article class="card"><div class="icon">💌</div><h2>Make a little note <span class="ai-badge">AI</span></h2><p>Choose a feeling, write from your heart, and give it a cute surprise style.</p><div class="note-maker"><div class="moods" id="moods"><button class="mood selected" data-mood="loving" type="button" aria-pressed="true">Loving</button><button class="mood" data-mood="happy" type="button" aria-pressed="false">Happy</button><button class="mood" data-mood="missing you" type="button" aria-pressed="false">Missing you</button><button class="mood" data-mood="sorry" type="button" aria-pressed="false">Sorry</button></div><textarea id="noteText" placeholder="Write something for your partner…" aria-label="Your note" maxlength="500"></textarea><button class="button" id="makeNote" type="button">Wrap it with love</button></div><div id="noteResult" class="result"></div></article></section>
     <section id="play" class="view"><div class="grid">
       <article class="card wide">
         <div class="icon">🧠</div><h2>Couple Trivia</h2>
@@ -228,7 +193,7 @@
         <button class="button" id="quizNext" type="button" disabled>Next question</button>
         <button class="button soft" id="quizReset" type="button">Restart quiz</button>
       </article>
-      <article class="card wide"><div class="icon">🌟</div><h2>Rate the effort</h2><p>After the quiz, rate how sweet each other was. Your combined hearts add to your Love Effort.</p><div class="rating-row"><label>Rate <span id="rateYouName">Honey Bear</span><select id="rateYou"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label><label>Rate <span id="rateHerName">Moon Bunny</span><select id="rateHer"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label></div><button class="button" id="saveRating" type="button">Add mutual rating</button><div class="notice" id="ratingStatus"></div></article>
+      <article class="card wide"><div class="icon">🌟</div><h2>Rate the effort</h2><p>After the quiz, rate how sweet each other was. Your combined hearts add to your Love Effort.</p><div class="rating-row"><label>Rate yourself<select id="rateYou"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label><label>Rate your partner<select id="rateHer"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label></div><button class="button" id="saveRating" type="button">Add mutual rating</button><div class="notice" id="ratingStatus"></div></article>
     </div></section>
     <section id="task" class="view"><div class="grid">
       <article class="card wide">
@@ -304,11 +269,11 @@
     // Each flag flips after a listener's first snapshot, so only changes that arrive after that can notify.
     let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"" };
     let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
-    let lastPresence={}, aliasIndex=0, aliasSetAtMs=Date.now(), aliasAdvancedAt=0;
+    let lastPresence={};
     let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapBlob=null, selectedSnapUrl=null;
     let currentSnap=null, openingSnap=false, deferredInstallPrompt=null, swipeStartX=0, swipeStartY=0;
     const genderCache={}, genderTried={}, purging=new Set(), scoring=new Set(), celebratedTrivia=new Set();
-    const MESSAGE_LIMIT=100, SNAP_LIMIT=60, PRESENCE_TTL_MS=50000, ALIAS_PERIOD_MS=60000;
+    const MESSAGE_LIMIT=100, SNAP_LIMIT=60, PRESENCE_TTL_MS=50000;
     const defaultFaces = { you: { girl:"👧", boy:"👦" }, them: { girl:"👩", boy:"👨" } };
     const tabOrder = ["home","notes","play","task","chat"];
     const coupleRef = () => doc(db,"couples",coupleId);
@@ -453,7 +418,7 @@
     async function createPair(){
       const id=code(), gender=$("genderSelect").value;
       try {
-        await setDoc(doc(db,"couples",id),{members:[authUser.uid],createdBy:authUser.uid,effort:0,createdAt:serverTimestamp(),shared:{aliasIndex:0,aliasSetAt:serverTimestamp()}});
+        await setDoc(doc(db,"couples",id),{members:[authUser.uid],createdBy:authUser.uid,effort:0,createdAt:serverTimestamp()});
         await setDoc(doc(db,"users",authUser.uid),{email:authUser.email,coupleId:id,gender},{merge:true});
         genderCache[authUser.uid]=gender;
         setPairMessage("");
@@ -531,7 +496,7 @@
       sharedApproach=on;
       $("approach").textContent=on?"Aww, they found each other!":"Approach each other";
       $("approach").setAttribute("aria-pressed",String(on));
-      document.querySelector(".hero-chars").classList.toggle("together",on);
+      document.querySelector(".pair-chars").classList.toggle("together",on);
       if(on && !prevApproach && live){ confettiBurst(); playChime("success"); }
       prevApproach=on;
     }
@@ -575,7 +540,6 @@
 
       renderTrivia(shared.trivia||{index:0,answers:{}},shared,live);
       lastPresence=shared.presence||{}; renderPresence();
-      aliasIndex=shared.aliasIndex||0; aliasSetAtMs=millis(shared.aliasSetAt)||aliasSetAtMs; renderAliases();
 
       const task=shared.customTask;
       renderAssignedTask(task);
@@ -583,7 +547,7 @@
       if(live && task && task.forUid===me && task.authorId!==me && taskKey!==seen.task) notifyMe("A new task for you 📝",task.text);
       seen.task=taskKey;
 
-      updateHeroChars().catch(()=>{});
+      updateChars().catch(()=>{});
       seen.ready=true;
     }
 
@@ -680,7 +644,7 @@
       typingTimer=setTimeout(()=>{ typingSentAt=0; setTyping(false); },1800);
     });
 
-    // ---- Characters and nicknames ------------------------------------------------------------------------
+    // ---- Characters ---------------------------------------------------------------------------------------
     // Gender lives on each person's profile; the security rules let you read your partner's once you're paired.
     async function loadGender(uid){
       if(!uid) return null;
@@ -693,51 +657,13 @@
         return gender;
       } catch(error){ return null; }
     }
-    async function updateHeroChars(){
+    async function updateChars(){
       if(!authUser) return;
       const yourType=(await loadGender(authUser.uid)) || $("genderSelect").value || "girl";
       const themGender=partnerUid ? await loadGender(partnerUid) : null;
       $("youFace").textContent=defaultFaces.you[yourType]||defaultFaces.you.girl;
       $("themFace").textContent=themGender ? (defaultFaces.them[themGender]||defaultFaces.them.girl) : "💞";
-      $("youProfileFace").textContent=$("youFace").textContent; $("themProfileFace").textContent=$("themFace").textContent;
-      $("youProfileName").textContent=yourType==="boy" ? "Your boy profile" : "Your girl profile";
-      $("youProfileMeta").textContent=yourType==="boy" ? "Man character profile" : "Girl character profile";
-      if(themGender){
-        $("themProfileName").textContent=themGender==="boy" ? "Partner boy profile" : "Partner girl profile";
-        $("themProfileMeta").textContent=themGender==="boy" ? "Man character profile" : "Girl character profile";
-      } else {
-        $("themProfileName").textContent="Partner profile";
-        $("themProfileMeta").textContent=partnerUid ? "Character not shared yet" : "Waiting for your partner";
-      }
     }
-    const aliases = [["Honey Bear","Moon Bunny"],["Sunshine","Star Girl"],["Cuddle Bug","Sweet Pea"],["Lovebird","Cherry Heart"],["Biscuit","Baby Panda"]];
-    // The first person in the couple always gets the first nickname of the pair, so both of you see the same names.
-    function renderAliases(){
-      const pair=aliases[aliasIndex%aliases.length], myIndex=members.indexOf(authUser.uid)===1?1:0;
-      const mine=pair[myIndex], theirs=pair[1-myIndex];
-      $("youAlias").textContent="You: "+mine; $("themAlias").textContent="Partner: "+theirs;
-      $("rateYouName").textContent=mine; $("rateHerName").textContent=theirs;
-      $("noteText").placeholder=`Write something for ${theirs}…`;
-    }
-    async function maybeAdvanceAlias(){
-      if(!coupleId) return;
-      try {
-        await runTransaction(db,async transaction=>{
-          const ref=coupleRef(), snap=await transaction.get(ref);
-          if(!snap.exists()) return;
-          const shared=snap.data().shared||{};
-          if(Date.now()-millis(shared.aliasSetAt)>=ALIAS_PERIOD_MS) transaction.update(ref,{"shared.aliasIndex":((shared.aliasIndex||0)+1)%aliases.length,"shared.aliasSetAt":serverTimestamp()});
-        });
-      } catch(error){}
-    }
-    setInterval(()=>{
-      if(!coupleId || document.hidden) return;
-      const remaining=Math.max(0,ALIAS_PERIOD_MS-(Date.now()-aliasSetAtMs));
-      const m=Math.floor(remaining/60000), s=String(Math.floor((remaining%60000)/1000)).padStart(2,"0");
-      $("countdown").textContent=`changes in ${m}:${s}`;
-      // Only ask Firestore once the timer has run out (and at most every 15s), not on every tick.
-      if(remaining===0 && Date.now()-aliasAdvancedAt>15000){ aliasAdvancedAt=Date.now(); maybeAdvanceAlias(); }
-    },1000);
 
     // ---- Tabs --------------------------------------------------------------------------------------------
     function setActiveTab(view){
