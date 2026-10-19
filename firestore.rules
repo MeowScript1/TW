@@ -61,17 +61,34 @@ service cloud.firestore {
         allow update: if memberOf(coupleId) && onlyChanges(['reactions']);
       }
 
+      // Snaps are one-time photos. The snap record is small; the photo itself lives in snapImages.
       match /snaps/{snapId} {
         allow read: if memberOf(coupleId);
         allow create: if memberOf(coupleId)
-          && request.resource.data.keys().hasOnly(['authorId', 'url', 'storagePath', 'caption', 'viewOnce', 'viewed', 'createdAt'])
+          && request.resource.data.keys().hasOnly(['authorId', 'caption', 'viewed', 'createdAt'])
           && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.viewed == false
           && request.resource.data.createdAt == request.time;
         // The receiver marks a snap as viewed.
         allow update: if memberOf(coupleId)
           && resource.data.authorId != request.auth.uid
           && onlyChanges(['viewed']);
-        // Either of you can delete a snap (the receiver does it after a view-once snap is closed).
+        // Either of you can delete a snap (the receiver does it after closing it, the sender can unsend).
+        allow delete: if memberOf(coupleId);
+      }
+
+      // The receiver can only read a photo after its snap has been marked as viewed.
+      match /snapImages/{snapId} {
+        allow read: if memberOf(coupleId) && (
+          resource.data.authorId == request.auth.uid ||
+          get(/databases/$(database)/documents/couples/$(coupleId)/snaps/$(snapId)).data.viewed == true
+        );
+        allow create: if memberOf(coupleId)
+          && request.resource.data.keys().hasOnly(['authorId', 'data', 'createdAt'])
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.data is string
+          && request.resource.data.data.size() < 800000
+          && request.resource.data.createdAt == request.time;
         allow delete: if memberOf(coupleId);
       }
     }

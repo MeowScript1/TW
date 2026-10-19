@@ -169,17 +169,13 @@
     .assigned { margin-top:12px; padding:12px 14px; border-radius:var(--radius-sm); background:var(--accent-soft); color:var(--accent-text); font-weight:700; font-size:.9rem; }
     .assigned:empty { display:none; }
     .snap-preview { display:block; width:100%; max-height:260px; margin:14px 0 10px; border-radius:14px; object-fit:cover; }
-    .snap-mode-row { display:grid; gap:8px; margin:12px 0; font-size:.9rem; font-weight:600; }
-    .snap-mode-row label { display:flex; align-items:center; gap:10px; min-height:36px; }
-    .snap-mode-row input { width:20px; height:20px; accent-color:var(--accent); }
     .snap-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
     .snap-gallery .empty { grid-column:1/-1; padding:14px 0 4px; }
-    .snap-thumb { position:relative; display:block; width:100%; aspect-ratio:1; padding:0; overflow:hidden; border-radius:14px; background:var(--surface-2); }
-    .snap-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
-    .snap-thumb.unseen { display:grid; place-items:center; font-size:1.8rem; background:linear-gradient(135deg,var(--accent-soft),var(--purple-soft)); }
-    .snap-thumb.unseen:after { content:"NEW"; position:absolute; top:6px; right:6px; padding:2px 7px; border-radius:99px; background:var(--accent); color:#fff; font-size:.6rem; font-weight:900; }
-    .snap-thumb.opened img { opacity:.4; }
-    .snap-thumb.opened:after { content:"OPENED"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); padding:3px 8px; border-radius:99px; background:rgba(42,33,48,.78); color:#fff; font-size:.6rem; font-weight:900; }
+    .snap-thumb { display:grid; place-content:center; justify-items:center; gap:5px; width:100%; aspect-ratio:1; padding:6px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); font-size:1.8rem; line-height:1; }
+    .snap-thumb .snap-label { font-size:.68rem; font-weight:800; color:var(--muted); }
+    .snap-thumb.unseen { background:linear-gradient(135deg,var(--accent-soft),var(--purple-soft)); border-color:transparent; }
+    .snap-thumb.unseen .snap-label { color:var(--accent-text); }
+    .snap-thumb.opened { opacity:.65; }
     .snap-view-img { display:block; width:100%; max-height:60vh; object-fit:contain; border-radius:16px; background:#000; }
 
     /* Chat */
@@ -263,7 +259,7 @@
   <!-- Surprise, bouquet and snap viewer -->
   <div id="surpriseScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="modal-card"><div class="logo big">♥</div><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="btn wide" id="closeSurprise" type="button">Open TW</button></div></div>
   <div id="bouquetScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="modal-card"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="btn wide" id="closeBouquet" type="button">Open TW</button></div></div>
-  <div id="snapViewScreen" class="screen hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="modal-card"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="btn wide" id="closeSnapView" type="button">Close</button><button class="btn soft wide hidden" id="deleteSnap" type="button">Delete this snap</button></div></div></div>
+  <div id="snapViewScreen" class="screen hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="modal-card"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="btn wide" id="closeSnapView" type="button">Close</button></div></div></div>
 
   <!-- Sign in and pairing -->
   <div id="authScreen" class="screen opaque">
@@ -411,23 +407,19 @@
         </article>
         <article class="card">
           <h2>Send a snap</h2>
-          <p class="lead">Complete a task and send proof — you choose how it disappears.</p>
+          <p class="lead">Complete a task and send proof. It disappears once your partner has opened it.</p>
           <input type="file" accept="image/*" id="snapFile" class="hidden" aria-label="Choose a photo">
           <div class="field"><button class="btn wide" id="snapPickBtn" type="button">📷 Take or choose a photo</button></div>
           <div id="snapPreviewWrap" class="hidden">
             <img id="snapPreview" class="snap-preview" alt="Preview of your snap">
             <input id="snapCaption" maxlength="120" placeholder="Add a little caption (optional)" aria-label="Caption">
-            <div class="snap-mode-row">
-              <label><input type="radio" name="snapMode" value="once" checked> View once — disappears after they open it</label>
-              <label><input type="radio" name="snapMode" value="keep"> Keep in the gallery</label>
-            </div>
             <div class="row"><button class="btn" id="snapSendBtn" type="button">Send snap</button><button class="btn soft" id="snapCancelBtn" type="button">Cancel</button></div>
           </div>
           <div class="status" id="snapStatus"></div>
         </article>
         <article class="card">
-          <h2>Snap gallery</h2>
-          <p class="lead">New view-once snaps show a NEW badge — open one and it’s gone. Kept snaps stay here.</p>
+          <h2>Snap inbox</h2>
+          <p class="lead">New snaps from your partner show up here. Open one and it’s gone for good.</p>
           <div class="snap-gallery" id="snapGallery"></div>
         </article>
         <details class="card">
@@ -479,9 +471,8 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
     import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager, doc, setDoc, getDoc, updateDoc, addDoc, deleteDoc, collection, query, orderBy, onSnapshot, serverTimestamp, runTransaction, increment, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
     const firebaseConfig = { apiKey:"AIzaSyBeBde2ro0vYt3XADcdmbuu56HdylpajQA", authDomain:"aytt-677b4.firebaseapp.com", projectId:"aytt-677b4", storageBucket:"aytt-677b4.firebasestorage.app", messagingSenderId:"366976601638", appId:"1:366976601638:web:c6d9689f098251844b20e7", measurementId:"G-42VV7B6HYR" };
-    const firebaseApp = initializeApp(firebaseConfig), auth = getAuth(firebaseApp), storage = getStorage(firebaseApp);
+    const firebaseApp = initializeApp(firebaseConfig), auth = getAuth(firebaseApp);
     // The local cache keeps chat history readable offline and queues writes made while offline.
     let db;
     try { db = initializeFirestore(firebaseApp, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }); } catch(error){ db = getFirestore(firebaseApp); }
@@ -511,7 +502,7 @@
     let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"" };
     let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
     let lastPresence={};
-    let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapBlob=null, selectedSnapUrl=null;
+    let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapData=null;
     let currentSnap=null, openingSnap=false, deferredInstallPrompt=null, swipeStartX=0, swipeStartY=0, swipeBlocked=false, toastTimer=null;
     const genderCache={}, genderTried={}, purging=new Set(), scoring=new Set(), celebratedTrivia=new Set();
     const MESSAGE_LIMIT=100, SNAP_LIMIT=60, PRESENCE_TTL_MS=50000;
@@ -1094,9 +1085,20 @@
         img.src=url;
       });
     }
+    // Snaps are one-time photos. The photo lives in its own small document (snapImages) so the inbox only has to
+    // download who sent what; it is fetched when your partner opens the snap, then both documents are deleted.
+    const SNAP_MAX_CHARS=700000;   // a Firestore document can hold 1 MiB
+    const blobToDataUrl = blob => new Promise((resolve,reject)=>{ const reader=new FileReader(); reader.onload=()=>resolve(reader.result); reader.onerror=()=>reject(reader.error); reader.readAsDataURL(blob); });
+    // Shrink the photo until it fits comfortably in one document.
+    async function prepareSnapPhoto(file){
+      for(const [maxDim,quality] of [[900,.72],[720,.6],[560,.5],[420,.45]]){
+        const dataUrl=await blobToDataUrl(await compressImage(file,maxDim,quality));
+        if(dataUrl.length<=SNAP_MAX_CHARS) return dataUrl;
+      }
+      throw new Error("photo too large");
+    }
     function clearSnapSelection(){
-      selectedSnapBlob=null;
-      if(selectedSnapUrl){ URL.revokeObjectURL(selectedSnapUrl); selectedSnapUrl=null; }
+      selectedSnapData=null;
       $("snapPreview").removeAttribute("src"); $("snapFile").value=""; $("snapCaption").value=""; $("snapPreviewWrap").classList.add("hidden");
     }
     $("snapPickBtn").onclick=()=>$("snapFile").click();
@@ -1104,46 +1106,57 @@
       const file=event.target.files[0]; if(!file) return;
       $("snapStatus").textContent="Preparing photo…";
       try {
-        selectedSnapBlob=await compressImage(file,900,0.72);
-        if(selectedSnapUrl) URL.revokeObjectURL(selectedSnapUrl);
-        selectedSnapUrl=URL.createObjectURL(selectedSnapBlob);
-        $("snapPreview").src=selectedSnapUrl; $("snapPreviewWrap").classList.remove("hidden"); $("snapStatus").textContent="";
-      } catch(error){ $("snapStatus").textContent="Could not read that photo."; }
+        selectedSnapData=await prepareSnapPhoto(file);
+        $("snapPreview").src=selectedSnapData; $("snapPreviewWrap").classList.remove("hidden"); $("snapStatus").textContent="";
+      } catch(error){ selectedSnapData=null; $("snapStatus").textContent="Could not use that photo — try another one."; }
     });
     $("snapCancelBtn").onclick=clearSnapSelection;
     $("snapSendBtn").onclick=()=>busy($("snapSendBtn"),async()=>{
-      if(!selectedSnapBlob || !coupleId) return;
-      const viewOnce=document.querySelector('input[name="snapMode"]:checked').value==="once", caption=$("snapCaption").value.trim();
+      if(!selectedSnapData || !coupleId) return;
+      const me=authUser.uid, caption=$("snapCaption").value.trim();
+      const id=me.slice(0,6)+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
       $("snapStatus").textContent="Sending your snap…";
       try {
-        const path=`couples/${coupleId}/snaps/${authUser.uid}_${Date.now()}.jpg`, fileRef=storageRef(storage,path);
-        await uploadBytes(fileRef,selectedSnapBlob,{contentType:"image/jpeg"});
-        const url=await getDownloadURL(fileRef);
-        await addDoc(collection(db,"couples",coupleId,"snaps"),{authorId:authUser.uid,url,storagePath:path,caption,viewOnce,viewed:false,createdAt:serverTimestamp()});
+        // The photo goes first, so it is already there by the time your partner sees the new snap.
+        await setDoc(doc(db,"couples",coupleId,"snapImages",id),{authorId:me,data:selectedSnapData,createdAt:serverTimestamp()});
+        try { await setDoc(doc(db,"couples",coupleId,"snaps",id),{authorId:me,caption,viewed:false,createdAt:serverTimestamp()}); }
+        catch(error){ deleteDoc(doc(db,"couples",coupleId,"snapImages",id)).catch(()=>{}); throw error; }
         $("snapStatus").textContent="Snap sent! 📸"; playChime("pop"); confettiBurst(["📸","💗","✨"],10);
         clearSnapSelection();
-      } catch(error){ $("snapStatus").textContent="Could not send — check Firebase Storage is enabled and its rules are deployed."; }
+      } catch(error){ $("snapStatus").textContent="Could not send that snap — check your connection and try again."; }
     });
-    // A view-once snap is "expired" for the receiver as soon as it has been opened.
-    const isExpired = item => item.viewOnce && item.viewed && item.authorId!==authUser.uid;
+    // A snap is spent for the receiver as soon as it has been opened.
+    const isExpired = item => item.viewed && item.authorId!==authUser.uid;
     async function purgeSnap(item){
       if(!coupleId || purging.has(item.id)) return;
       purging.add(item.id);
-      if(item.storagePath){ try { await deleteObject(storageRef(storage,item.storagePath)); } catch(error){} }
+      try { await deleteDoc(doc(db,"couples",coupleId,"snapImages",item.id)); } catch(error){}
       try { await deleteDoc(doc(db,"couples",coupleId,"snaps",item.id)); } catch(error){ purging.delete(item.id); }
+    }
+    async function unsendSnap(item){
+      if(!(await askConfirm("Unsend this snap? Your partner won't be able to open it.",{ok:"Unsend"}))) return;
+      purgeSnap(item); toast("Snap unsent");
     }
     function renderSnapGallery(items){
       const box=$("snapGallery"); box.innerHTML="";
-      if(!items.length){ const p=document.createElement("p"); p.className="empty"; p.textContent="No snaps yet — send one from Today's task!"; box.appendChild(p); return; }
+      if(!items.length){ const p=document.createElement("p"); p.className="empty"; p.textContent="No snaps yet — send one from today's task!"; box.appendChild(p); return; }
       items.forEach(item=>{
-        const mine=item.authorId===authUser.uid, unseen=item.viewOnce && !mine && !item.viewed;
+        const mine=item.authorId===authUser.uid;
         const tile=document.createElement("button"); tile.type="button";
-        tile.className="snap-thumb"+(unseen?" unseen":"")+(item.viewOnce&&mine&&item.viewed?" opened":"");
-        tile.setAttribute("aria-label",unseen?"New view-once snap":(mine?"Snap you sent":"Snap from your partner"));
-        if(unseen) tile.textContent="📸";
-        else { const img=document.createElement("img"); img.src=item.url; img.alt=item.caption||"Snap"; img.loading="lazy"; tile.appendChild(img); }
-        tile.onclick=()=>openSnap(item);
-        box.appendChild(tile);
+        const icon=document.createElement("span"); icon.setAttribute("aria-hidden","true");
+        const label=document.createElement("span"); label.className="snap-label";
+        if(mine){
+          tile.className="snap-thumb sent"+(item.viewed?" opened":"");
+          icon.textContent=item.viewed?"👀":"✈️"; label.textContent=item.viewed?"Opened":"Sent";
+          tile.setAttribute("aria-label",item.viewed?"Snap you sent, opened":"Snap you sent, waiting to be opened. Tap to unsend");
+          tile.onclick=()=>{ if(!item.viewed) unsendSnap(item); };
+        } else {
+          tile.className="snap-thumb unseen";
+          icon.textContent="📸"; label.textContent="Tap to view";
+          tile.setAttribute("aria-label","New snap from your partner. Tap to view it once");
+          tile.onclick=()=>openSnap(item);
+        }
+        tile.appendChild(icon); tile.appendChild(label); box.appendChild(tile);
       });
     }
     function onSnapsSnapshot(snap){
@@ -1154,40 +1167,43 @@
         snap.docChanges().forEach(change=>{
           if(change.type!=="added") return;
           const m=change.doc.data();
-          if(m.authorId!==me && !(m.viewOnce && m.viewed)){ notifyMe("A snap arrived 📸",m.caption||"Tap to view it."); markUnread("snaps"); }
+          if(m.authorId!==me && !m.viewed){ notifyMe("A snap arrived 📸",m.caption||"Tap to view it."); markUnread("snaps"); }
         });
       }
       seen.snaps=true;
     }
     async function openSnap(item){
-      if(openingSnap || currentSnap) return;
-      const mine=item.authorId===authUser.uid, consume=item.viewOnce && !mine;
-      if(consume && item.viewed) return;
+      if(openingSnap || currentSnap || item.viewed) return;
       openingSnap=true;
       // Set before the write: the "viewed" snapshot arrives first and must not clean up the snap we're about to show.
-      currentSnap={item,consume};
+      currentSnap={item};
+      let marked=false;
       try {
-        // The snap only opens once Firestore has recorded the view, so it really can't be opened twice.
-        if(consume) await withTimeout(updateDoc(doc(db,"couples",coupleId,"snaps",item.id),{viewed:true}),8000);
-        $("snapViewImg").src=item.url; $("snapViewCaption").textContent=item.caption||"";
-        $("deleteSnap").classList.toggle("hidden",!mine);
+        // The photo can only be read once Firestore has recorded the view, so a snap can't be opened twice.
+        await withTimeout(updateDoc(doc(db,"couples",coupleId,"snaps",item.id),{viewed:true}),8000); marked=true;
+        const photo=await withTimeout(getDoc(doc(db,"couples",coupleId,"snapImages",item.id)),8000);
+        if(!photo.exists()) throw Object.assign(new Error("gone"),{code:"gone"});
+        $("snapViewImg").src=photo.data().data; $("snapViewCaption").textContent=item.caption||"";
+        $("snapViewCaption").classList.toggle("hidden",!item.caption);
         $("snapViewScreen").classList.remove("hidden");
-      } catch(error){ currentSnap=null; $("snapStatus").textContent="Could not open that snap right now — try again in a moment."; }
+      } catch(error){
+        // A missing photo reads as "permission denied" (the rule needs the document to exist), so treat that as gone too.
+        const gone=error.code==="gone" || error.code==="permission-denied";
+        // Couldn't show it (e.g. the connection dropped): put it back as unopened instead of wasting the snap.
+        if(marked && !gone) updateDoc(doc(db,"couples",coupleId,"snaps",item.id),{viewed:false}).catch(()=>{});
+        if(gone) purgeSnap(item);
+        currentSnap=null;
+        $("snapStatus").textContent=gone?"That snap is no longer available.":"Could not open that snap right now — try again in a moment.";
+        toast($("snapStatus").textContent);
+      }
       finally { openingSnap=false; }
     }
     function closeSnapView(){
       $("snapViewScreen").classList.add("hidden"); $("snapViewImg").removeAttribute("src");
       const finished=currentSnap; currentSnap=null;
-      if(finished?.consume) purgeSnap(finished.item);
+      if(finished) purgeSnap(finished.item);
     }
     $("closeSnapView").onclick=closeSnapView;
-    $("deleteSnap").onclick=async()=>{
-      const item=currentSnap?.item;
-      if(!item || !(await askConfirm("Delete this snap for both of you?",{ok:"Delete"})) || currentSnap?.item.id!==item.id) return;
-      currentSnap=null;
-      $("snapViewScreen").classList.add("hidden"); $("snapViewImg").removeAttribute("src");
-      purgeSnap(item);
-    };
     document.addEventListener("keydown",event=>{
       if(event.key!=="Escape") return;
       if(!$("snapViewScreen").classList.contains("hidden")) closeSnapView();
