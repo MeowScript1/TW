@@ -1,13 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#ff7da5"/>
-      <stop offset="1" stop-color="#7b5cbd"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffc9dd"/>
+      <stop offset="1" stop-color="#cbb6ff"/>
     </linearGradient>
+    <linearGradient id="pink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7fab"/>
+      <stop offset="1" stop-color="#ff4f86"/>
+    </linearGradient>
+    <linearGradient id="lilac" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b79cff"/>
+      <stop offset="1" stop-color="#8d6cf0"/>
+    </linearGradient>
+    <path id="heart" d="M0 -30C0 -78 -78 -82 -82 -26C-86 26 -32 56 0 88C32 56 86 26 82 -26C78 -82 0 -78 0 -30Z"/>
   </defs>
-  <rect width="512" height="512" fill="url(#g)"/>
-  <g transform="translate(256 256) scale(.84) translate(-256 -250)">
-    <path d="M256 390 119 263C38 187 84 78 176 96c37 7 64 31 80 61 16-30 43-54 80-61 92-18 138 91 57 167L256 390Z" fill="#fff"/>
-    <text x="256" y="306" text-anchor="middle" fill="#7b5cbd" font-family="Arial, sans-serif" font-size="112" font-weight="700">TW</text>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- everything important stays inside the central safe zone -->
+  <g transform="translate(256 256) scale(.78) translate(-256 -262)">
+    <ellipse cx="256" cy="440" rx="150" ry="16" fill="#8d6cf0" opacity=".16"/>
+    <g transform="translate(352 318) rotate(14) scale(1.02)">
+      <use href="#heart" fill="url(#lilac)"/>
+      <ellipse cx="-44" cy="-42" rx="14" ry="8" fill="#fff" opacity=".45" transform="rotate(-30 -44 -42)"/>
+      <ellipse cx="-24" cy="0" rx="8" ry="11" fill="#43284a"/><ellipse cx="24" cy="0" rx="8" ry="11" fill="#43284a"/>
+      <circle cx="-21" cy="-4" r="3" fill="#fff"/><circle cx="27" cy="-4" r="3" fill="#fff"/>
+      <ellipse cx="-44" cy="20" rx="13" ry="8" fill="#ffa6c9" opacity=".75"/><ellipse cx="44" cy="20" rx="13" ry="8" fill="#ffa6c9" opacity=".75"/>
+      <path d="M-9 18Q0 30 9 18" fill="none" stroke="#43284a" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(222 232) rotate(-9) scale(1.62)">
+      <use href="#heart" fill="url(#pink)"/>
+      <ellipse cx="-46" cy="-44" rx="15" ry="8.5" fill="#fff" opacity=".5" transform="rotate(-30 -46 -44)"/>
+      <ellipse cx="-27" cy="2" rx="8" ry="11" fill="#43284a"/><ellipse cx="27" cy="2" rx="8" ry="11" fill="#43284a"/>
+      <circle cx="-24" cy="-2" r="3.2" fill="#fff"/><circle cx="30" cy="-2" r="3.2" fill="#fff"/>
+      <ellipse cx="-47" cy="24" rx="13" ry="8" fill="#ffc2d8" opacity=".85"/><ellipse cx="47" cy="24" rx="13" ry="8" fill="#ffc2d8" opacity=".85"/>
+      <path d="M-10 22Q0 35 10 22" fill="none" stroke="#43284a" stroke-width="4.6" stroke-linecap="round"/>
+    </g>
+    <path d="M96 118l7 20 20 7-20 7-7 20-7-20-20-7 20-7Z" fill="#fff" opacity=".9"/>
+    <path d="M410 96l5 14 14 5-14 5-5 14-5-14-14-5 14-5Z" fill="#fff" opacity=".85"/>
   </g>
 </svg>

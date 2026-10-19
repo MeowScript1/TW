@@ -84,8 +84,8 @@
     @media (min-width:700px) { .app { border-left:1px solid var(--line); border-right:1px solid var(--line); } }
     .topbar { flex:none; display:flex; align-items:center; gap:10px; padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 8px max(16px,env(safe-area-inset-left)); }
     .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; letter-spacing:-.01em; }
-    .logo { display:grid; place-items:center; width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg,var(--pink),#9a74e0); color:#fff; font-size:1rem; box-shadow:0 4px 12px rgba(214,51,108,.28); }
-    .logo.big { width:56px; height:56px; border-radius:18px; font-size:1.5rem; margin:0 auto 14px; }
+    .logo { display:block; width:34px; height:34px; border-radius:10px; box-shadow:0 4px 12px rgba(214,51,108,.25); }
+    .logo.big { width:72px; height:72px; border-radius:20px; margin:0 auto 14px; box-shadow:0 10px 24px rgba(214,51,108,.22); }
     .presence { display:flex; align-items:center; gap:7px; margin-left:auto; max-width:48%; padding:6px 12px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:.78rem; font-weight:700; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .presence-dot { flex:none; width:9px; height:9px; border-radius:50%; background:#cfc3d6; transition:.2s; }
     .presence-dot.online { background:#2fc48d; box-shadow:0 0 0 4px rgba(47,196,141,.2); }
@@ -242,6 +242,19 @@
     #toast.show { opacity:1; transform:translate(-50%,0); }
     body.dark #toast { background:#f2e9f0; color:#2a2130; }
 
+    /* ---- Opening splash ------------------------------------------------------------------------------- */
+    .splash { position:fixed; inset:0; z-index:200; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:linear-gradient(160deg,var(--bg),var(--bg-2)); transition:opacity .45s ease,visibility .45s; }
+    .splash.done { opacity:0; visibility:hidden; pointer-events:none; }
+    .splash-logo { width:112px; height:112px; border-radius:30px; box-shadow:0 18px 40px rgba(214,51,108,.28); animation:splashBob 1.7s ease-in-out infinite; }
+    @keyframes splashBob { 0%,100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-9px) scale(1.05); } }
+    .splash-title { margin-top:14px; font-size:1.7rem; font-weight:800; letter-spacing:-.01em; }
+    .splash-sub { color:var(--muted); font-size:.92rem; }
+    .splash-dots { display:flex; gap:7px; margin-top:12px; }
+    .splash-dots span { width:8px; height:8px; border-radius:50%; background:var(--accent); opacity:.3; animation:splashDot 1.2s ease-in-out infinite; }
+    .splash-dots span:nth-child(2) { animation-delay:.18s; }
+    .splash-dots span:nth-child(3) { animation-delay:.36s; }
+    @keyframes splashDot { 0%,100% { opacity:.25; transform:scale(.8); } 40% { opacity:1; transform:scale(1.15); } }
+
     /* ---- Confetti ------------------------------------------------------------------------------------ */
     .confetti-layer { position:fixed; inset:0; z-index:100; overflow:hidden; pointer-events:none; }
     .confetti-piece { position:absolute; top:-24px; animation:confetti-fall linear forwards; }
@@ -256,15 +269,23 @@
 <body>
   <script>try { var savedDark = localStorage.getItem("ty-dark-mode"); if (savedDark === "1" || (savedDark === null && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark"); } catch (error) {}</script>
 
+  <!-- Opening splash: stays until we know whether you are signed in, so the sign-in card never flashes -->
+  <div id="splash" class="splash" role="status" aria-live="polite">
+    <img class="splash-logo" src="icon.svg" alt="" width="112" height="112">
+    <div class="splash-title">TW</div>
+    <div class="splash-sub">Opening your little world…</div>
+    <div class="splash-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+  </div>
+
   <!-- Surprise, bouquet and snap viewer -->
-  <div id="surpriseScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="modal-card"><div class="logo big">♥</div><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="btn wide" id="closeSurprise" type="button">Open TW</button></div></div>
+  <div id="surpriseScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="modal-card"><img class="logo big" src="icon.svg" alt="" width="72" height="72"><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="btn wide" id="closeSurprise" type="button">Open TW</button></div></div>
   <div id="bouquetScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="modal-card"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="btn wide" id="closeBouquet" type="button">Open TW</button></div></div>
   <div id="snapViewScreen" class="screen hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="modal-card"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="btn wide" id="closeSnapView" type="button">Close</button></div></div></div>
 
   <!-- Sign in and pairing -->
   <div id="authScreen" class="screen opaque">
     <div class="modal-card">
-      <div class="logo big">♥</div>
+      <img class="logo big" src="icon.svg" alt="" width="72" height="72">
       <section id="loginPanel">
         <h2>Welcome to TW</h2><p class="muted">Sign in to find your person.</p>
         <form id="loginForm" onsubmit="return false" novalidate>
@@ -299,7 +320,7 @@
   <!-- The app -->
   <main class="app hidden" id="app">
     <header class="topbar">
-      <div class="brand"><span class="logo">♥</span> TW</div>
+      <div class="brand"><img class="logo" src="icon.svg" alt="" width="34" height="34"> TW</div>
       <div class="presence" id="presenceChip"><span class="presence-dot" id="presenceDot"></span><span id="presenceLabel">Connecting…</span></div>
       <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     </header>
@@ -485,6 +506,13 @@
     const withTimeout = (promise,ms) => Promise.race([promise, new Promise((_,reject)=>setTimeout(()=>reject(new Error("timeout")),ms))]);
     const pick = list => list[Math.floor(Math.random()*list.length)];
     const millis = ts => ts && ts.toMillis ? ts.toMillis() : 0;
+    // The splash stays for at least a moment and goes away once the first real screen is ready.
+    const splash=$("splash"), splashStart=performance.now();
+    function hideSplash(){
+      if(!splash.isConnected || splash.classList.contains("done")) return;
+      setTimeout(()=>{ splash.classList.add("done"); setTimeout(()=>splash.remove(),600); },Math.max(0,700-(performance.now()-splashStart)));
+    }
+    setTimeout(hideSplash,6000);   // never leave it up if something stalls
     document.querySelectorAll(".status,.auth-message").forEach(el=>{ el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); });
 
     function setDarkMode(enabled,persist){
@@ -674,8 +702,8 @@
         const data=(await getDoc(doc(db,"users",uid))).data()||{};
         if(authUser?.uid!==uid) return;
         if(data.gender) genderCache[uid]=data.gender;
-        if(data.coupleId) await openCouple(data.coupleId); else showPanel("pair");
-      } catch(error){ if(authUser?.uid===uid) showStatus(friendlyError(error),true); }
+        if(data.coupleId) await openCouple(data.coupleId); else { showPanel("pair"); hideSplash(); }
+      } catch(error){ if(authUser?.uid===uid){ showStatus(friendlyError(error),true); hideSplash(); } }
     }
     async function createPair(){
       const id=code(), gender=$("genderSelect").value;
@@ -732,7 +760,7 @@
     }
     onAuthStateChanged(auth,user=>{
       authUser=user; teardown(); closeDialog($("settingsDialog"));
-      if(!user){ $("authPassword").value=""; showPanel("login"); return; }
+      if(!user){ $("authPassword").value=""; showPanel("login"); hideSplash(); return; }
       enterApp();
     });
 
@@ -764,7 +792,7 @@
     }
     function onCoupleSnapshot(snap){
       if(!snap.exists()){
-        if(!snap.metadata.fromCache){ teardown(); showPanel("pair"); setPairMessage("That space no longer exists. Create or join a new one."); }
+        if(!snap.metadata.fromCache){ teardown(); showPanel("pair"); setPairMessage("That space no longer exists. Create or join a new one."); hideSplash(); }
         return;
       }
       const data=snap.data(), shared=data.shared||{}, me=authUser.uid, live=seen.ready, previousPartner=partnerUid;
@@ -811,6 +839,7 @@
 
       updateChars().catch(()=>{});
       seen.ready=true;
+      hideSplash();
     }
 
     // ---- Presence, activity and chat ---------------------------------------------------------------------
@@ -1304,7 +1333,8 @@
     }
     setTimeout(() => {
       if (!window.__tyReady) {
-        const message = document.getElementById("authMessage");
+        const message = document.getElementById("authMessage"), cover = document.getElementById("splash");
+        if (cover) cover.classList.add("done");
         if (message) message.textContent = "Couldn't load TW — check your connection and reload.";
       }
     }, 10000);
