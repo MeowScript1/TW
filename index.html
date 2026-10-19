@@ -61,7 +61,7 @@
     .icon-btn { display:grid; place-items:center; width:42px; height:42px; border-radius:50%; color:var(--ink); }
     .icon-btn:hover { background:var(--surface-2); }
     .icon-btn svg, .tab svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-    input[type=text], input[type=email], input[type=password], input:not([type]), textarea, select { width:100%; min-height:46px; padding:0 14px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--surface); color:var(--ink); }
+    input[type=text], input[type=email], input[type=password], input[type=date], input:not([type]), textarea, select { width:100%; min-height:46px; padding:0 14px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--surface); color:var(--ink); }
     textarea { padding:12px 14px; min-height:92px; resize:vertical; line-height:1.45; }
     input::placeholder, textarea::placeholder { color:var(--muted); opacity:.8; }
     .status { min-height:20px; margin-top:10px; font-size:.85rem; color:var(--muted); }
@@ -118,16 +118,6 @@
     .empty .btn { margin-top:12px; }
 
     /* Home */
-    .hero-card { text-align:center; }
-    .pair-chars { position:relative; display:flex; justify-content:center; gap:10px; margin:2px 0 14px; padding-top:10px; }
-    .pair-char { display:grid; place-items:center; width:72px; height:72px; border-radius:24px; font-size:2.2rem; line-height:1; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid var(--line); box-shadow:0 8px 18px rgba(128,68,95,.1); transition:transform .65s cubic-bezier(.2,.8,.2,1); }
-    body.dark .pair-char { background:linear-gradient(145deg,#2a2030,#2b2338); }
-    .pair-chars.together .pair-char:first-child { transform:translateX(9px); }
-    .pair-chars.together .pair-char:last-child { transform:translateX(-9px); }
-    .pair-chars.together:after { content:"💞"; position:absolute; left:50%; top:-8px; font-size:1.3rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
-    @keyframes heartFloat { 50% { transform:translateX(-50%) translateY(-5px); } }
-    .love-points { margin-bottom:14px; font-size:.95rem; color:var(--muted); }
-    .love-points b { font-size:1.5rem; color:var(--accent-text); margin:0 2px; }
     .activity-feed { display:grid; margin-top:8px; }
     .activity-item { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--line); font-size:.92rem; }
     .activity-item:last-child { border-bottom:0; padding-bottom:0; }
@@ -242,6 +232,116 @@
     #toast.show { opacity:1; transform:translate(-50%,0); }
     body.dark #toast { background:#f2e9f0; color:#2a2130; }
 
+    /* ---- Home: greeting, characters, moments, moods, stats ------------------------------------------- */
+    .greeting { margin:6px 4px 14px; }
+    .greeting h1 { font-size:1.6rem; font-weight:800; letter-spacing:-.02em; }
+    .greeting p { margin-top:2px; font-size:.9rem; }
+    .hero-card { text-align:center; }
+    .pair-chars { position:relative; display:flex; justify-content:center; gap:14px; margin:4px 0 8px; padding-top:18px; }
+    .char-col { position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; transition:transform .65s cubic-bezier(.2,.8,.2,1); }
+    .pair-chars.together .char-col:first-child { transform:translateX(10px); }
+    .pair-chars.together .char-col:last-child { transform:translateX(-10px); }
+    .pair-chars.together:after { content:"💞"; position:absolute; left:50%; top:-2px; font-size:1.4rem; transform:translateX(-50%); animation:heartFloat 2s ease-in-out infinite; }
+    @keyframes heartFloat { 50% { transform:translateX(-50%) translateY(-5px); } }
+    .pair-char { display:grid; place-items:center; width:84px; height:84px; border-radius:28px; font-size:2.6rem; line-height:1; background:linear-gradient(145deg,#fff4f8,#efe8ff); border:1px solid var(--line); box-shadow:0 10px 22px rgba(128,68,95,.12); cursor:pointer; }
+    body.dark .pair-char { background:linear-gradient(145deg,#2a2030,#2b2338); }
+    .pair-char.squish { animation:squish .5s ease; }
+    .pair-char.wiggle { animation:wiggle .8s ease; }
+    @keyframes squish { 0% { transform:scale(1); } 30% { transform:scale(1.2,.82); } 60% { transform:scale(.92,1.12); } 100% { transform:scale(1); } }
+    @keyframes wiggle { 0%,100% { transform:rotate(0); } 15% { transform:rotate(-12deg) scale(1.08); } 35% { transform:rotate(10deg) scale(1.08); } 55% { transform:rotate(-7deg); } 75% { transform:rotate(5deg); } }
+    .char-name { font-size:.75rem; font-weight:800; color:var(--muted); }
+    .mood-bubble { position:absolute; top:-16px; right:-12px; z-index:2; display:grid; place-items:center; min-width:36px; height:36px; padding:0 6px; border-radius:50%; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); font-size:1.2rem; animation:bubblePop .4s cubic-bezier(.2,1.4,.4,1); }
+    @keyframes bubblePop { from { transform:scale(.3); opacity:0; } to { transform:scale(1); opacity:1; } }
+    #youMood { right:auto; left:-12px; }
+    .mood-line { min-height:22px; margin:6px 0 4px; color:var(--muted); font-size:.88rem; }
+    .float-heart { position:fixed; z-index:120; pointer-events:none; font-size:1.4rem; animation:floatUp 1.1s ease-out forwards; }
+    @keyframes floatUp { from { transform:translateY(0) scale(.7); opacity:1; } to { transform:translateY(-90px) scale(1.2); opacity:0; } }
+    .section-label { margin:14px 0 8px; font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .moments { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:14px; }
+    .moment { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0 7px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); font-size:.7rem; font-weight:800; color:var(--muted); transition:transform .12s ease,background .15s; }
+    .moment span { font-size:1.45rem; line-height:1.2; }
+    .moment:active { transform:scale(.92); background:var(--accent-soft); }
+    .mood-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .mood-chip { display:inline-flex; align-items:center; gap:6px; min-height:42px; padding:0 14px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); font-size:.88rem; font-weight:700; color:var(--muted); transition:transform .12s ease; }
+    .mood-chip span { font-size:1.25rem; }
+    .mood-chip:active { transform:scale(.95); }
+    .mood-chip.selected { background:var(--accent-soft); border-color:var(--accent); color:var(--accent-text); }
+    .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .stat-grid .card { margin-bottom:0; }
+    .stat-card { display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-width:0; text-align:left; }
+    .stat-label { font-size:.7rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .stat-num { font-size:1.7rem; font-weight:800; line-height:1.1; letter-spacing:-.02em; color:var(--accent-text); }
+    .stat-num small { font-size:.8rem; font-weight:700; color:var(--muted); }
+    .stat-sub { font-size:.78rem; color:var(--muted); line-height:1.35; }
+    button.stat-card { width:100%; cursor:pointer; }
+    .level-name { font-size:.9rem; font-weight:800; }
+    .level-bar { width:100%; height:9px; margin:4px 0 2px; border-radius:99px; background:var(--surface-2); border:1px solid var(--line); overflow:hidden; }
+    .level-bar span, .tap-bar span { display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,var(--pink),var(--purple)); transition:width .5s ease; }
+
+    /* ---- Games hub ------------------------------------------------------------------------------------ */
+    .game-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .game-tile { position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-height:150px; padding:16px; border-radius:var(--radius); text-align:left; color:#2a2130; box-shadow:var(--shadow); transition:transform .15s ease; overflow:hidden; }
+    .game-tile:active { transform:scale(.97); }
+    .gt-emoji { font-size:2.3rem; line-height:1; margin-bottom:6px; }
+    .gt-title { font-size:1rem; font-weight:800; line-height:1.2; }
+    .gt-sub { font-size:.76rem; line-height:1.35; opacity:.78; }
+    .gt-trivia { background:linear-gradient(145deg,#ffe0ec,#ffc9dd); }
+    .gt-wyr { background:linear-gradient(145deg,#e6dcff,#cbb6ff); }
+    .gt-tap { background:linear-gradient(145deg,#ffd9d9,#ffb3b8); }
+    .gt-memory { background:linear-gradient(145deg,#d9f3e6,#b4e6cd); }
+    .gt-wheel { background:linear-gradient(145deg,#fff0c9,#ffd98a); }
+    .gt-rate { background:linear-gradient(145deg,#dbe9ff,#bcd3ff); }
+    body.dark .game-tile { color:#fff; }
+    body.dark .gt-trivia { background:linear-gradient(145deg,#4a2638,#3a2030); }
+    body.dark .gt-wyr { background:linear-gradient(145deg,#3b2f5c,#2d2548); }
+    body.dark .gt-tap { background:linear-gradient(145deg,#5a2a33,#3f2229); }
+    body.dark .gt-memory { background:linear-gradient(145deg,#24473b,#1d3630); }
+    body.dark .gt-wheel { background:linear-gradient(145deg,#5a4720,#3f3320); }
+    body.dark .gt-rate { background:linear-gradient(145deg,#2a3f66,#223250); }
+    .gt-badge { position:absolute; top:10px; right:10px; padding:3px 9px; border-radius:99px; background:var(--accent); color:#fff; font-size:.66rem; font-weight:900; animation:badgePulse 1.6s ease-in-out infinite; }
+    @keyframes badgePulse { 50% { transform:scale(1.08); } }
+    .back-btn { display:inline-flex; align-items:center; min-height:40px; margin:2px 0 10px; padding:0 14px 0 8px; border-radius:999px; color:var(--purple); font-weight:800; font-size:.9rem; }
+    .back-btn:hover { background:var(--surface-2); }
+    .game-panel .lead { margin-bottom:12px; }
+
+    /* Tap Together */
+    .tap-meta { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; font-weight:700; color:var(--muted); }
+    .tap-meta b { font-size:1.2rem; color:var(--accent-text); }
+    .tap-timer { font-size:1.15rem; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
+    .tap-bar { height:12px; border-radius:99px; background:var(--surface-2); border:1px solid var(--line); overflow:hidden; }
+    .tap-stage { display:grid; place-items:center; padding:22px 0 12px; }
+    .tap-heart { display:grid; place-items:center; width:156px; height:156px; border-radius:50%; font-size:4.4rem; background:radial-gradient(circle at 35% 30%,#ffd1e1,#ff7fab 70%); box-shadow:0 14px 34px rgba(214,51,108,.35); transition:transform .08s ease; touch-action:manipulation; user-select:none; -webkit-user-select:none; }
+    .tap-heart:disabled { opacity:.55; box-shadow:none; filter:grayscale(.3); }
+    .tap-heart.hit { transform:scale(.9); }
+    .tap-heart.live { animation:tapPulse .7s ease-in-out infinite; }
+    @keyframes tapPulse { 50% { box-shadow:0 14px 46px rgba(214,51,108,.6); } }
+    .tap-scores { display:flex; justify-content:center; gap:28px; color:var(--muted); font-weight:700; }
+    .tap-scores b { font-size:1.4rem; color:var(--purple); margin-left:4px; }
+    .tap-status { font-weight:800; font-size:1rem; color:var(--ink); }
+
+    /* Memory Match */
+    .memory-board { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:6px 0 4px; }
+    .mem-card { aspect-ratio:1; display:grid; place-items:center; border-radius:16px; font-size:2rem; background:linear-gradient(145deg,var(--accent-soft),var(--purple-soft)); border:2px solid transparent; transition:transform .2s ease,background .2s; }
+    .mem-card.down:after { content:"💗"; opacity:.55; font-size:1.5rem; }
+    .mem-card.up { background:var(--surface); border-color:var(--pink); transform:rotateY(0); animation:flipIn .3s ease; }
+    .mem-card.matched { background:var(--mint); border-color:#2f9d73; }
+    .mem-card:disabled { opacity:1; }
+    @keyframes flipIn { from { transform:scale(.8) rotateY(90deg); } to { transform:none; } }
+
+    /* Spin the Wheel */
+    .wheel-wrap { position:relative; display:grid; place-items:center; margin:10px 0 16px; }
+    .wheel-pointer { position:absolute; top:-12px; z-index:3; font-size:1.7rem; color:var(--accent); filter:drop-shadow(0 2px 2px rgba(0,0,0,.2)); line-height:1; }
+    .wheel { position:relative; width:min(78vw,280px); aspect-ratio:1; border-radius:50%; background:conic-gradient(#ff9ec0 0 90deg,#b9a0f6 90deg 180deg,#8fd9b8 180deg 270deg,#ffd27f 270deg 360deg); border:6px solid var(--surface); box-shadow:0 12px 30px rgba(80,40,60,.2); transition:transform 4s cubic-bezier(.12,.7,.1,1); }
+    .wheel:after { content:"♥"; position:absolute; inset:0; margin:auto; width:46px; height:46px; display:grid; place-items:center; border-radius:50%; background:var(--surface); color:var(--accent); font-size:1.3rem; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+    .w-label { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) rotate(var(--a)) translateY(-86px); font-size:.82rem; font-weight:900; color:#2a2130; text-align:center; width:80px; line-height:1.15; }
+    .wheel-result { margin-top:14px; padding:16px; border-radius:var(--radius-sm); text-align:center; background:linear-gradient(120deg,var(--accent-soft),var(--purple-soft)); animation:bubblePop .4s ease; }
+    .wheel-result p { margin:10px 0 6px; font-size:1.05rem; font-weight:700; line-height:1.45; }
+    .wheel-result .muted { font-size:.78rem; }
+
+    /* A toast can be tapped when it carries an action (e.g. "join the game") */
+    #toast.action { pointer-events:auto; cursor:pointer; background:var(--accent); color:#fff; }
+    body.dark #toast.action { background:var(--accent); color:#fff; }
+
     /* ---- Opening splash ------------------------------------------------------------------------------- */
     .splash { position:fixed; inset:0; z-index:200; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:linear-gradient(160deg,var(--bg),var(--bg-2)); transition:opacity .45s ease,visibility .45s; }
     .splash.done { opacity:0; visibility:hidden; pointer-events:none; }
@@ -328,11 +428,46 @@
 
     <div class="views">
       <section id="home" class="view active" aria-label="Home">
+        <header class="greeting"><h1 id="greetingTitle">Hi love 💗</h1><p class="muted" id="greetingSub"></p></header>
+
         <article class="card hero-card">
-          <div class="pair-chars" aria-hidden="true"><div class="pair-char" id="youFace">🧸</div><div class="pair-char" id="themFace">🐰</div></div>
-          <p class="love-points"><span aria-hidden="true">🏆</span><b id="effortCount">0</b>love points</p>
-          <button class="btn" id="approach" type="button" aria-pressed="false">Come closer</button>
+          <div class="pair-chars" id="pairChars">
+            <div class="char-col"><span class="mood-bubble hidden" id="youMood"></span><button class="pair-char" id="youFace" type="button" aria-label="Give your character a squish">🧸</button><span class="char-name">You</span></div>
+            <div class="char-col"><span class="mood-bubble hidden" id="themMood"></span><button class="pair-char" id="themFace" type="button" aria-label="Give your partner’s character a squish">🐰</button><span class="char-name">Partner</span></div>
+          </div>
+          <p class="mood-line" id="moodLine">Tap your characters — they love attention.</p>
+          <p class="section-label">Send a little moment</p>
+          <div class="moments" role="group" aria-label="Send a little moment">
+            <button class="moment" type="button" data-moment="hug"><span aria-hidden="true">🤗</span>Hug</button>
+            <button class="moment" type="button" data-moment="kiss"><span aria-hidden="true">😘</span>Kiss</button>
+            <button class="moment" type="button" data-moment="miss"><span aria-hidden="true">🥺</span>Miss you</button>
+            <button class="moment" type="button" data-moment="proud"><span aria-hidden="true">💪</span>Proud</button>
+            <button class="moment" type="button" data-moment="cheer"><span aria-hidden="true">🎉</span>Cheer</button>
+          </div>
+          <button class="btn soft wide" id="approach" type="button" aria-pressed="false">Come closer</button>
         </article>
+
+        <article class="card">
+          <h2>How are you feeling?</h2>
+          <p class="lead">Your partner will see it on your character.</p>
+          <div class="mood-row" id="moodRow" role="group" aria-label="How are you feeling?"></div>
+        </article>
+
+        <div class="stat-grid">
+          <button class="card stat-card" id="sinceBtn" type="button">
+            <span class="stat-label">Together</span>
+            <span class="stat-num" id="sinceNum">💞</span>
+            <span class="stat-sub" id="sinceSub">Tap to set your day</span>
+          </button>
+          <article class="card stat-card">
+            <span class="stat-label">Love level</span>
+            <span class="stat-num"><span id="effortCount">0</span> <small>pts</small></span>
+            <span class="level-name" id="levelName">Just started</span>
+            <div class="level-bar" role="progressbar" aria-label="Progress to the next love level" aria-valuemin="0" aria-valuemax="100" id="levelBar"><span id="levelFill"></span></div>
+            <span class="stat-sub" id="levelNext"></span>
+          </article>
+        </div>
+
         <article class="card">
           <h2>Recent activity</h2>
           <div class="activity-feed" id="activityFeed"></div>
@@ -396,28 +531,96 @@
         </article>
       </section>
 
-      <section id="play" class="view" aria-label="Play">
-        <article class="card">
-          <div class="quiz-top">
-            <span class="chip">Question <span id="quizProgress">1</span>/<span id="quizTotal">10</span></span>
-            <span class="quiz-score"><span>You <b id="quizScoreYou">0</b></span><span>Together <b id="quizScoreShared">0</b></span></span>
+      <section id="play" class="view" aria-label="Games">
+        <div id="gameHub">
+          <header class="greeting"><h1>Games</h1><p class="muted">Play together — every win earns love points 💗</p></header>
+          <div class="game-grid">
+            <button class="game-tile gt-trivia" type="button" data-game="trivia"><span class="gt-emoji" aria-hidden="true">🧠</span><span class="gt-title">Couple Trivia</span><span class="gt-sub">How well do you know each other?</span><span class="gt-badge hidden" id="badgeTrivia"></span></button>
+            <button class="game-tile gt-wyr" type="button" data-game="wyr"><span class="gt-emoji" aria-hidden="true">🤔</span><span class="gt-title">Would You Rather</span><span class="gt-sub">Same brain, or opposites?</span><span class="gt-badge hidden" id="badgeWyr"></span></button>
+            <button class="game-tile gt-tap" type="button" data-game="tap"><span class="gt-emoji" aria-hidden="true">💗</span><span class="gt-title">Tap Together</span><span class="gt-sub">10 seconds. One heart. Go!</span><span class="gt-badge hidden" id="badgeTap"></span></button>
+            <button class="game-tile gt-memory" type="button" data-game="memory"><span class="gt-emoji" aria-hidden="true">🃏</span><span class="gt-title">Memory Match</span><span class="gt-sub">Take turns, find the pairs</span><span class="gt-badge hidden" id="badgeMemory"></span></button>
+            <button class="game-tile gt-wheel" type="button" data-game="wheel"><span class="gt-emoji" aria-hidden="true">🎡</span><span class="gt-title">Spin the Wheel</span><span class="gt-sub">Truth, dare, dates & compliments</span><span class="gt-badge hidden" id="badgeWheel"></span></button>
+            <button class="game-tile gt-rate" type="button" data-game="rate"><span class="gt-emoji" aria-hidden="true">🌟</span><span class="gt-title">Rate the Effort</span><span class="gt-sub">Give each other hearts</span></button>
           </div>
-          <h2 class="quiz-q" id="quizQ">Loading question…</h2>
-          <div class="quiz-options" id="quizOptions"></div>
-          <div class="status quiz-status" id="quizStatus"></div>
-          <div class="row"><button class="btn" id="quizNext" type="button" disabled>Next question</button><button class="btn ghost" id="quizReset" type="button">Restart</button></div>
-          <p class="effort-note">Answer about each other — matching picks score a point for both of you.</p>
-        </article>
-        <article class="card">
-          <h2>Rate the effort</h2>
-          <p class="lead">After the quiz, rate how sweet each other was. Your hearts add to your love points.</p>
-          <div class="rating-row">
-            <label>Rate yourself<select id="rateYou"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label>
-            <label>Rate your partner<select id="rateHer"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label>
-          </div>
-          <button class="btn wide" id="saveRating" type="button">Add mutual rating</button>
-          <div class="status center" id="ratingStatus"></div>
-        </article>
+        </div>
+
+        <div id="gamePanels" class="hidden">
+          <button class="back-btn" id="gameBack" type="button">← All games</button>
+
+          <article class="card game-panel hidden" id="game-trivia">
+            <div class="quiz-top">
+              <span class="chip">Question <span id="quizProgress">1</span>/<span id="quizTotal">10</span></span>
+              <span class="quiz-score"><span>You <b id="quizScoreYou">0</b></span><span>Together <b id="quizScoreShared">0</b></span></span>
+            </div>
+            <h2 class="quiz-q" id="quizQ">Loading question…</h2>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="status quiz-status" id="quizStatus"></div>
+            <div class="row"><button class="btn" id="quizNext" type="button" disabled>Next question</button><button class="btn ghost" id="quizReset" type="button">Restart</button></div>
+            <p class="effort-note">Answer about each other — matching picks score a point for both of you (+2 love points).</p>
+          </article>
+
+          <article class="card game-panel hidden" id="game-wyr">
+            <div class="quiz-top">
+              <span class="chip">Round <span id="wyrProgress">1</span>/<span id="wyrTotal">12</span></span>
+              <span class="quiz-score"><span>Same picks <b id="wyrScore">0</b></span></span>
+            </div>
+            <h2 class="quiz-q">Would you rather…</h2>
+            <div class="quiz-options" id="wyrOptions"></div>
+            <div class="status quiz-status" id="wyrStatus"></div>
+            <div class="row"><button class="btn" id="wyrNext" type="button" disabled>Next round</button></div>
+            <p class="effort-note">Pick on your own. If you both choose the same, you earn a love point.</p>
+          </article>
+
+          <article class="card game-panel hidden" id="game-tap">
+            <h2>Tap Together</h2>
+            <p class="lead">Both of you tap the heart as fast as you can for 10 seconds. Reach the team target to win love points!</p>
+            <div class="tap-meta"><span>Team <b id="tapTotal">0</b> / <span id="tapTarget">80</span></span><span class="tap-timer" id="tapTimer">10.0s</span></div>
+            <div class="tap-bar" role="progressbar" aria-label="Team progress" aria-valuemin="0" aria-valuemax="100" id="tapBar"><span id="tapFill"></span></div>
+            <div class="tap-stage"><button class="tap-heart" id="tapHeart" type="button" disabled aria-label="Tap the heart">💗</button></div>
+            <div class="tap-scores"><span>You <b id="tapYou">0</b></span><span>Partner <b id="tapThem">0</b></span></div>
+            <div class="status center tap-status" id="tapStatus">Ready when you are.</div>
+            <button class="btn wide" id="tapStart" type="button">Start — 3, 2, 1…</button>
+            <p class="effort-note">Best team score: <b id="tapBest">0</b> taps · win = +5 love points</p>
+          </article>
+
+          <article class="card game-panel hidden" id="game-memory">
+            <div class="quiz-top">
+              <span class="chip" id="memoryTurn">New game</span>
+              <span class="quiz-score"><span>You <b id="memoryYou">0</b></span><span>Partner <b id="memoryThem">0</b></span></span>
+            </div>
+            <div class="memory-board" id="memoryBoard" aria-label="Memory cards"></div>
+            <div class="status center" id="memoryStatus">Flip two cards and find the matching pair.</div>
+            <button class="btn wide" id="memoryStart" type="button">New game</button>
+            <p class="effort-note">Take turns. Finish the board together for +5 love points.</p>
+          </article>
+
+          <article class="card game-panel hidden" id="game-wheel">
+            <h2>Spin the Wheel</h2>
+            <p class="lead">Spin it — you both see what comes up.</p>
+            <div class="wheel-wrap">
+              <div class="wheel-pointer" aria-hidden="true">▼</div>
+              <div class="wheel" id="wheel" aria-hidden="true">
+                <span class="w-label" style="--a:45deg">Truth</span>
+                <span class="w-label" style="--a:135deg">Dare</span>
+                <span class="w-label" style="--a:225deg">Date idea</span>
+                <span class="w-label" style="--a:315deg">Sweet words</span>
+              </div>
+            </div>
+            <button class="btn wide" id="spinBtn" type="button">Spin!</button>
+            <div class="wheel-result hidden" id="wheelResult" aria-live="polite"><span class="chip" id="wheelCat"></span><p id="wheelText"></p><span class="muted" id="wheelBy"></span></div>
+          </article>
+
+          <article class="card game-panel hidden" id="game-rate">
+            <h2>Rate the effort</h2>
+            <p class="lead">After playing, rate how sweet each other was. Your hearts add to your love points.</p>
+            <div class="rating-row">
+              <label>Rate yourself<select id="rateYou"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label>
+              <label>Rate your partner<select id="rateHer"><option value="1">1 heart</option><option value="2">2 hearts</option><option value="3" selected>3 hearts</option><option value="4">4 hearts</option><option value="5">5 hearts</option></select></label>
+            </div>
+            <button class="btn wide" id="saveRating" type="button">Add mutual rating</button>
+            <div class="status center" id="ratingStatus"></div>
+          </article>
+        </div>
       </section>
 
       <section id="snaps" class="view" aria-label="Snaps">
@@ -459,7 +662,7 @@
       <button class="tab active" type="button" data-view="home" aria-current="page"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M5.5 9.8V20h13V9.8"/></svg></span>Home<span class="dot hidden"></span></button>
       <button class="tab" type="button" data-view="chat"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/></svg></span>Chat<span class="dot hidden"></span></button>
       <button class="tab" type="button" data-view="send"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2C19.5 15.4 12 20 12 20Z"/></svg></span>Send<span class="dot hidden"></span></button>
-      <button class="tab" type="button" data-view="play"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9 6.8 19.7l1-5.9-4.3-4.1 5.9-.8Z"/></svg></span>Play<span class="dot hidden"></span></button>
+      <button class="tab" type="button" data-view="play"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8.5h10a4 4 0 0 1 3.9 4.6l-.5 3.2a2.6 2.6 0 0 1-4.5 1.3L14.5 16h-5l-1.4 1.6a2.6 2.6 0 0 1-4.5-1.3l-.5-3.2A4 4 0 0 1 7 8.5Z"/><path d="M8.5 11v3M7 12.5h3"/><circle cx="15.6" cy="11.8" r=".7" fill="currentColor"/><circle cx="17.4" cy="13.6" r=".7" fill="currentColor"/></svg></span>Games<span class="dot hidden"></span></button>
       <button class="tab" type="button" data-view="snaps"><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3V19H4Z"/><circle cx="12" cy="13.5" r="3.3"/></svg></span>Snaps<span class="dot hidden"></span></button>
     </nav>
   </main>
@@ -485,6 +688,13 @@
   <dialog id="confirmDialog" class="confirm" aria-labelledby="confirmText">
     <p id="confirmText"></p>
     <div class="row"><button class="btn ghost" id="confirmCancel" type="button">Cancel</button><button class="btn" id="confirmOk" type="button">OK</button></div>
+  </dialog>
+  <dialog id="sinceDialog" class="confirm" aria-labelledby="sinceTitle">
+    <h2 id="sinceTitle" style="margin-bottom:6px;font-size:1.15rem">When did you get together?</h2>
+    <p class="muted" style="margin-bottom:14px;font-size:.9rem">We’ll count the days for you both.</p>
+    <input type="date" id="sinceInput" aria-label="The day you got together">
+    <div class="row" style="margin-top:16px"><button class="btn ghost" id="sinceClear" type="button">Clear</button><button class="btn" id="sinceSave" type="button">Save</button></div>
+    <button class="link-btn" id="sinceCancel" type="button" style="display:block;margin:6px auto 0">Cancel</button>
   </dialog>
   <div id="toast" role="status" aria-live="polite"></div>
 
@@ -527,7 +737,7 @@
     // ---- State -------------------------------------------------------------------------------------------
     let authUser=null, coupleId=null, partnerUid=null, members=[], coupleUnsubs=[];
     // Each flag flips after a listener's first snapshot, so only changes that arrive after that can notify.
-    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"" };
+    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1 };
     let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
     let lastPresence={};
     let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapData=null;
@@ -539,9 +749,11 @@
     const coupleRef = () => doc(db,"couples",coupleId);
 
     // ---- Toasts, dialogs and sizing ------------------------------------------------------------------------
-    function toast(message){
-      const el=$("toast"); el.textContent=message; el.classList.add("show");
-      clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),2600);
+    // A toast can carry an action (e.g. "join the game"); tapping it runs that.
+    function toast(message,action){
+      const el=$("toast"); el.textContent=message; el.classList.add("show"); el.classList.toggle("action",!!action);
+      el.onclick=action?()=>{ el.classList.remove("show"); action(); }:null;
+      clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),action?6500:2600);
     }
     const openDialog = dialog => { if(dialog.showModal) { if(!dialog.open) dialog.showModal(); } else dialog.setAttribute("open",""); };
     const closeDialog = dialog => { if(dialog.close) { if(dialog.open) dialog.close(); } else dialog.removeAttribute("open"); };
@@ -757,6 +969,8 @@
       coupleUnsubs.forEach(stop=>{ try { stop(); } catch(error){} });
       coupleUnsubs=[]; coupleId=null; partnerUid=null; members=[]; lastPresence={};
       clearTimeout(typingTimer); typingSentAt=0; currentSnap=null; openingSnap=false;
+      clearInterval(tapTimer); tapTimer=null; tapRun=null; tapState=null; memoryState=null; memoryTimers.clear();
+      lastWyrSig=""; lastSpinId=""; spinning=false; memoryCelebrated=""; showHub();
     }
     onAuthStateChanged(auth,user=>{
       authUser=user; teardown(); closeDialog($("settingsDialog"));
@@ -767,7 +981,7 @@
     async function openCouple(id){
       teardown();
       coupleId=id;
-      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"" };
+      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1 };
       surpriseShown=false; bouquetShown=false; sharedApproach=false; prevApproach=false; lastTriviaSig="";
       celebratedTrivia.clear(); scoring.clear(); purging.clear();
       $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show"); setActiveTab("home");
@@ -799,7 +1013,6 @@
       members=data.members||[];
       partnerUid=members.find(uid=>uid!==me)||null;
       if(partnerUid!==previousPartner && partnerUid) delete genderTried[partnerUid];
-      $("effortCount").textContent=data.effort||0;
       renderInvite(snap.id,members.length<2); $("settingsCode").textContent=snap.id;
       renderApproach(!!shared.approach,live);
 
@@ -829,6 +1042,14 @@
       if(bouquet && bouquet.authorId===me && bouquet.seen) $("bouquetStatus").textContent="They opened your bouquet 💐";
 
       renderTrivia(shared.trivia||{index:0,answers:{}},shared,live);
+      renderWyr(shared.wyr||{index:0,answers:{}},shared,live);
+      lastTapBest=shared.tapBest||0; onTapState(shared.tap,live);
+      onMemoryState(shared.memory,live);
+      onWheelState(shared.wheel,live);
+      renderMoods(shared.moods||{},live); renderSince(shared.since); renderLevel(data.effort||0,live);
+      const moment=shared.lastMoment, momentKey=moment?moment.emoji+"|"+millis(moment.at):"";
+      if(live && moment && moment.by!==me && momentKey!==seen.moment){ confettiBurst([moment.emoji],16); playAnim($("themFace"),"wiggle",800); playChime("pop"); }
+      seen.moment=momentKey;
       lastPresence=shared.presence||{}; renderPresence();
 
       const task=shared.customTask;
@@ -1083,7 +1304,7 @@
     function dayIndex(){ const now=new Date(), start=new Date(now.getFullYear(),0,0); return Math.floor((now-start)/86400000); }
     function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
     renderDailyTask();
-    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); } });
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); } });
     function renderAssignedTask(task){
       const box=$("assignedTaskView");
       if(!task || !authUser){ box.textContent=""; return; }
@@ -1255,24 +1476,12 @@
     ];
     let quizCurrentIndex=0;
     // Either of you may award the point; the transaction makes sure it is only counted once per question.
-    async function scoreTrivia(idx){
-      const key=coupleId+":"+idx;
-      if(scoring.has(key)) return;
-      scoring.add(key);
-      try {
-        await runTransaction(db,async transaction=>{
-          const ref=coupleRef(), snap=await transaction.get(ref);
-          const t=snap.data()?.shared?.trivia||{}, picks=Object.values(t.answers||{});
-          if((t.index||0)%triviaQuestions.length!==idx || (t.scoredIndexes||[]).includes(idx) || picks.length<2 || picks[0]!==picks[1]) return;
-          transaction.update(ref,{"shared.trivia.scoredIndexes":arrayUnion(idx),"shared.triviaScore":increment(1)});
-        });
-      } catch(error){}
-      finally { scoring.delete(key); }
-    }
+    const scoreTrivia = idx => scorePair("trivia",idx,triviaQuestions.length,"shared.triviaScore",2);
     function renderTrivia(t,shared,live){
       const idx=(t.index||0)%triviaQuestions.length; quizCurrentIndex=idx;
       const q=triviaQuestions[idx], answers=t.answers||{}, me=authUser.uid;
       const myPick=answers[me], partnerPick=partnerUid?answers[partnerUid]:undefined;
+      setBadge("badgeTrivia",partnerPick!==undefined && myPick===undefined ? "Your turn" : "");
       $("quizScoreYou").textContent=(shared.triviaAnswered||{})[me]||0;
       if(typeof shared.triviaScore==="number") $("quizScoreShared").textContent=shared.triviaScore;
       const bothAnswered=myPick!==undefined && partnerPick!==undefined, matched=bothAnswered && myPick===partnerPick;
@@ -1320,6 +1529,405 @@
       if(!coupleId || !(await askConfirm("Restart the trivia quiz and reset your shared score?",{ok:"Restart"}))) return;
       try { await updateDoc(coupleRef(),{"shared.trivia":{index:0,answers:{},scoredIndexes:[]},"shared.triviaScore":0,"shared.triviaAnswered":{}}); } catch(error){}
     };
+
+    // ---- Little animations used around the app -----------------------------------------------------------
+    function playAnim(el,cls,ms){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls),ms); }
+    function floatHeart(el,emoji="💗"){
+      const box=el.getBoundingClientRect(), heart=document.createElement("span");
+      heart.className="float-heart"; heart.textContent=emoji; heart.setAttribute("aria-hidden","true");
+      heart.style.left=(box.left+box.width/2-10+(Math.random()*36-18))+"px"; heart.style.top=(box.top+6)+"px";
+      document.body.appendChild(heart); setTimeout(()=>heart.remove(),1200);
+    }
+    const shuffle = list => { const copy=list.slice(); for(let i=copy.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]]; } return copy; };
+    const randomId = () => Math.random().toString(36).slice(2,10);
+    const setBadge = (id,text) => { const el=$(id); el.textContent=text||""; el.classList.toggle("hidden",!text); };
+
+    // ---- Home: greeting, characters, moments, moods, days together, love level -----------------------------
+    function renderGreeting(){
+      const hour=new Date().getHours();
+      const hello=hour<5?"Up late, love?":hour<12?"Good morning":hour<17?"Good afternoon":hour<22?"Good evening":"Sweet dreams";
+      $("greetingTitle").textContent=hello+" 💗";
+      $("greetingSub").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+    }
+    renderGreeting();
+    [["youFace","💗"],["themFace","💞"]].forEach(([id,emoji])=>$(id).onclick=()=>{ playAnim($(id),"squish",500); floatHeart($(id),emoji); playChime("pop"); });
+
+    // A "moment" is a one-tap sweet message: it lands in your partner's activity and plays an animation on their screen.
+    const moments={
+      hug:{emoji:"🤗",text:"🤗 Sending you a big hug"},
+      kiss:{emoji:"😘",text:"😘 Sending you a kiss"},
+      miss:{emoji:"🥺",text:"🥺 I miss you"},
+      proud:{emoji:"💪",text:"💪 I’m so proud of you"},
+      cheer:{emoji:"🎉",text:"🎉 You’re amazing!"}
+    };
+    let momentCooldown=0;
+    document.querySelectorAll("[data-moment]").forEach(button=>button.onclick=async()=>{
+      const moment=moments[button.dataset.moment];
+      if(!coupleId || Date.now()<momentCooldown) return;
+      momentCooldown=Date.now()+1500;
+      confettiBurst([moment.emoji],10); playAnim($("themFace"),"wiggle",800); playChime("pop");
+      try {
+        await Promise.all([share("poke",moment.text),updateDoc(coupleRef(),{"shared.lastPoke":moment.text,"shared.lastPokeBy":authUser.uid,"shared.lastPokeAt":serverTimestamp(),"shared.lastMoment":{emoji:moment.emoji,by:authUser.uid,at:serverTimestamp()}})]);
+      } catch(error){ toast("Couldn't send that — try again"); }
+    });
+
+    const moods=[{key:"happy",emoji:"😊",label:"Happy"},{key:"loved",emoji:"🥰",label:"Loved"},{key:"tired",emoji:"😴",label:"Tired"},{key:"sad",emoji:"😢",label:"Sad"},{key:"stressed",emoji:"😤",label:"Stressed"},{key:"sick",emoji:"🤒",label:"Unwell"}];
+    const MOOD_FRESH_MS=24*3600*1000;
+    moods.forEach(mood=>{
+      const chip=document.createElement("button"); chip.type="button"; chip.className="mood-chip"; chip.dataset.mood=mood.key; chip.setAttribute("aria-pressed","false");
+      const icon=document.createElement("span"); icon.setAttribute("aria-hidden","true"); icon.textContent=mood.emoji;
+      chip.appendChild(icon); chip.appendChild(document.createTextNode(mood.label));
+      chip.onclick=async()=>{
+        if(!coupleId) return;
+        try { await updateDoc(coupleRef(),{[`shared.moods.${authUser.uid}`]:{key:mood.key,emoji:mood.emoji,label:mood.label,at:serverTimestamp()}}); toast(`Feeling ${mood.label.toLowerCase()} ${mood.emoji} — your partner can see it`); }
+        catch(error){ toast("Couldn't save that — try again"); }
+      };
+      $("moodRow").appendChild(chip);
+    });
+    const freshMood = entry => entry && entry.key && (!millis(entry.at) || Date.now()-millis(entry.at)<MOOD_FRESH_MS) ? entry : null;
+    function renderMoods(all,live){
+      const mine=freshMood(all[authUser.uid]), theirs=partnerUid?freshMood(all[partnerUid]):null;
+      $("youMood").textContent=mine?mine.emoji:""; $("youMood").classList.toggle("hidden",!mine);
+      $("themMood").textContent=theirs?theirs.emoji:""; $("themMood").classList.toggle("hidden",!theirs);
+      document.querySelectorAll(".mood-chip").forEach(chip=>{ const on=!!mine && chip.dataset.mood===mine.key; chip.classList.toggle("selected",on); chip.setAttribute("aria-pressed",String(on)); });
+      let line="Tap your characters — they love attention.";
+      if(!partnerUid) line="Your partner’s mood will show up here once they join.";
+      else if(theirs){
+        const hint=["sad","stressed","tired","sick"].includes(theirs.key)?" Maybe send a hug? 🤗":"";
+        line=`Your partner is feeling ${theirs.label.toLowerCase()} ${theirs.emoji}${millis(theirs.at)?" · "+timeAgo(millis(theirs.at)):""}.${hint}`;
+      }
+      $("moodLine").textContent=line;
+      const key=theirs?theirs.key+"|"+millis(theirs.at):"";
+      if(live && theirs && key!==seen.partnerMood){ playAnim($("themFace"),"wiggle",800); toast(`Your partner is feeling ${theirs.label.toLowerCase()} ${theirs.emoji}`); }
+      seen.partnerMood=key;
+    }
+
+    const milestones=[7,14,30,50,100,150,200,300,365,500,730,1000,1500,2000,3000];
+    let currentSince="";
+    function renderSince(since){
+      currentSince=since||"";
+      if(!since){ $("sinceNum").textContent="💞"; $("sinceSub").textContent="Tap to set your day"; return; }
+      const [y,m,d]=since.split("-").map(Number), start=new Date(y,m-1,d), today=new Date();
+      const days=Math.round((new Date(today.getFullYear(),today.getMonth(),today.getDate())-start)/86400000);
+      if(days<0){ $("sinceNum").textContent="Soon 💞"; $("sinceSub").textContent=`in ${-days} day${-days===1?"":"s"}`; return; }
+      $("sinceNum").textContent=days===0?"Day 1":`${days.toLocaleString()} days`;
+      const next=milestones.find(n=>n>days);
+      $("sinceSub").textContent=days===0?"Your story starts today":(next?`Next: ${next} days, in ${next-days}`:"Still going strong 💞");
+    }
+    $("sinceBtn").onclick=()=>{ $("sinceInput").value=currentSince; $("sinceInput").max=new Date().toISOString().slice(0,10); openDialog($("sinceDialog")); };
+    $("sinceCancel").onclick=()=>closeDialog($("sinceDialog"));
+    $("sinceSave").onclick=async()=>{
+      const value=$("sinceInput").value;
+      if(!value){ toast("Pick a date first"); return; }
+      closeDialog($("sinceDialog"));
+      try { await updateDoc(coupleRef(),{"shared.since":value}); toast("Saved 💞"); } catch(error){ toast("Couldn't save that — try again"); }
+    };
+    $("sinceClear").onclick=async()=>{ closeDialog($("sinceDialog")); try { await updateDoc(coupleRef(),{"shared.since":""}); } catch(error){} };
+
+    const levels=[{min:0,name:"Just started 🌱"},{min:15,name:"Sweethearts 💕"},{min:40,name:"Cuddle Bugs 🧸"},{min:80,name:"Lovebirds 🕊️"},{min:150,name:"Soulmates ✨"},{min:300,name:"Forever Duo 👑"}];
+    function renderLevel(points,live){
+      let index=levels.length-1; while(index>0 && points<levels[index].min) index--;
+      const current=levels[index], next=levels[index+1], percent=next?Math.min(100,Math.round((points-current.min)/(next.min-current.min)*100)):100;
+      $("effortCount").textContent=points; $("levelName").textContent=current.name;
+      $("levelFill").style.width=percent+"%"; $("levelBar").setAttribute("aria-valuenow",String(percent));
+      $("levelNext").textContent=next?`${next.min-points} more for ${next.name}`:"Top level — wow! 🎉";
+      if(live && seen.level>=0 && index>seen.level){ confettiBurst(["🎉","💗","✨","👑"],26); playChime("success"); toast(`Level up! You’re ${current.name}`); }
+      seen.level=index;
+    }
+
+    // ---- Games hub ----------------------------------------------------------------------------------------
+    let openGameId=null;
+    function showHub(){
+      openGameId=null; $("gameHub").classList.remove("hidden"); $("gamePanels").classList.add("hidden");
+      document.querySelectorAll(".game-panel").forEach(panel=>panel.classList.add("hidden")); $("play").scrollTop=0;
+    }
+    function openGame(id){
+      openGameId=id; $("gameHub").classList.add("hidden"); $("gamePanels").classList.remove("hidden");
+      document.querySelectorAll(".game-panel").forEach(panel=>panel.classList.toggle("hidden",panel.id!=="game-"+id)); $("play").scrollTop=0;
+      if(id==="memory") renderMemory(); else if(id==="tap") renderTap();
+    }
+    document.querySelectorAll(".game-tile").forEach(tile=>tile.onclick=()=>openGame(tile.dataset.game));
+    $("gameBack").onclick=showHub;
+
+    // One transaction awards the point for a matching round, so it counts once even if both phones try at the same time.
+    async function scorePair(game,idx,length,scoreField,points){
+      const key=game+":"+coupleId+":"+idx;
+      if(scoring.has(key)) return;
+      scoring.add(key);
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=coupleRef(), snap=await transaction.get(ref);
+          const t=snap.data()?.shared?.[game]||{}, picks=Object.values(t.answers||{});
+          if((t.index||0)%length!==idx || (t.scoredIndexes||[]).includes(idx) || picks.length<2 || picks[0]!==picks[1]) return;
+          transaction.update(ref,{[`shared.${game}.scoredIndexes`]:arrayUnion(idx),[scoreField]:increment(1),effort:increment(points)});
+        });
+      } catch(error){}
+      finally { scoring.delete(key); }
+    }
+
+    // ---- Would You Rather ---------------------------------------------------------------------------------
+    const wyrQuestions=[
+      ["A cozy night in","A night out on the town"],["A beach holiday","A mountain trip"],["Breakfast in bed","Dinner under the stars"],
+      ["Text all day","One long call at night"],["A surprise party","A quiet celebration"],["Cook together","Order in and watch a movie"],
+      ["Live in the city","Live in the countryside"],["Relive your first date","Skip ahead to your 50th anniversary"],["Be able to read minds","Be able to fly"],
+      ["Sweet snacks","Salty snacks"],["Early bird mornings","Night owl evenings"],["A pet dog","A pet cat"]
+    ];
+    let lastWyrSig="", wyrIndex=0;
+    function renderWyr(t,shared,live){
+      const idx=(t.index||0)%wyrQuestions.length, answers=t.answers||{}, me=authUser.uid;
+      wyrIndex=idx;
+      const myPick=answers[me], partnerPick=partnerUid?answers[partnerUid]:undefined;
+      $("wyrScore").textContent=shared.wyrMatches||0; $("wyrTotal").textContent=wyrQuestions.length;
+      const both=myPick!==undefined && partnerPick!==undefined, matched=both && myPick===partnerPick;
+      if(matched && !(t.scoredIndexes||[]).includes(idx)) scorePair("wyr",idx,wyrQuestions.length,"shared.wyrMatches",1);
+      setBadge("badgeWyr",partnerPick!==undefined && myPick===undefined ? "Your turn" : "");
+      const signature=`${idx}|${myPick}|${partnerPick}`;
+      if(signature===lastWyrSig) return;
+      lastWyrSig=signature;
+      $("wyrProgress").textContent=idx+1;
+      const box=$("wyrOptions"); box.innerHTML="";
+      wyrQuestions[idx].forEach((text,i)=>{
+        const btn=document.createElement("button"); btn.type="button"; btn.className="quiz-option"; btn.textContent=text;
+        if(myPick!==undefined){
+          btn.disabled=true;
+          if(i===myPick) btn.classList.add("picked");
+          if(both){
+            const tags=[]; if(i===myPick) tags.push("you"); if(i===partnerPick) tags.push("partner");
+            if(tags.length){ const tag=document.createElement("span"); tag.className="pick-tag"; tag.textContent=tags.join(" + "); btn.appendChild(tag); }
+            if(matched && i===myPick) btn.classList.add("correct");
+          }
+        } else {
+          btn.onclick=async()=>{
+            if(!coupleId) return;
+            box.querySelectorAll("button").forEach(b=>b.disabled=true);
+            try { await updateDoc(coupleRef(),{[`shared.wyr.answers.${me}`]:i,"shared.wyr.index":idx}); }
+            catch(error){ box.querySelectorAll("button").forEach(b=>b.disabled=false); }
+          };
+        }
+        box.appendChild(btn);
+      });
+      if(myPick===undefined){ $("wyrStatus").textContent=partnerPick!==undefined?"Your partner already picked — your turn!":"Pick one!"; $("wyrNext").disabled=true; }
+      else if(partnerPick===undefined){ $("wyrStatus").textContent="Waiting for your partner…"; $("wyrNext").disabled=true; }
+      else {
+        $("wyrStatus").textContent=matched?"Same brain! 💞 +1 love point":"Opposites attract 😄";
+        $("wyrNext").disabled=false;
+        if(matched && live){ confettiBurst(["🧠","💞","✨"],14); playChime("success"); }
+      }
+    }
+    $("wyrNext").onclick=()=>busy($("wyrNext"),async()=>{
+      if(!coupleId) return;
+      const next=(wyrIndex+1)%wyrQuestions.length;
+      try { await updateDoc(coupleRef(),{"shared.wyr.index":next,"shared.wyr.answers":{},"shared.wyr.scoredIndexes":arrayRemove(next)}); } catch(error){}
+    });
+
+    // ---- Tap Together -------------------------------------------------------------------------------------
+    // Both phones start their own clock the moment the round reaches them, so it doesn't matter if the clocks differ.
+    const TAP_TARGET=80, TAP_COUNTDOWN_MS=3000, TAP_PLAY_MS=10000, TAP_FINAL_MS=1800;
+    let tapRun=null, tapState=null, tapTimer=null, lastTapBest=0;
+    $("tapTarget").textContent=TAP_TARGET;
+    const tapFresh = tap => !!tap && !tap.done && (!millis(tap.startedAt) || Date.now()-millis(tap.startedAt)<40000);
+    function tapPhase(){
+      if(!tapRun) return {name:"idle"};
+      const elapsed=performance.now()-tapRun.recv;
+      if(elapsed<TAP_COUNTDOWN_MS) return {name:"countdown",left:TAP_COUNTDOWN_MS-elapsed};
+      if(elapsed<TAP_COUNTDOWN_MS+TAP_PLAY_MS) return {name:"play",left:TAP_COUNTDOWN_MS+TAP_PLAY_MS-elapsed};
+      return {name:"ended",over:elapsed-TAP_COUNTDOWN_MS-TAP_PLAY_MS};
+    }
+    function onTapState(tap,live){
+      tapState=tap||null;
+      if(tapFresh(tap) && (!tapRun || tapRun.id!==tap.id)){
+        tapRun={id:tap.id,recv:performance.now(),count:0,flushed:0,lastFlush:0,finalized:false,celebrated:false};
+        if(live && tap.by!==authUser.uid){
+          markUnread("play");
+          toast("🎮 Your partner started Tap Together — tap to join!",()=>{ openTab("play"); openGame("tap"); });
+        }
+        clearInterval(tapTimer); tapTimer=setInterval(tickTap,100);
+      }
+      renderTap();
+    }
+    function flushTap(){
+      if(!coupleId || !tapRun || tapRun.id!==tapState?.id) return;
+      tapRun.lastFlush=performance.now(); tapRun.flushed=tapRun.count;
+      updateDoc(coupleRef(),{[`shared.tap.counts.${authUser.uid}`]:tapRun.count}).catch(()=>{});
+    }
+    async function finalizeTap(id){
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=coupleRef(), snap=await transaction.get(ref), shared=snap.data()?.shared||{}, tap=shared.tap;
+          if(!tap || tap.id!==id || tap.done) return;
+          const total=Object.values(tap.counts||{}).reduce((sum,n)=>sum+(Number(n)||0),0), success=total>=TAP_TARGET;
+          const update={"shared.tap.done":true,"shared.tap.total":total,"shared.tap.success":success};
+          if(total>(shared.tapBest||0)) update["shared.tapBest"]=total;
+          if(success) update.effort=increment(5);
+          transaction.update(ref,update);
+        });
+      } catch(error){}
+    }
+    function tickTap(){
+      const phase=tapPhase();
+      if(phase.name==="play" && tapRun.count!==tapRun.flushed && performance.now()-tapRun.lastFlush>350) flushTap();
+      if(phase.name==="ended"){
+        if(tapRun.count!==tapRun.flushed) flushTap();
+        if(!tapRun.finalized && phase.over>TAP_FINAL_MS){ tapRun.finalized=true; finalizeTap(tapRun.id); }
+        if(tapState?.done || phase.over>9000){ clearInterval(tapTimer); tapTimer=null; }
+      }
+      renderTap();
+    }
+    function renderTap(){
+      if(!authUser) return;
+      const me=authUser.uid, counts=tapState?.counts||{}, phase=tapPhase();
+      const active=!!tapRun && !!tapState && tapRun.id===tapState.id;
+      const mine=!tapState?0:(active?Math.max(tapRun.count,Number(counts[me])||0):Number(counts[me])||0);
+      const theirs=!tapState||!partnerUid?0:Number(counts[partnerUid])||0;
+      const total=tapState?.done?(tapState.total||0):mine+theirs, percent=Math.min(100,Math.round(total/TAP_TARGET*100));
+      $("tapYou").textContent=mine; $("tapThem").textContent=theirs; $("tapTotal").textContent=total; $("tapBest").textContent=lastTapBest;
+      $("tapFill").style.width=percent+"%"; $("tapBar").setAttribute("aria-valuenow",String(percent));
+      const heart=$("tapHeart"), status=$("tapStatus"), start=$("tapStart"), timer=$("tapTimer");
+      if(active && phase.name==="countdown"){ heart.disabled=true; heart.classList.remove("live"); status.textContent=String(Math.ceil(phase.left/1000)); timer.textContent="Get ready"; start.disabled=true; }
+      else if(active && phase.name==="play"){ heart.disabled=false; heart.classList.add("live"); status.textContent="TAP! TAP! TAP! 💗"; timer.textContent=(phase.left/1000).toFixed(1)+"s"; start.disabled=true; }
+      else {
+        heart.disabled=true; heart.classList.remove("live"); timer.textContent=(TAP_PLAY_MS/1000).toFixed(1)+"s"; start.disabled=false;
+        if(active && phase.name==="ended" && !tapState.done) status.textContent="Counting up…";
+        else if(tapState?.done) status.textContent=tapState.success?`🎉 Team score ${tapState.total} — you did it! +5 love points`:`So close! ${tapState.total} / ${TAP_TARGET} — go again?`;
+        else status.textContent="Ready when you are.";
+      }
+      start.textContent=tapState?.done?"Play again":"Start — 3, 2, 1…";
+      setBadge("badgeTap",active && phase.name!=="ended" && phase.name!=="idle" && tapState.by!==me && openGameId!=="tap" ? "Live now!" : "");
+      if(tapState?.done && tapRun && tapRun.id===tapState.id && !tapRun.celebrated){
+        tapRun.celebrated=true;
+        if(tapState.success){ confettiBurst(["💗","🎉","✨"],26); playChime("success"); }
+      }
+    }
+    $("tapHeart").onclick=()=>{
+      if(tapPhase().name!=="play") return;
+      tapRun.count++; navigator.vibrate?.(6); playAnim($("tapHeart"),"hit",90); renderTap();
+    };
+    $("tapStart").onclick=()=>busy($("tapStart"),async()=>{
+      if(!coupleId) return;
+      if(!partnerUid){ toast("Your partner needs to join first"); return; }
+      try { await updateDoc(coupleRef(),{"shared.tap":{id:randomId(),by:authUser.uid,startedAt:serverTimestamp(),counts:{},done:false}}); }
+      catch(error){ toast("Couldn't start — try again"); }
+    });
+
+    // ---- Memory Match -------------------------------------------------------------------------------------
+    const memoryEmojis=["🍓","🌸","🦋","🍰","🎈","🌙","🐻","🍀","🎀","🍩","🧁","🐝"];
+    let memoryState=null, memoryCelebrated="";
+    const memoryTimers=new Set();
+    async function startMemory(){
+      if(!coupleId) return;
+      if(!partnerUid){ toast("Your partner needs to join first"); return; }
+      if(memoryState && !memoryState.done && !(await askConfirm("Start a new game? This ends the one in progress.",{ok:"New game"}))) return;
+      const faces=shuffle(memoryEmojis).slice(0,6);
+      try { await updateDoc(coupleRef(),{"shared.memory":{id:randomId(),cards:shuffle([...faces,...faces]),flipped:[],matched:[],turn:authUser.uid,scores:{},done:false}}); }
+      catch(error){ toast("Couldn't start — try again"); }
+    }
+    $("memoryStart").onclick=()=>busy($("memoryStart"),startMemory);
+    function flipMemoryCard(i){
+      const m=memoryState;
+      if(!m || m.done || m.turn!==authUser.uid || m.flipped.length>=2 || m.flipped.includes(i) || m.matched.includes(i)) return;
+      updateDoc(coupleRef(),{"shared.memory.flipped":arrayUnion(i)}).catch(()=>toast("Couldn't flip that — try again"));
+    }
+    // After two cards are up, the player whose turn it is settles the pair; the other phone is a safety net.
+    async function resolveMemory(id){
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=coupleRef(), snap=await transaction.get(ref), mm=snap.data()?.shared?.memory;
+          if(!mm || mm.id!==id || mm.done || (mm.flipped||[]).length<2) return;
+          const [a,b]=mm.flipped;
+          if(mm.cards[a]===mm.cards[b]){
+            const matched=[...(mm.matched||[]),a,b], done=matched.length===mm.cards.length;
+            const update={"shared.memory.matched":matched,"shared.memory.flipped":[],[`shared.memory.scores.${mm.turn}`]:increment(1)};
+            if(done){ update["shared.memory.done"]=true; update.effort=increment(5); }
+            transaction.update(ref,update);
+          } else {
+            const other=(snap.data().members||[]).find(uid=>uid!==mm.turn)||mm.turn;
+            transaction.update(ref,{"shared.memory.flipped":[],"shared.memory.turn":other});
+          }
+        });
+      } catch(error){}
+    }
+    function onMemoryState(m,live){
+      const me=authUser.uid, previous=memoryState;
+      memoryState=m||null;
+      if(m && !m.done && (m.flipped||[]).length===2){
+        const key=m.id+":"+m.flipped.join(",");
+        if(!memoryTimers.has(key)){ memoryTimers.add(key); setTimeout(()=>{ memoryTimers.delete(key); resolveMemory(m.id); },m.turn===me?1100:2800); }
+      }
+      setBadge("badgeMemory",m && !m.done && m.turn===me ? "Your turn!" : "");
+      if(live && m && !m.done && m.turn===me && previous && previous.id===m.id && previous.turn!==me){
+        markUnread("play");
+        if(openGameId!=="memory") toast("🃏 Your turn in Memory Match!",()=>{ openTab("play"); openGame("memory"); });
+      }
+      if(live && m?.done && memoryCelebrated!==m.id){ memoryCelebrated=m.id; confettiBurst(["🃏","💗","🎉"],22); playChime("success"); }
+      renderMemory();
+    }
+    function renderMemory(){
+      if(!authUser) return;
+      const m=memoryState, me=authUser.uid, board=$("memoryBoard");
+      board.innerHTML="";
+      if(!m){
+        $("memoryTurn").textContent="New game"; $("memoryYou").textContent=0; $("memoryThem").textContent=0;
+        $("memoryStatus").textContent="Start a game — you take the first turn."; $("memoryStart").textContent="Start game"; return;
+      }
+      m.cards.forEach((face,i)=>{
+        const matched=(m.matched||[]).includes(i), up=matched || (m.flipped||[]).includes(i);
+        const btn=document.createElement("button"); btn.type="button"; btn.className="mem-card "+(matched?"matched up":up?"up":"down");
+        btn.textContent=up?face:""; btn.setAttribute("aria-label",up?face:"Hidden card "+(i+1));
+        btn.disabled=!(m.turn===me && !m.done && !up && (m.flipped||[]).length<2);
+        btn.onclick=()=>flipMemoryCard(i);
+        board.appendChild(btn);
+      });
+      const mine=m.scores?.[me]||0, theirs=partnerUid?(m.scores?.[partnerUid]||0):0;
+      $("memoryYou").textContent=mine; $("memoryThem").textContent=theirs;
+      if(m.done){
+        $("memoryTurn").textContent=mine===theirs?"It’s a tie 💞":mine>theirs?"You won! 🏆":"Your partner won 🏆";
+        $("memoryStatus").textContent="All pairs found — +5 love points!";
+      } else {
+        $("memoryTurn").textContent=m.turn===me?"Your turn":"Partner’s turn";
+        $("memoryStatus").textContent=(m.flipped||[]).length===2?"Checking…":(m.turn===me?"Flip two cards and find a pair.":"Your partner is thinking…");
+      }
+      $("memoryStart").textContent=m.done?"Play again":"New game";
+    }
+
+    // ---- Spin the Wheel -----------------------------------------------------------------------------------
+    const wheelCategories=[
+      {name:"Truth",items:["What’s your favorite memory of us?","What’s something you’ve never told me?","When did you first realize you liked me?","What’s the sweetest thing I’ve ever done for you?","What song reminds you of me?","What was your first impression of me?","What’s a small thing I do that makes you smile?","What’s your dream for our future?"]},
+      {name:"Dare",items:["Send a selfie with your silliest face.","Sing one line of a song you both love.","Do your best impression of your partner.","Give a 10-second speech about why you love them.","Send a voice note saying something sweet.","Draw a quick doodle of the two of you.","Text three things you love about them.","Do a happy dance and describe it."]},
+      {name:"Date idea",items:["Cook the same recipe together (even over video).","Watch the same movie at the same time.","Take a walk and swap your favorite songs.","Plan a dream trip together.","Have a picnic — indoors counts.","Make a playlist for each other.","Play an online board game.","Write each other tiny love letters."]},
+      {name:"Sweet words",items:["You make ordinary days feel special.","Your smile is my favorite notification.","I love how you laugh at my silly jokes.","You’re the best part of my day.","I feel so safe with you.","You make me want to be better.","Your kindness shows in everything you do.","I’m so lucky it’s you."]}
+    ];
+    let wheelRotation=0, lastSpinId="", spinning=false;
+    function setWheel(cat,animate){
+      const wheel=$("wheel");
+      if(!animate){ wheel.style.transition="none"; }
+      wheelRotation=Math.ceil(wheelRotation/360)*360+(animate?360*5:0)-(cat*90+45);
+      wheel.style.transform=`rotate(${wheelRotation}deg)`;
+      if(!animate){ void wheel.offsetWidth; wheel.style.transition=""; }
+    }
+    function showWheelResult(w){
+      $("wheelCat").textContent=wheelCategories[w.cat].name; $("wheelText").textContent=wheelCategories[w.cat].items[w.idx]||"";
+      $("wheelBy").textContent=w.by===authUser.uid?"You spun this":"Your partner spun this"; $("wheelResult").classList.remove("hidden");
+    }
+    function runSpin(w){
+      lastSpinId=w.spinId; spinning=true; $("spinBtn").disabled=true; $("wheelResult").classList.add("hidden"); setWheel(w.cat,true);
+      setTimeout(()=>{ spinning=false; $("spinBtn").disabled=false; showWheelResult(w); playChime("pop"); },4100);
+    }
+    function onWheelState(w,live){
+      if(!w || w.spinId===lastSpinId) return;
+      if(live && w.by!==authUser.uid){
+        markUnread("play"); setBadge("badgeWheel","New spin!");
+        toast("🎡 Your partner spun the wheel!",()=>{ openTab("play"); openGame("wheel"); });
+        runSpin(w);
+      } else if(!live){ lastSpinId=w.spinId; setWheel(w.cat,false); showWheelResult(w); }
+    }
+    $("spinBtn").onclick=async()=>{
+      if(!coupleId || spinning) return;
+      const cat=Math.floor(Math.random()*wheelCategories.length), idx=Math.floor(Math.random()*wheelCategories[cat].items.length);
+      const spin={spinId:randomId(),cat,idx,by:authUser.uid};
+      runSpin(spin);
+      try { await updateDoc(coupleRef(),{"shared.wheel":{...spin,at:serverTimestamp()}}); } catch(error){ toast("Couldn’t share that spin"); }
+    };
+    document.querySelectorAll(".game-tile").forEach(tile=>tile.addEventListener("click",()=>{ if(tile.dataset.game==="wheel") setBadge("badgeWheel",""); if(tile.dataset.game==="tap") setBadge("badgeTap",""); }));
 
     // The page is ready: unlock the sign-in buttons (they stay disabled if the Firebase SDK can't load).
     setAuthBusy(false); setAuthMessage("");
