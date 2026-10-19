@@ -1,6 +1,7 @@
 {
   "functions": {
-    "api/couple-portrait.js": { "maxDuration": 60 }
+    "api/couple-portrait.js": { "maxDuration": 60 },
+    "api/notify.js": { "maxDuration": 15 }
   },
   "headers": [
     {

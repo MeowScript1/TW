@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="36%" r="78%">
+      <stop offset="0" stop-color="#fffafb"/>
+      <stop offset="1" stop-color="#ffd5de"/>
+    </radialGradient>
+    <radialGradient id="body" cx="34%" cy="28%" r="82%">
+      <stop offset="0" stop-color="#ff8493"/>
+      <stop offset=".36" stop-color="#f0213f"/>
+      <stop offset=".78" stop-color="#b20a27"/>
+      <stop offset="1" stop-color="#76051a"/>
+    </radialGradient>
+    <filter id="b10" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="10"/></filter>
+    <filter id="b3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="b5" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="b1" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation=".7"/></filter>
+    <clipPath id="clip"><path d="M0 -30C0 -78 -78 -82 -82 -26C-86 26 -32 56 0 88C32 56 86 26 82 -26C78 -82 0 -78 0 -30Z"/></clipPath>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <ellipse cx="256" cy="452" rx="128" ry="15" fill="#a3122f" opacity=".3" filter="url(#b10)"/>
+  <g transform="translate(256 238) scale(2.1)">
+    <path d="M0 -30C0 -78 -78 -82 -82 -26C-86 26 -32 56 0 88C32 56 86 26 82 -26C78 -82 0 -78 0 -30Z" fill="url(#body)"/>
+    <g clip-path="url(#clip)">
+      <ellipse cx="46" cy="30" rx="30" ry="9" transform="rotate(58 46 30)" fill="#ff5a70" opacity=".42" filter="url(#b5)"/>
+      <ellipse cx="0" cy="-33" rx="9" ry="15" fill="#620012" opacity=".38" filter="url(#b5)"/>
+      <ellipse cx="-44" cy="-40" rx="26" ry="13" transform="rotate(-34 -44 -40)" fill="#fff" opacity=".62" filter="url(#b5)"/>
+      <ellipse cx="42" cy="-42" rx="11" ry="6" transform="rotate(30 42 -42)" fill="#fff" opacity=".34" filter="url(#b3)"/>
+    </g>
+    <path d="M-67 -28Q-64 -50 -42 -58" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9" filter="url(#b1)"/>
+    <circle cx="-30" cy="-62" r="2.6" fill="#fff" opacity=".85" filter="url(#b1)"/>
+  </g>
+</svg>

@@ -78,6 +78,22 @@ self.addEventListener("fetch", event => {
   // Firestore, Auth and Storage traffic is left to the browser.
 });
 
+// A push from api/notify.js: the partner sent a message, poke, note, snap and so on. Browsers (iPhone especially)
+// require every push to show a notification, so this always does; a repeated tag replaces the earlier banner.
+self.addEventListener("push", event => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch (error) { data = { body: event.data ? event.data.text() : "" }; }
+  const title = String(data.title || "TW").slice(0, 80);
+  event.waitUntil(self.registration.showNotification(title, {
+    body: String(data.body || "").slice(0, 200),
+    icon: "icon-heart-192.png",
+    badge: "badge-96.png",
+    tag: String(data.tag || "tw"),
+    renotify: true,
+    data: { url: String(data.url || "./") }
+  }));
+});
+
 self.addEventListener("notificationclick", event => {
   event.notification.close();
   event.waitUntil(

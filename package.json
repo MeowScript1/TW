@@ -1,0 +1,8 @@
+{
+  "name": "tw",
+  "private": true,
+  "description": "TW — a private little world for two. The site is static; this file only lets Vercel install the push-notification sender.",
+  "dependencies": {
+    "web-push": "^3.6.7"
+  }
+}

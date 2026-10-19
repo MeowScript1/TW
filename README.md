@@ -12,6 +12,7 @@ static site backed by Firebase (Auth and Firestore; no Storage bucket or paid pl
 | `service-worker.js`, `manifest.webmanifest`, `icon*.svg/png` | PWA: offline shell, install metadata, icons. |
 | `firestore.rules`, `firebase.json`, `.firebaserc` | Firestore security rules and CLI config (project `aytt-677b4`). |
 | `api/couple-portrait.js` | Optional Vercel function that draws the AI couple portrait (see below). |
+| `api/notify.js`, `package.json` | Vercel function that sends push notifications to your partner's phone (see below). |
 | `vercel.json` | Security headers and the function's timeout for the Vercel deployment. |
 | `tw-local-app/Start TW.command` | Double-click on a Mac to serve this folder on `http://localhost:8765`. |
 
@@ -49,6 +50,25 @@ The AI drawing runs through `api/couple-portrait.js`, which calls Google's Gemin
 Until the key exists the function answers “not configured” and the app keeps the collage. The function only accepts signed-in
 TW users (it checks their Firebase ID token), allows one portrait per person per minute, and never stores the photos.
 
+## Push notifications
+
+Messages, pokes, notes, snaps, surprises, bouquets and tasks reach your partner's phone as real notifications, even when
+TW is closed. Each phone saves its push address under `couples/{id}/push` (turn it on in Settings → Notifications), and
+`api/notify.js` sends the push through the browser's push service using Web Push (VAPID). To switch it on:
+
+1. Make a VAPID key pair once: `npx web-push generate-vapid-keys`. The public key is already in `index.html`
+   (`VAPID_PUBLIC_KEY`); if you make new keys, replace it there.
+2. In the Vercel project settings add `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and, optionally, `VAPID_SUBJECT`
+   (for example `mailto:you@example.com`), then redeploy. Keep the private key out of the repo.
+3. Publish the latest `firestore.rules` (they now include the `push` collection).
+4. Open TW on each phone, go to Settings and tap **Enable** under Notifications, then **Test**.
+   **iPhone:** web push only works once TW is added to the Home Screen (Share → Add to Home Screen) and opened from there
+   (iOS 16.4 or newer).
+
+The function only accepts signed-in TW users (it checks their Firebase ID token), reads the couple and devices using that
+user's own token so the security rules apply, and answers “not configured” until the keys exist, in which case TW keeps
+using in-app alerts only.
+
 ## Good to know
 
 - Messages, notes and snaps are stored in Firebase and protected by the rules above; they are **not** end-to-end encrypted.
@@ -60,5 +80,5 @@ TW users (it checks their Firebase ID token), allows one portrait per person per
   Cloud console (APIs & Services → Credentials) and consider enabling Firebase App Check.
 - AI-flavoured features fall back to built-in templates until `AI_ENDPOINT` in `index.html` points at your own proxy
   that holds the API key server-side.
-- Pokes, notes and messages only notify while TW is open in the background. True push notifications need Firebase
-  Cloud Messaging.
+- Your partner can read your phone's push address (that is how a push finds it), but only your Vercel function holds the
+  key needed to send one.

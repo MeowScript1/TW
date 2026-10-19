@@ -406,6 +406,7 @@
     .slot-img img { width:100%; height:100%; object-fit:cover; display:block; }
     .slot-img.filled { border:3px solid var(--pink); }
     .photo-slot .btn { min-height:40px; padding:0 16px; font-size:.85rem; }
+    .slot-actions { display:flex; flex-direction:column; gap:4px; width:100%; }
     .check { display:flex; align-items:flex-start; gap:10px; margin:6px 0 4px; font-size:.88rem; font-weight:600; line-height:1.4; }
     .check input { flex:none; width:22px; height:22px; margin-top:1px; accent-color:var(--accent); }
     .fine { margin:6px 0 4px; color:var(--muted); font-size:.76rem; line-height:1.5; }
@@ -520,21 +521,21 @@
 
   <!-- Opening splash: stays until we know whether you are signed in, so the sign-in card never flashes -->
   <div id="splash" class="splash" role="status" aria-live="polite">
-    <img class="splash-logo" src="icon.svg" alt="" width="112" height="112">
+    <img class="splash-logo" src="icon-512.png" alt="" width="112" height="112">
     <div class="splash-title">TW</div>
     <div class="splash-sub">Opening your little world…</div>
     <div class="splash-dots" aria-hidden="true"><span></span><span></span><span></span></div>
   </div>
 
   <!-- Surprise, bouquet and snap viewer -->
-  <div id="surpriseScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="modal-card"><img class="logo big" src="icon.svg" alt="" width="72" height="72"><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="btn wide" id="closeSurprise" type="button">Open TW</button></div></div>
+  <div id="surpriseScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="modal-card"><img class="logo big" src="icon-192.png" alt="" width="72" height="72"><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="btn wide" id="closeSurprise" type="button">Open TW</button></div></div>
   <div id="bouquetScreen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="modal-card"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="btn wide" id="closeBouquet" type="button">Open TW</button></div></div>
   <div id="snapViewScreen" class="screen hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="modal-card"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="btn wide" id="closeSnapView" type="button">Close</button></div></div></div>
 
   <!-- Sign in and pairing -->
   <div id="authScreen" class="screen opaque">
     <div class="modal-card">
-      <img class="logo big" src="icon.svg" alt="" width="72" height="72">
+      <img class="logo big" src="icon-192.png" alt="" width="72" height="72">
       <section id="loginPanel">
         <h2>Welcome to TW</h2><p class="muted">Sign in to find your person.</p>
         <form id="loginForm" onsubmit="return false" novalidate>
@@ -569,7 +570,7 @@
   <!-- The app -->
   <main class="app hidden" id="app">
     <header class="topbar">
-      <div class="brand"><img class="logo" src="icon.svg" alt="" width="34" height="34"> TW</div>
+      <div class="brand"><img class="logo" src="icon-192.png" alt="" width="34" height="34"> TW</div>
       <div class="presence" id="presenceChip"><span class="presence-dot" id="presenceDot"></span><span id="presenceLabel">Connecting…</span></div>
       <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     </header>
@@ -817,8 +818,9 @@
         <article class="card">
           <h2>Send a snap</h2>
           <p class="lead">Complete a task and send proof. It disappears once your partner has opened it.</p>
-          <input type="file" accept="image/*" id="snapFile" class="hidden" aria-label="Choose a photo">
-          <div class="field"><button class="btn wide" id="snapPickBtn" type="button">📷 Take or choose a photo</button></div>
+          <input type="file" accept="image/*" id="snapFile" class="hidden" aria-label="Choose a photo from your gallery">
+          <input type="file" accept="image/*" capture="environment" id="snapFileCam" class="hidden" aria-label="Take a photo">
+          <div class="row"><button class="btn" id="snapCamBtn" type="button">Take a photo</button><button class="btn soft" id="snapPickBtn" type="button">From gallery</button></div>
           <div id="snapPreviewWrap" class="hidden">
             <img id="snapPreview" class="snap-preview" alt="Preview of your snap">
             <input id="snapCaption" maxlength="120" placeholder="Add a little caption (optional)" aria-label="Caption">
@@ -857,8 +859,10 @@
     <div class="sheet-head"><h2 id="settingsTitle">Settings</h2><button class="icon-btn" id="closeSettings" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <div class="sheet-body">
       <div class="setting"><label for="darkToggle">Dark mode</label><input class="switch" id="darkToggle" type="checkbox"></div>
-      <div class="setting"><label for="notifyToggle">Notify me of pokes, notes &amp; messages</label><input class="switch" id="notifyToggle" type="checkbox" checked></div>
-      <div class="setting"><span id="notifyStatusLabel">Browser notifications: not enabled yet</span><button class="btn soft" id="enableNotify" type="button" style="min-height:38px;padding:0 14px">Enable</button></div>
+      <div class="setting"><label for="notifyToggle">Notify me when my love sends something</label><input class="switch" id="notifyToggle" type="checkbox" checked></div>
+      <div class="setting"><span id="notifyStatusLabel">Notifications: not turned on yet</span><button class="btn soft" id="enableNotify" type="button" style="min-height:38px;padding:0 14px">Enable</button></div>
+      <div class="setting hidden" id="notifyTestRow"><span>Send a test to this phone</span><button class="btn soft" id="testNotify" type="button" style="min-height:38px;padding:0 14px">Test</button></div>
+      <p class="privacy-note hidden" id="notifyHint" style="margin-top:8px"></p>
       <div class="setting"><span>Our connection code</span><span class="code-chip" id="settingsCode">—</span></div>
       <div class="sheet-actions">
         <button class="btn soft wide" id="downloadBtn" type="button">Install the app</button>
@@ -883,8 +887,9 @@
         <div class="photo-slot">
           <div class="slot-img" id="slotYou">No photo yet</div>
           <b>You</b>
-          <button class="btn soft" id="photoPick" type="button">Add my photo</button>
-          <input type="file" accept="image/*" id="photoFile" class="hidden" aria-label="Choose your photo">
+          <div class="slot-actions"><button class="btn soft" id="photoCam" type="button">Take a selfie</button><button class="btn ghost" id="photoPick" type="button">Choose photo</button></div>
+          <input type="file" accept="image/*" id="photoFile" class="hidden" aria-label="Choose your photo from your gallery">
+          <input type="file" accept="image/*" capture="user" id="photoFileCam" class="hidden" aria-label="Take a selfie">
         </div>
         <div class="photo-slot">
           <div class="slot-img" id="slotThem">Waiting…</div>
@@ -1051,32 +1056,135 @@
     async function generateAIText(prompt,fallback){ if(!AI_ENDPOINT) return fallback; try{ const res=await fetch(AI_ENDPOINT,{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({prompt}) }); if(!res.ok) throw new Error("bad response"); const data=await res.json(); return (data.text||"").trim()||fallback; } catch(error){ return fallback; } }
 
     // ---- Notifications -----------------------------------------------------------------------------------
-    function updateNotifyLabel(){
-      const label=$("notifyStatusLabel"), button=$("enableNotify");
-      if(!("Notification" in window)){ label.textContent="Browser notifications: not supported here"; button.style.display="none"; return; }
-      if(Notification.permission==="granted"){ label.textContent="Browser notifications: on"; button.style.display="none"; }
-      else if(Notification.permission==="denied"){ label.textContent="Browser notifications: blocked — allow them in your browser's site settings"; button.style.display="none"; }
-      else { label.textContent="Browser notifications: not enabled yet"; button.style.display=""; }
+    // Real push: a phone that turns notifications on saves its push address under couples/{id}/push, and /api/notify
+    // sends your partner's phone a push whenever you send something — it arrives even when TW is closed.
+    // (The matching private key lives only in the Vercel project settings; this public key is safe to ship.)
+    const VAPID_PUBLIC_KEY = "BFfpfoEujKgg4o1wIWrCbExTNSEhe2tiaWdDdVroAUZ7xGpXJ1AWQjB_Otkc6hiwhyC1bmccnLESmrmxgyJUT2s";
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+    const isInstalled = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
+    const pushSupported = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+    let pushState = "off";   // "on" once this phone's push address is saved, "error" if setting it up failed
+    let pushChain = Promise.resolve();
+    const pushJob = task => { pushChain = pushChain.then(task).catch(error=>console.warn("TW: notifications",error?.message||error)); return pushChain; };
+    const keyBytes = text => Uint8Array.from(atob((text+"=".repeat((4-text.length%4)%4)).replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
+    const keyText = buffer => btoa(String.fromCharCode(...new Uint8Array(buffer))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+    async function deviceIdFor(endpoint){
+      const hash=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(endpoint));
+      return authUser.uid+"_"+[...new Uint8Array(hash)].slice(0,12).map(byte=>byte.toString(16).padStart(2,"0")).join("");
     }
-    async function requestNotifyPermission(){
-      if(!("Notification" in window)){ updateNotifyLabel(); return; }
-      if(Notification.permission==="default"){ try { await Notification.requestPermission(); } catch(error){} }
-      updateNotifyLabel();
+    async function pushRegistration(){ return withTimeout(navigator.serviceWorker.ready,6000); }
+    // Saves this phone's push address for the open couple. `ask` may show the permission prompt — only pass it from a tap.
+    async function subscribePush(ask){
+      if(!pushSupported() || !coupleId || !authUser) return "unsupported";
+      if(Notification.permission==="default" && ask){ try { await Notification.requestPermission(); } catch(error){} }
+      if(Notification.permission!=="granted") return Notification.permission;
+      const registration=await pushRegistration();
+      let subscription=await registration.pushManager.getSubscription();
+      const key=subscription?.options?.applicationServerKey;
+      if(subscription && key && keyText(key)!==VAPID_PUBLIC_KEY){ await subscription.unsubscribe(); subscription=null; }
+      if(!subscription) subscription=await registration.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:keyBytes(VAPID_PUBLIC_KEY) });
+      const json=subscription.toJSON(), keys=json.keys||{};
+      if(!json.endpoint || !keys.p256dh || !keys.auth) throw new Error("incomplete push subscription");
+      const deviceId=await deviceIdFor(json.endpoint);
+      await setDoc(doc(db,"couples",coupleId,"push",deviceId),{ uid:authUser.uid, endpoint:json.endpoint, p256dh:keys.p256dh, auth:keys.auth, createdAt:serverTimestamp() });
+      // The browser can hand out a new address now and then; drop the one this phone registered before so none go stale.
+      const [lastCouple,lastDevice]=(store.get("ty-push-device")||"").split("/");
+      if(lastCouple && lastDevice && (lastCouple!==coupleId || lastDevice!==deviceId)) deleteDoc(doc(db,"couples",lastCouple,"push",lastDevice)).catch(()=>{});
+      store.set("ty-push-device",coupleId+"/"+deviceId);
+      return "on";
     }
-    // Only fires while TW is in the background; when it's open the change is already on screen.
-    async function notifyMe(title,body){
+    // Keeps this phone registered whenever TW opens (the address can change, and a new couple needs its own copy).
+    function syncPush(ask){
+      return pushJob(async()=>{
+        if(!$("notifyToggle").checked || !pushSupported() || !coupleId) { pushState="off"; return; }
+        try { pushState=(await subscribePush(!!ask))==="on" ? "on" : "off"; }
+        catch(error){ pushState="error"; console.warn("TW: could not turn on notifications",error?.message||error); }
+      }).then(()=>refreshNotifyUi());
+    }
+    // Forgets this phone for a couple (turning notifications off, logging out, or moving to a new code).
+    function removePushDevice(forCouple){
+      return pushJob(async()=>{
+        pushState="off";
+        if(!pushSupported()) return;
+        const ids=new Set(), [lastCouple,lastDevice]=(store.get("ty-push-device")||"").split("/");
+        if(lastCouple===forCouple && lastDevice) ids.add(lastDevice);
+        let subscription=null;
+        try {
+          const registration=await withTimeout(navigator.serviceWorker.ready,3000);
+          subscription=await registration.pushManager.getSubscription();
+          if(subscription && authUser) ids.add(await deviceIdFor(subscription.endpoint));
+        } catch(error){}
+        if(forCouple && authUser) await Promise.all([...ids].map(id=>withTimeout(deleteDoc(doc(db,"couples",forCouple,"push",id)),4000).catch(()=>{})));
+        store.set("ty-push-device","");
+        try { if(subscription) await subscription.unsubscribe(); } catch(error){}
+      });
+    }
+    function refreshNotifyUi(){
+      const label=$("notifyStatusLabel"), button=$("enableNotify"), hint=$("notifyHint");
+      let text="", help="", showButton=false, buttonText="Enable";
+      if(!pushSupported()){
+        if(isIos && !isInstalled){ text="Notifications: add TW to your Home Screen first"; help="On iPhone, tap the Share button in Safari → Add to Home Screen, then open TW from your Home Screen and turn notifications on here."; }
+        else text="Notifications: this browser can't show them";
+      } else if(Notification.permission==="denied"){
+        text="Notifications: blocked"; help="Allow notifications for TW in your phone or browser settings, then come back here.";
+      } else if(Notification.permission!=="granted"){
+        text="Notifications: not turned on yet"; showButton=true;
+      } else if(!$("notifyToggle").checked){
+        text="Notifications: paused";
+      } else if(pushState==="on"){
+        text="Notifications: on for this phone";
+      } else if(pushState==="error"){
+        text="Notifications: couldn't finish setting up"; showButton=true; buttonText="Try again";
+      } else { text="Notifications: setting up…"; }
+      label.textContent=text; button.textContent=buttonText; button.style.display=showButton?"":"none";
+      hint.textContent=help; hint.classList.toggle("hidden",!help);
+      $("notifyTestRow").classList.toggle("hidden",!(pushState==="on" && $("notifyToggle").checked && pushSupported() && Notification.permission==="granted"));
+    }
+    // Asks the server to push to your partner (or, with test, to your own phones). Quietly does nothing if it can't.
+    async function callNotify(payload){
+      const id=coupleId;
+      if(!id || !authUser) return null;
+      try {
+        const token=await authUser.getIdToken();
+        const response=await fetch("/api/notify",{ method:"POST", headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token }, body:JSON.stringify({ coupleId:id, ...payload }), keepalive:true });
+        let data={}; try { data=await response.json(); } catch(error){}
+        return { status:response.status, data };
+      } catch(error){ return null; }
+    }
+    const notifyPartner = (title,body,tag) => { if(partnerUid) callNotify({ title, body:String(body||"").slice(0,200), tag }); };
+    // The in-app fallback: only fires while TW sits in the background of a running tab (a push covers the closed-app case;
+    // sharing a tag makes the second banner replace the first instead of doubling up).
+    async function notifyMe(title,body,tag){
       if(!$("notifyToggle").checked || !document.hidden) return;
       if(!("Notification" in window) || Notification.permission!=="granted") return;
-      const options={ body, icon:"icon-192.png", badge:"icon-192.png" };
+      const options={ body, icon:"icon-heart-192.png", badge:"badge-96.png" };
+      if(tag){ options.tag=tag; options.renotify=true; }
       try {
         const registration = "serviceWorker" in navigator ? await navigator.serviceWorker.getRegistration() : null;
         if(registration) await registration.showNotification(title,options); else new Notification(title,options);
       } catch(error){}
     }
     $("notifyToggle").checked=store.get("ty-notify")!=="0";
-    $("notifyToggle").onchange=()=>store.set("ty-notify",$("notifyToggle").checked?"1":"0");
-    $("enableNotify").onclick=requestNotifyPermission;
-    updateNotifyLabel();
+    $("notifyToggle").onchange=()=>{
+      store.set("ty-notify",$("notifyToggle").checked?"1":"0");
+      if($("notifyToggle").checked) syncPush(false); else { removePushDevice(coupleId).then(()=>refreshNotifyUi()); }
+      refreshNotifyUi();
+    };
+    $("enableNotify").onclick=()=>busy($("enableNotify"),async()=>{
+      $("notifyToggle").checked=true; store.set("ty-notify","1");
+      await syncPush(true);
+      if(pushState==="on") toast("Notifications are on for this phone");
+    });
+    $("testNotify").onclick=()=>busy($("testNotify"),async()=>{
+      const result=await callNotify({ title:"TW is working 💗", body:"This is how your love's messages will show up.", tag:"tw-test", test:true });
+      if(!result) toast("Couldn't reach the notification service");
+      else if(result.status===503) toast("Notifications aren't switched on for this site yet");
+      else if(result.status===200 && result.data.sent>0) toast("Sent — it should pop up in a moment");
+      else if(result.status===200) toast("This phone isn't registered yet — switch notifications off and on");
+      else toast("Couldn't send the test");
+    });
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshNotifyUi(); });
+    refreshNotifyUi();
 
     // ---- Screens -----------------------------------------------------------------------------------------
     function showPanel(name){
@@ -1111,11 +1219,11 @@
       try { await sendPasswordResetEmail(auth,email); setAuthMessage("If that email has an account, a reset link is on its way."); }
       catch(error){ setAuthMessage(friendlyError(error)); }
     };
-    $("settingsBtn").onclick=()=>openDialog($("settingsDialog"));
+    $("settingsBtn").onclick=()=>{ refreshNotifyUi(); openDialog($("settingsDialog")); };
     $("closeSettings").onclick=()=>closeDialog($("settingsDialog"));
     $("settingsDialog").addEventListener("click",event=>{ if(event.target===$("settingsDialog")) closeDialog($("settingsDialog")); });
-    $("logoutBtn").onclick=()=>{ closeDialog($("settingsDialog")); signOut(auth); };
-    $("statusLogout").onclick=()=>signOut(auth);
+    $("logoutBtn").onclick=async()=>{ closeDialog($("settingsDialog")); await removePushDevice(coupleId); signOut(auth); };
+    $("statusLogout").onclick=async()=>{ await removePushDevice(coupleId); signOut(auth); };
     $("retryBtn").onclick=()=>enterApp();
 
     // ---- Pairing -----------------------------------------------------------------------------------------
@@ -1194,6 +1302,7 @@
     });
 
     async function openCouple(id){
+      const previousCouple=coupleId;
       teardown();
       coupleId=id;
       seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"" };
@@ -1207,6 +1316,8 @@
       coupleUnsubs.push(onSnapshot(collection(db,"couples",id,"photos"),onPhotosSnapshot,listenError("photos")));
       coupleUnsubs.push(onSnapshot(doc(db,"couples",id,"portraits","current"),onPortraitSnapshot,listenError("portrait")));
       coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"snaps"),orderBy("createdAt","desc"),limit(SNAP_LIMIT)),onSnapsSnapshot,listenError("snaps")));
+      if(previousCouple && previousCouple!==id) removePushDevice(previousCouple);
+      syncPush(false);
       heartbeat();
     }
 
@@ -1235,25 +1346,25 @@
 
       if(shared.lastPoke) $("pokeStatus").textContent=`Last poke (${shared.lastPokeBy===me?"you":"your partner"}): ${shared.lastPoke}`;
       const pokeKey=changeKey(shared.lastPoke,shared.lastPokeAt);
-      if(live && shared.lastPoke && shared.lastPokeBy && shared.lastPokeBy!==me && pokeKey!==seen.poke) notifyMe("A little poke 💌",shared.lastPoke);
+      if(live && shared.lastPoke && shared.lastPokeBy && shared.lastPokeBy!==me && pokeKey!==seen.poke) notifyMe("A little poke 💌",shared.lastPoke,"tw-poke");
       seen.poke=pokeKey;
 
       if(shared.lastNote){ $("noteResult").textContent=shared.lastNote; $("noteResult").classList.add("show"); }
       const noteKey=changeKey(shared.lastNote,shared.lastNoteAt);
-      if(live && shared.lastNote && shared.lastNoteBy && shared.lastNoteBy!==me && noteKey!==seen.note) notifyMe("A love note 💗",shared.lastNote);
+      if(live && shared.lastNote && shared.lastNoteBy && shared.lastNoteBy!==me && noteKey!==seen.note) notifyMe("A love note 💗",shared.lastNote,"tw-note");
       seen.note=noteKey;
 
       const surprise=shared.surprise;
       if(surprise && surprise.authorId!==me && !surprise.seen && !surpriseShown){
         surpriseShown=true; $("surpriseText").textContent=surprise.text; $("surpriseScreen").classList.remove("hidden");
-        if(live) notifyMe("A surprise is waiting 🎁","Open TW to see it.");
+        if(live) notifyMe("A surprise is waiting 🎁","Open TW to see it.","tw-surprise");
         confettiBurst(); playChime("success");
       }
       if(surprise && surprise.authorId===me && surprise.seen) $("surpriseStatus").textContent="They opened your surprise 💗";
       const bouquet=shared.bouquet;
       if(bouquet && bouquet.authorId!==me && !bouquet.seen && !bouquetShown){
         bouquetShown=true; $("bouquetNote").textContent=bouquet.note; $("bouquetScreen").classList.remove("hidden");
-        if(live) notifyMe("A bouquet arrived 💐",bouquet.note);
+        if(live) notifyMe("A bouquet arrived 💐",bouquet.note,"tw-bouquet");
         confettiBurst(["💐","🌷","🌸","✨"],20); playChime("success");
       }
       if(bouquet && bouquet.authorId===me && bouquet.seen) $("bouquetStatus").textContent="They opened your bouquet 💐";
@@ -1274,7 +1385,7 @@
       const task=shared.customTask;
       renderAssignedTask(task);
       const taskKey=task?task.text+"|"+task.authorId:"";
-      if(live && task && task.forUid===me && task.authorId!==me && taskKey!==seen.task) notifyMe("A new task for you 📝",task.text);
+      if(live && task && task.forUid===me && task.authorId!==me && taskKey!==seen.task) notifyMe("A new task for you 📝",task.text,"tw-task");
       seen.task=taskKey;
 
       updateChars().catch(()=>{});
@@ -1369,12 +1480,18 @@
           if(change.type!=="added") return;
           const m=change.doc.data();
           if(m.authorId===me) return;
-          if(m.type==="chat"){ notifyMe("New message 💬",m.text); markUnread("chat"); } else markUnread("home");
+          if(m.type==="chat"){ notifyMe("New message 💬",m.text,"tw-chat"); markUnread("chat"); if(document.querySelector(".tab.active")?.dataset.view!=="chat") toast("Your partner: "+(m.text.length>60?m.text.slice(0,60)+"…":m.text),()=>openTab("chat")); } else markUnread("home");
         });
       }
       seen.chat=true;
     }
-    async function share(type,text){ if(!coupleId) return; await addDoc(collection(db,"couples",coupleId,"messages"),{type,text,authorId:authUser.uid,createdAt:serverTimestamp()}); }
+    const PUSH_KINDS = { chat:["New message 💬","tw-chat"], poke:["A little poke 💌","tw-poke"], note:["A love note 💗","tw-note"] };
+    async function share(type,text){
+      if(!coupleId) return;
+      await addDoc(collection(db,"couples",coupleId,"messages"),{type,text,authorId:authUser.uid,createdAt:serverTimestamp()});
+      const kind=PUSH_KINDS[type];
+      if(kind) notifyPartner(kind[0],text,kind[1]);
+    }
     function setTyping(isTyping){ if(coupleId && authUser) updateDoc(coupleRef(),{[`shared.presence.${authUser.uid}.typing`]:isTyping}).catch(()=>{}); }
     $("chatForm").onsubmit=async event=>{
       event.preventDefault();
@@ -1476,7 +1593,7 @@
       if(!raw){ $("surpriseStatus").textContent="Write a little message first."; return; }
       $("surpriseStatus").textContent="Wrapping it up…";
       const text=await generateAIText(`Lightly polish this heartfelt note from one partner to another. Keep their original meaning and voice, just make it warm and well written (max 3 sentences), no quotation marks: "${raw}"`,raw);
-      try { await updateDoc(coupleRef(),{"shared.surprise":{text,authorId:authUser.uid,seen:false}}); $("surpriseInput").value=""; $("surpriseStatus").textContent="Saved — your love will see it the next time they open TW."; }
+      try { await updateDoc(coupleRef(),{"shared.surprise":{text,authorId:authUser.uid,seen:false}}); $("surpriseInput").value=""; $("surpriseStatus").textContent="Saved — your love will see it the next time they open TW."; notifyPartner("A surprise is waiting 🎁","Open TW to see it.","tw-surprise"); }
       catch(error){ $("surpriseStatus").textContent="Could not save it yet."; }
     });
     $("sendBouquet").onclick=()=>busy($("sendBouquet"),async()=>{
@@ -1487,7 +1604,7 @@
         ? `Write one short, sweet note (max 2 sentences) to go with a surprise virtual bouquet for a partner, inspired by: "${context}". No quotation marks, warm tone, end with one flower emoji.`
         : `Write one short, sweet, surprising note (max 2 sentences) to go with a virtual bouquet sent to a partner just because. No quotation marks, warm tone, end with one flower emoji.`;
       const text=await generateAIText(prompt,fallback);
-      try { await updateDoc(coupleRef(),{"shared.bouquet":{note:text,authorId:authUser.uid,seen:false}}); $("bouquetInput").value=""; $("bouquetStatus").textContent="Bouquet sent — they'll see it the next time they open TW. 💐"; playChime("success"); confettiBurst(["💐","🌷","🌸","✨"],16); }
+      try { await updateDoc(coupleRef(),{"shared.bouquet":{note:text,authorId:authUser.uid,seen:false}}); $("bouquetInput").value=""; $("bouquetStatus").textContent="Bouquet sent — they'll see it the next time they open TW. 💐"; playChime("success"); confettiBurst(["💐","🌷","🌸","✨"],16); notifyPartner("A bouquet arrived 💐",text,"tw-bouquet"); }
       catch(error){ $("bouquetStatus").textContent="Could not send the bouquet yet."; }
     });
     // Closing the card marks it as seen so it doesn't pop up again on every visit.
@@ -1535,7 +1652,7 @@
       if(!coupleId || !partnerUid){ $("customTaskStatus").textContent="Waiting for your partner to join first."; return; }
       const text=$("customTaskInput").value.trim();
       if(!text){ $("customTaskStatus").textContent="Write a task first."; return; }
-      try { await updateDoc(coupleRef(),{"shared.customTask":{text,authorId:authUser.uid,forUid:partnerUid}}); $("customTaskInput").value=""; $("customTaskStatus").textContent="Task assigned! They'll see it here."; }
+      try { await updateDoc(coupleRef(),{"shared.customTask":{text,authorId:authUser.uid,forUid:partnerUid}}); $("customTaskInput").value=""; $("customTaskStatus").textContent="Task assigned! They'll see it here."; notifyPartner("A new task for you 📝",text,"tw-task"); }
       catch(error){ $("customTaskStatus").textContent="Could not assign it yet."; }
     });
 
@@ -1568,17 +1685,20 @@
     }
     function clearSnapSelection(){
       selectedSnapData=null;
-      $("snapPreview").removeAttribute("src"); $("snapFile").value=""; $("snapCaption").value=""; $("snapPreviewWrap").classList.add("hidden");
+      $("snapPreview").removeAttribute("src"); $("snapFile").value=""; $("snapFileCam").value=""; $("snapCaption").value=""; $("snapPreviewWrap").classList.add("hidden");
     }
+    // Two inputs: one opens the camera straight away, the other the photo library (a single input can't offer both on every phone).
+    $("snapCamBtn").onclick=()=>$("snapFileCam").click();
     $("snapPickBtn").onclick=()=>$("snapFile").click();
-    $("snapFile").addEventListener("change",async event=>{
-      const file=event.target.files[0]; if(!file) return;
+    const onSnapFile=async event=>{
+      const file=event.target.files[0]; event.target.value=""; if(!file) return;
       $("snapStatus").textContent="Preparing photo…";
       try {
         selectedSnapData=await prepareSnapPhoto(file);
         $("snapPreview").src=selectedSnapData; $("snapPreviewWrap").classList.remove("hidden"); $("snapStatus").textContent="";
       } catch(error){ selectedSnapData=null; $("snapStatus").textContent="Could not use that photo — try another one."; }
-    });
+    };
+    $("snapFile").addEventListener("change",onSnapFile); $("snapFileCam").addEventListener("change",onSnapFile);
     $("snapCancelBtn").onclick=clearSnapSelection;
     $("snapSendBtn").onclick=()=>busy($("snapSendBtn"),async()=>{
       if(!selectedSnapData || !coupleId) return;
@@ -1590,6 +1710,7 @@
         await setDoc(doc(db,"couples",coupleId,"snapImages",id),{authorId:me,data:selectedSnapData,createdAt:serverTimestamp()});
         try { await setDoc(doc(db,"couples",coupleId,"snaps",id),{authorId:me,caption,viewed:false,createdAt:serverTimestamp()}); }
         catch(error){ deleteDoc(doc(db,"couples",coupleId,"snapImages",id)).catch(()=>{}); throw error; }
+        notifyPartner("A snap arrived 📸",caption||"Tap to view it.","tw-snap");
         $("snapStatus").textContent="Snap sent! 📸"; playChime("pop"); confettiBurst(["📸","💗","✨"],10);
         clearSnapSelection();
       } catch(error){ $("snapStatus").textContent="Could not send that snap — check your connection and try again."; }
@@ -1636,7 +1757,7 @@
         snap.docChanges().forEach(change=>{
           if(change.type!=="added") return;
           const m=change.doc.data();
-          if(m.authorId!==me && !m.viewed){ notifyMe("A snap arrived 📸",m.caption||"Tap to view it."); markUnread("snaps"); }
+          if(m.authorId!==me && !m.viewed){ notifyMe("A snap arrived 📸",m.caption||"Tap to view it.","tw-snap"); markUnread("snaps"); }
         });
       }
       seen.snaps=true;
@@ -2115,7 +2236,7 @@
       const fill=(el,photo,empty)=>{ el.innerHTML=""; el.classList.toggle("filled",!!photo); if(photo){ const img=document.createElement("img"); img.src=photo.data; img.alt=""; el.appendChild(img); } else el.textContent=empty; };
       fill($("slotYou"),mine,"No photo yet"); fill($("slotThem"),theirs,partnerUid?"Waiting…":"Not joined");
       $("slotThemNote").textContent=!partnerUid?"Hasn’t joined yet":(theirs?"Added ✓":"Hasn’t added one yet");
-      $("photoPick").textContent=mine?"Change my photo":"Add my photo";
+      $("photoCam").textContent=mine?"Retake selfie":"Take a selfie"; $("photoPick").textContent="Choose photo";
       if(mine) $("aiConsent").checked=!!mine.aiOk;
       $("removePhoto").classList.toggle("hidden",!mine);
       const bothReady=!!(mine && theirs);
@@ -2143,8 +2264,9 @@
     $("portraitEdit").onclick=()=>openDialog($("photoDialog"));
     $("closePhotos").onclick=()=>closeDialog($("photoDialog"));
     $("photoDialog").addEventListener("click",event=>{ if(event.target===$("photoDialog")) closeDialog($("photoDialog")); });
+    $("photoCam").onclick=()=>$("photoFileCam").click();
     $("photoPick").onclick=()=>$("photoFile").click();
-    $("photoFile").addEventListener("change",async event=>{
+    const onProfilePhoto=async event=>{
       const file=event.target.files[0]; event.target.value=""; if(!file || !coupleId) return;
       $("photoStatus").textContent="Saving your photo…";
       try {
@@ -2152,7 +2274,8 @@
         await setDoc(doc(db,"couples",coupleId,"photos",authUser.uid),{authorId:authUser.uid,data,aiOk:$("aiConsent").checked,createdAt:serverTimestamp()});
         $("photoStatus").textContent="Photo saved 💗";
       } catch(error){ $("photoStatus").textContent="Couldn’t save that photo — try another one."; }
-    });
+    };
+    $("photoFile").addEventListener("change",onProfilePhoto); $("photoFileCam").addEventListener("change",onProfilePhoto);
     $("aiConsent").onchange=async()=>{
       if(!coupleId || !photoOf(authUser.uid)) return;
       try { await updateDoc(doc(db,"couples",coupleId,"photos",authUser.uid),{aiOk:$("aiConsent").checked}); } catch(error){ $("photoStatus").textContent="Couldn’t save that choice."; }

@@ -116,6 +116,25 @@ service cloud.firestore {
         allow delete: if memberOf(coupleId) && photoId == request.auth.uid;
       }
 
+      // Phones that have notifications turned on. Both of you can read them (that is how a push finds your
+      // partner's phone); each person manages only their own devices, whose ids start with their uid.
+      match /push/{deviceId} {
+        allow read: if memberOf(coupleId);
+        allow create, update: if memberOf(coupleId)
+          && deviceId.matches(request.auth.uid + '_[A-Za-z0-9]{8,64}')
+          && request.resource.data.keys().hasOnly(['uid', 'endpoint', 'p256dh', 'auth', 'createdAt'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.endpoint is string
+          && request.resource.data.endpoint.matches('https://.*')
+          && request.resource.data.endpoint.size() < 600
+          && request.resource.data.p256dh is string
+          && request.resource.data.p256dh.size() < 200
+          && request.resource.data.auth is string
+          && request.resource.data.auth.size() < 100
+          && request.resource.data.createdAt == request.time;
+        allow delete: if memberOf(coupleId) && deviceId.matches(request.auth.uid + '_[A-Za-z0-9]{8,64}');
+      }
+
       // The AI-drawn couple portrait shown on the home screen (the collage needs no document).
       match /portraits/{portraitId} {
         allow read: if memberOf(coupleId);
