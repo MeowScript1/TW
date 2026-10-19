@@ -1,6 +1,6 @@
-TY on your Mac
+TW on your Mac
 
-1. Double-click "Start TY.command". It serves this repo's site at http://localhost:8765
+1. Double-click "Start TW.command". It serves this repo's site at http://localhost:8765
    (only on this computer) and opens your browser. Close the Terminal window to stop it.
 2. In Safari: File > Add to Dock. In Chrome: use the Install icon in the address bar.
 

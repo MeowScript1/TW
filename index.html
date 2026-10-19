@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#ff7da5">
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="TY — a private little world for two.">
+  <meta name="description" content="TW — a private little world for two.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="TY">
+  <meta name="apple-mobile-web-app-title" content="TW">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <title>TY</title>
+  <title>TW</title>
   <style>
     :root { --ink:#382938; --muted:#806d7b; --paper:#fff9fb; --pink:#ff7da5; --pink-strong:#d6336c; --pink-soft:#ffe0eb; --purple:#7b5cbd; --mint:#e3f7ed; --line:#f2d7e1; --shadow:0 12px 30px rgba(128,68,95,.14); }
     * { box-sizing:border-box; }
@@ -172,13 +172,13 @@
 </head>
 <body>
   <script>try { var savedDark = localStorage.getItem("ty-dark-mode"); if (savedDark === "1" || (savedDark === null && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark"); } catch (error) {}</script>
-  <div id="surpriseScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="authbox"><div class="heart">♥</div><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="button" id="closeSurprise" type="button">Open TY</button></div></div>
-  <div id="bouquetScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="authbox"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="button" id="closeBouquet" type="button">Open TY</button></div></div>
+  <div id="surpriseScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle"><div class="authbox"><div class="heart">♥</div><h2 id="surpriseTitle">A little something for you</h2><div class="surprise-text" id="surpriseText"></div><button class="button" id="closeSurprise" type="button">Open TW</button></div></div>
+  <div id="bouquetScreen" class="hidden" role="dialog" aria-modal="true" aria-labelledby="bouquetTitle"><div class="authbox"><div class="bouquet-art" aria-hidden="true"><span>🌷</span><span>🌹</span><span>🌸</span><span>🌼</span><span>💐</span></div><h2 id="bouquetTitle">A bouquet arrived</h2><div class="surprise-text" id="bouquetNote"></div><button class="button" id="closeBouquet" type="button">Open TW</button></div></div>
   <div id="snapViewScreen" class="hidden" role="dialog" aria-modal="true" aria-label="Snap"><div class="authbox"><img id="snapViewImg" class="snap-view-img" alt="Snap from your partner"><div class="surprise-text" id="snapViewCaption"></div><div class="snap-view-actions"><button class="button" id="closeSnapView" type="button">Close</button><button class="button soft hidden" id="deleteSnap" type="button">Delete this snap</button></div></div></div>
   <div id="authScreen">
     <div class="authbox">
       <div class="heart">♥</div>
-      <section id="loginPanel"><h2>Welcome to TY</h2><p class="sub">Sign in to find your person.</p>
+      <section id="loginPanel"><h2>Welcome to TW</h2><p class="sub">Sign in to find your person.</p>
         <form id="loginForm" onsubmit="return false" novalidate>
           <input id="authEmail" type="email" autocomplete="email" placeholder="Your email" aria-label="Email">
           <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password (at least 6 characters)" aria-label="Password">
@@ -193,7 +193,7 @@
     </div>
   </div>
   <main class="app hidden" id="app">
-    <header class="top"><div class="brand"><span class="heart">♥</span> TY</div><div class="account-actions"><button class="lock" id="darkBtn" type="button">🌙 Dark</button><button class="lock" id="downloadBtn" type="button">📲 Install</button><button class="lock" id="codeBtn" type="button">Change code</button><button class="lock" id="logoutBtn" type="button">Log out</button></div></header>
+    <header class="top"><div class="brand"><span class="heart">♥</span> TW</div><div class="account-actions"><button class="lock" id="darkBtn" type="button">🌙 Dark</button><button class="lock" id="downloadBtn" type="button">📲 Install</button><button class="lock" id="codeBtn" type="button">Change code</button><button class="lock" id="logoutBtn" type="button">Log out</button></div></header>
     <section class="hero">
       <div class="hero-copy">
         <div class="eyebrow">Private space</div><h1>Hi love</h1><p class="sub">A small shared space for two.</p>
@@ -212,9 +212,9 @@
       <article class="card"><div class="icon">🫶</div><h2>Come closer</h2><p>Make your little characters meet in the middle.</p><button class="button" id="approach" type="button" aria-pressed="false">Approach each other</button></article>
       <article class="card"><div class="icon">👆</div><h2>Magic poke <span class="ai-badge">AI</span></h2><p>Type a thought and turn it into a cute note.</p><input class="poke-input" id="pokeThought" maxlength="140" placeholder="e.g. I miss your smile" aria-label="Your thought"><button class="poke" id="poke" type="button">Make note &amp; poke</button><div class="poke-status" id="pokeStatus"></div></article>
       <article class="card"><div class="icon">🏆</div><h2>Love effort</h2><p>Grows from the ratings you give each other after games.</p><div class="effort-number" id="effortCount">0</div><span class="tiny">mutual love points</span></article>
-      <article class="card"><div class="icon">🎁</div><h2>Opening surprise <span class="ai-badge">AI</span></h2><p>Set a loving message that appears the next time your partner opens TY.</p><input class="poke-input" id="surpriseInput" maxlength="220" placeholder="e.g. I’m sorry, I miss you so much…" aria-label="Your surprise message"><button class="button" id="setSurprise" type="button">Save opening surprise</button><div class="poke-status" id="surpriseStatus"></div></article>
+      <article class="card"><div class="icon">🎁</div><h2>Opening surprise <span class="ai-badge">AI</span></h2><p>Set a loving message that appears the next time your partner opens TW.</p><input class="poke-input" id="surpriseInput" maxlength="220" placeholder="e.g. I’m sorry, I miss you so much…" aria-label="Your surprise message"><button class="button" id="setSurprise" type="button">Save opening surprise</button><div class="poke-status" id="surpriseStatus"></div></article>
       <article class="card"><div class="icon">💐</div><h2>Send a bouquet <span class="ai-badge">AI</span></h2><p>Surprise them with a virtual bouquet and a little AI-written note.</p><input class="poke-input" id="bouquetInput" maxlength="140" placeholder="Optional: what's it for? Leave blank for a surprise" aria-label="What the bouquet is for"><button class="button" id="sendBouquet" type="button">Send a bouquet</button><div class="poke-status" id="bouquetStatus"></div></article>
-      <article class="card wide privacy"><h2>Privacy first</h2><p>Your messages, notes and snaps are stored in your private TY space online. Security rules let only the two of you read them, but they are not end-to-end encrypted, so keep anything truly secret out of here.</p><div class="setting"><label for="notifyToggle">Notify me of pokes, notes &amp; messages</label><input class="switch" id="notifyToggle" type="checkbox" checked></div><div class="setting"><span id="notifyStatusLabel">Browser notifications: not requested yet</span><button class="lock" id="enableNotify" type="button">Enable</button></div></article>
+      <article class="card wide privacy"><h2>Privacy first</h2><p>Your messages, notes and snaps are stored in your private TW space online. Security rules let only the two of you read them, but they are not end-to-end encrypted, so keep anything truly secret out of here.</p><div class="setting"><label for="notifyToggle">Notify me of pokes, notes &amp; messages</label><input class="switch" id="notifyToggle" type="checkbox" checked></div><div class="setting"><span id="notifyStatusLabel">Browser notifications: not requested yet</span><button class="lock" id="enableNotify" type="button">Enable</button></div></article>
     </div></section>
     <section id="notes" class="view"><article class="card"><div class="icon">💌</div><h2>Make a little note <span class="ai-badge">AI</span></h2><p>Choose a feeling, write from your heart, and give it a cute surprise style.</p><div class="note-maker"><div class="moods" id="moods"><button class="mood selected" data-mood="loving" type="button" aria-pressed="true">Loving</button><button class="mood" data-mood="happy" type="button" aria-pressed="false">Happy</button><button class="mood" data-mood="missing you" type="button" aria-pressed="false">Missing you</button><button class="mood" data-mood="sorry" type="button" aria-pressed="false">Sorry</button></div><textarea id="noteText" placeholder="Write something for Moon Bunny…" aria-label="Your note" maxlength="500"></textarea><button class="button" id="makeNote" type="button">Wrap it with love</button></div><div id="noteResult" class="result"></div></article></section>
     <section id="play" class="view"><div class="grid">
@@ -329,7 +329,7 @@
       "auth/too-many-requests":"Too many tries — wait a minute and try again.",
       "auth/network-request-failed":"No connection — check your internet and try again.",
       "unavailable":"No connection — check your internet and try again.",
-      "permission-denied":"TY isn't allowed to do that yet — the Firebase security rules may need updating."
+      "permission-denied":"TW isn't allowed to do that yet — the Firebase security rules may need updating."
     };
     const friendlyError = error => errorMessages[error?.code] || (error?.message||"Something went wrong.").replace(/^Firebase: /,"");
     function timeAgo(ms){ const s=Math.floor((Date.now()-ms)/1000); if(s<45) return "just now"; const m=Math.floor(s/60); if(m<60) return m+"m ago"; const h=Math.floor(m/60); if(h<24) return h+"h ago"; return Math.floor(h/24)+"d ago"; }
@@ -385,7 +385,7 @@
       if(Notification.permission==="default"){ try { await Notification.requestPermission(); } catch(error){} }
       updateNotifyLabel();
     }
-    // Only fires while TY is in the background; when it's open the change is already on screen.
+    // Only fires while TW is in the background; when it's open the change is already on screen.
     async function notifyMe(title,body){
       if(!$("notifyToggle").checked || !document.hidden) return;
       if(!("Notification" in window) || Notification.permission!=="granted") return;
@@ -490,9 +490,9 @@
     $("shareCode").textContent = navigator.share ? "Share" : "Copy";
     $("shareCode").onclick=async()=>{
       if(!coupleId) return;
-      const button=$("shareCode"), text=`Join me on TY 💗 Our code is ${coupleId} — ${location.origin}/`;
+      const button=$("shareCode"), text=`Join me on TW 💗 Our code is ${coupleId} — ${location.origin}/`;
       try {
-        if(navigator.share){ await navigator.share({ title:"TY", text }); return; }
+        if(navigator.share){ await navigator.share({ title:"TW", text }); return; }
         await navigator.clipboard.writeText(coupleId);
         button.textContent="Copied ✓"; setTimeout(()=>{ button.textContent="Copy"; },1500);
       } catch(error){ if(error?.name!=="AbortError") prompt("Copy this code and send it to your partner:",coupleId); }
@@ -517,7 +517,7 @@
       celebratedTrivia.clear(); scoring.clear(); purging.clear();
       $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show");
       showApp();
-      const listenError = name => error => console.warn("TY: could not listen to "+name,error?.code||error);
+      const listenError = name => error => console.warn("TW: could not listen to "+name,error?.code||error);
       coupleUnsubs.push(onSnapshot(coupleRef(),onCoupleSnapshot,error=>{ if(coupleId===id) showStatus("We couldn't open your space ("+(error?.code||"error")+").",true); }));
       coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"messages"),orderBy("createdAt","desc"),limit(MESSAGE_LIMIT)),onMessagesSnapshot,listenError("messages")));
       coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"snaps"),orderBy("createdAt","desc"),limit(SNAP_LIMIT)),onSnapsSnapshot,listenError("snaps")));
@@ -561,7 +561,7 @@
       const surprise=shared.surprise;
       if(surprise && surprise.authorId!==me && !surprise.seen && !surpriseShown){
         surpriseShown=true; $("surpriseText").textContent=surprise.text; $("surpriseScreen").classList.remove("hidden");
-        if(live) notifyMe("A surprise is waiting 🎁","Open TY to see it.");
+        if(live) notifyMe("A surprise is waiting 🎁","Open TW to see it.");
         confettiBurst(); playChime("success");
       }
       if(surprise && surprise.authorId===me && surprise.seen) $("surpriseStatus").textContent="They opened your surprise 💗";
@@ -797,7 +797,7 @@
       if(!raw){ $("surpriseStatus").textContent="Write a little message first."; return; }
       $("surpriseStatus").textContent="Wrapping it up…";
       const text=await generateAIText(`Lightly polish this heartfelt note from one partner to another. Keep their original meaning and voice, just make it warm and well written (max 3 sentences), no quotation marks: "${raw}"`,raw);
-      try { await updateDoc(coupleRef(),{"shared.surprise":{text,authorId:authUser.uid,seen:false}}); $("surpriseInput").value=""; $("surpriseStatus").textContent="Saved — your love will see it the next time they open TY."; }
+      try { await updateDoc(coupleRef(),{"shared.surprise":{text,authorId:authUser.uid,seen:false}}); $("surpriseInput").value=""; $("surpriseStatus").textContent="Saved — your love will see it the next time they open TW."; }
       catch(error){ $("surpriseStatus").textContent="Could not save it yet."; }
     });
     $("sendBouquet").onclick=()=>busy($("sendBouquet"),async()=>{
@@ -808,7 +808,7 @@
         ? `Write one short, sweet note (max 2 sentences) to go with a surprise virtual bouquet for a partner, inspired by: "${context}". No quotation marks, warm tone, end with one flower emoji.`
         : `Write one short, sweet, surprising note (max 2 sentences) to go with a virtual bouquet sent to a partner just because. No quotation marks, warm tone, end with one flower emoji.`;
       const text=await generateAIText(prompt,fallback);
-      try { await updateDoc(coupleRef(),{"shared.bouquet":{note:text,authorId:authUser.uid,seen:false}}); $("bouquetInput").value=""; $("bouquetStatus").textContent="Bouquet sent — they'll see it the next time they open TY. 💐"; playChime("success"); confettiBurst(["💐","🌷","🌸","✨"],16); }
+      try { await updateDoc(coupleRef(),{"shared.bouquet":{note:text,authorId:authUser.uid,seen:false}}); $("bouquetInput").value=""; $("bouquetStatus").textContent="Bouquet sent — they'll see it the next time they open TW. 💐"; playChime("success"); confettiBurst(["💐","🌷","🌸","✨"],16); }
       catch(error){ $("bouquetStatus").textContent="Could not send the bouquet yet."; }
     });
     // Closing the card marks it as seen so it doesn't pop up again on every visit.
@@ -1068,7 +1068,7 @@
     setTimeout(() => {
       if (!window.__tyReady) {
         const message = document.getElementById("authMessage");
-        if (message) message.textContent = "Couldn't load TY — check your connection and reload.";
+        if (message) message.textContent = "Couldn't load TW — check your connection and reload.";
       }
     }, 10000);
   </script>

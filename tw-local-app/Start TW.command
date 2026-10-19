@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Serves the TY site from the repo root (one level up) on this Mac only.
+# Serves the TW site from the repo root (one level up) on this Mac only.
 cd "$(dirname "$0")/.." || exit 1
 PORT=8765
 python3 -m http.server "$PORT" --bind 127.0.0.1 &

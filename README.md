@@ -1,4 +1,4 @@
-# TY
+# TW
 
 A private little web app for two people: pairing by code, live chat with reactions, pokes and love notes,
 couple trivia, daily tasks, view-once or kept photo "snaps", and an installable PWA. No build step — it is a
@@ -12,7 +12,7 @@ static site backed by Firebase (Auth, Firestore, Storage).
 | `service-worker.js`, `manifest.webmanifest`, `icon*.svg/png` | PWA: offline shell, install metadata, icons. |
 | `firestore.rules`, `storage.rules`, `firebase.json`, `.firebaserc` | Firebase security rules and CLI config (project `aytt-677b4`). |
 | `vercel.json` | Security headers for the Vercel deployment. |
-| `ty-local-app/Start TY.command` | Double-click on a Mac to serve this folder on `http://localhost:8765`. |
+| `tw-local-app/Start TW.command` | Double-click on a Mac to serve this folder on `http://localhost:8765`. |
 
 ## Run it locally
 
@@ -43,5 +43,5 @@ rules look up the couple's members in Firestore).
   Cloud console (APIs & Services → Credentials) and consider enabling Firebase App Check.
 - AI-flavoured features fall back to built-in templates until `AI_ENDPOINT` in `index.html` points at your own proxy
   that holds the API key server-side.
-- Pokes, notes and messages only notify while TY is open in the background. True push notifications need Firebase
+- Pokes, notes and messages only notify while TW is open in the background. True push notifications need Firebase
   Cloud Messaging.

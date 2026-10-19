@@ -8,6 +8,6 @@
   <rect width="512" height="512" fill="url(#g)"/>
   <g transform="translate(256 256) scale(.84) translate(-256 -250)">
     <path d="M256 390 119 263C38 187 84 78 176 96c37 7 64 31 80 61 16-30 43-54 80-61 92-18 138 91 57 167L256 390Z" fill="#fff"/>
-    <text x="256" y="306" text-anchor="middle" fill="#7b5cbd" font-family="Arial, sans-serif" font-size="112" font-weight="700">TY</text>
+    <text x="256" y="306" text-anchor="middle" fill="#7b5cbd" font-family="Arial, sans-serif" font-size="112" font-weight="700">TW</text>
   </g>
 </svg>
