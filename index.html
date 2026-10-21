@@ -126,16 +126,9 @@
     .empty .btn { margin-top:12px; }
 
     /* Home */
-    .activity-feed { display:grid; margin-top:8px; }
-    .activity-item { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--line); font-size:.92rem; }
-    .activity-item:last-child { border-bottom:0; padding-bottom:0; }
-    .activity-icon { flex:none; display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:var(--accent-soft); color:var(--accent-text); }
-    .activity-icon svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-    .activity-icon .duo, .tab .duo { fill:currentColor; fill-opacity:.2; stroke:none; }
+    .tab .duo { fill:currentColor; fill-opacity:.2; stroke:none; }
     .tab .duo { fill-opacity:0; }
     .tab.active .duo { fill-opacity:.22; }
-    .activity-text { display:block; font-weight:600; line-height:1.35; overflow-wrap:anywhere; }
-    .activity-time { display:block; margin-top:2px; color:var(--muted); font-size:.75rem; }
 
     /* Send */
     .send-panel { margin-top:14px; }
@@ -316,18 +309,8 @@
     .feat-text b { font-size:1rem; font-weight:800; line-height:1.25; }
     .feat-text small { font-size:.82rem; line-height:1.35; opacity:.78; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
     .feat-go { margin-left:auto; flex:none; font-size:1.8rem; font-weight:700; line-height:1; opacity:.45; }
-    .feature-play { background:linear-gradient(135deg,#ffdbe9,#e2d2ff); }
-    .feature-task { background:linear-gradient(135deg,#d8f4e7,#cfe5ff); }
-    .feature-play.hot { background:linear-gradient(135deg,#ff9ec0,#c3a8ff); animation:hotPulse 1.8s ease-in-out infinite; }
-    @keyframes hotPulse { 50% { transform:scale(1.015); box-shadow:0 12px 30px rgba(214,51,108,.35); } }
     body.dark .feature { color:#fff; }
     body.dark .feat-emoji { background:rgba(255,255,255,.12); }
-    body.dark .feature-play { background:linear-gradient(135deg,#4a2840,#33284f); }
-    body.dark .feature-task { background:linear-gradient(135deg,#243f38,#24334f); }
-    body.dark .feature-play.hot { background:linear-gradient(135deg,#a8386b,#5b3fa8); }
-    .activity-card { padding:6px 16px; }
-    .activity-card .activity-item:first-child { padding-top:10px; }
-    .activity-card .activity-item:last-child { padding-bottom:10px; }
 
     .greeting { margin:6px 4px 14px; }
     .greeting h1 { font-size:1.6rem; font-weight:800; letter-spacing:-.02em; }
@@ -654,17 +637,6 @@
         <section class="home-section">
           <h2>How are you feeling?</h2>
           <div class="mood-row" id="moodRow" role="group" aria-label="How are you feeling?"></div>
-        </section>
-
-        <section class="home-section">
-          <h2>Today, together</h2>
-          <button class="feature feature-play" id="featPlay" type="button"><span class="feat-emoji" id="featPlayEmoji" data-ico="feat-play" aria-hidden="true"></span><span class="feat-text"><b id="featPlayTitle">Play a game</b><small id="featPlaySub">Pick one and have some fun</small></span><span class="feat-go" aria-hidden="true">›</span></button>
-          <button class="feature feature-task" id="featTask" type="button"><span class="feat-emoji" data-ico="feat-task" aria-hidden="true"></span><span class="feat-text"><b id="featTaskTitle">Today’s snap task</b><small id="featTaskText">…</small></span><span class="feat-go" aria-hidden="true">›</span></button>
-        </section>
-
-        <section class="home-section">
-          <h2>Recent activity</h2>
-          <div class="card activity-card"><div class="activity-feed" id="activityFeed"></div></div>
         </section>
       </section>
 
@@ -1387,7 +1359,7 @@
       if(live && moment && moment.by!==me && momentKey!==seen.moment){ confettiBurst([moment.emoji],16); playAnim($("themFace"),"wiggle",800); playChime("pop"); }
       seen.moment=momentKey;
       lastPet=shared.pet||null; renderPet(lastPet,live);
-      renderHero(); renderFeatured();
+      renderHero();
       lastPresence=shared.presence||{}; renderPresence();
 
       const task=shared.customTask;
@@ -1401,7 +1373,7 @@
       hideSplash();
     }
 
-    // ---- Presence, activity and chat ---------------------------------------------------------------------
+    // ---- Presence and chat ---------------------------------------------------------------------
     async function heartbeat(){
       if(!coupleId || !authUser || document.hidden) return;
       try { await updateDoc(coupleRef(),{[`shared.presence.${authUser.uid}.at`]:serverTimestamp()}); } catch(error){}
@@ -1418,25 +1390,6 @@
     }
     // Re-check now and then so "Online now" fades when the partner's heartbeats stop.
     setInterval(()=>{ if(coupleId) renderPresence(); },10000);
-    const activityIcons={poke:"act-poke",note:"act-note",chat:"act-chat"};
-    function renderActivity(items){
-      const box=$("activityFeed"); box.innerHTML="";
-      if(!items.length){
-        const empty=document.createElement("div"); empty.className="empty"; empty.textContent="Nothing yet — send a poke or a note to get things going.";
-        const go=document.createElement("button"); go.type="button"; go.className="btn soft"; go.textContent="Send something sweet"; go.onclick=()=>openTab("send");
-        empty.appendChild(document.createElement("br")); empty.appendChild(go); box.appendChild(empty); return;
-      }
-      items.forEach(m=>{
-        const row=document.createElement("div"); row.className="activity-item";
-        const icon=document.createElement("span"); icon.className="activity-icon"; icon.setAttribute("aria-hidden","true"); icon.innerHTML=ico(activityIcons[m.type]||"act-chat");
-        const textWrap=document.createElement("div");
-        const who=m.authorId===authUser.uid?"You":"Your partner";
-        const snippet=m.text&&m.text.length>60?m.text.slice(0,60)+"…":(m.text||"");
-        const line=document.createElement("span"); line.className="activity-text"; line.textContent=`${who}: ${snippet}`;
-        const time=document.createElement("span"); time.className="activity-time"; time.textContent=timeAgo(millis(m.createdAt)||Date.now());
-        textWrap.appendChild(line); textWrap.appendChild(time); row.appendChild(icon); row.appendChild(textWrap); box.appendChild(row);
-      });
-    }
     async function toggleReaction(msgId,emoji,alreadyReacted){
       if(!coupleId) return;
       try { await updateDoc(doc(db,"couples",coupleId,"messages",msgId),{[`reactions.${emoji}`]: alreadyReacted?arrayRemove(authUser.uid):arrayUnion(authUser.uid)}); } catch(error){}
@@ -1474,21 +1427,19 @@
       if(document.querySelector(".tab.active")?.dataset.view===view) return;
       document.querySelector(`.tab[data-view="${view}"] .dot`)?.classList.remove("hidden");
     }
-    // One query feeds both the chat and the "Recent activity" card (newest first).
     function onMessagesSnapshot(snap){
       const box=$("chatMessages"), scroller=$("chatScroll"), docs=snap.docs, me=authUser.uid;
       const nearBottom=scroller.scrollHeight-scroller.scrollTop-scroller.clientHeight<140;
       box.innerHTML="";
       if(!docs.length){ const hello=document.createElement("p"); hello.className="empty"; hello.textContent="No messages yet — say hi 👋"; box.appendChild(hello); }
       for(let i=docs.length-1;i>=0;i--) renderBubble(docs[i].id,docs[i].data(),box);
-      renderActivity(docs.slice(0,6).map(item=>item.data()));
       if(nearBottom || !seen.chat || docs[0]?.data().authorId===me) scroller.scrollTop=scroller.scrollHeight;
       if(seen.chat){
         snap.docChanges().forEach(change=>{
           if(change.type!=="added") return;
           const m=change.doc.data();
           if(m.authorId===me) return;
-          if(m.type==="chat"){ notifyMe("New message 💬",m.text,"tw-chat"); markUnread("chat"); if(document.querySelector(".tab.active")?.dataset.view!=="chat") toast("Your partner: "+(m.text.length>60?m.text.slice(0,60)+"…":m.text),()=>openTab("chat")); } else markUnread("home");
+          if(m.type==="chat"){ notifyMe("New message 💬",m.text,"tw-chat"); markUnread("chat"); if(document.querySelector(".tab.active")?.dataset.view!=="chat") toast("Your partner: "+(m.text.length>60?m.text.slice(0,60)+"…":m.text),()=>openTab("chat")); } else markUnread("chat");
         });
       }
       seen.chat=true;
@@ -1645,11 +1596,11 @@
     // Both partners compute the same day-of-year index locally, so no sync is needed for this part.
     const dailyTasks=["Send a snap of what you're having for breakfast today 🍳","Take a snap of the view outside your window right now 🌤️","Snap something that reminded you of your partner today 💭","Send a selfie with your best smile 😊","Snap your cozy spot right now 🛋️","Take a photo of your shoes — wherever you are 👟","Snap something you're grateful for today 🌸","Send a photo of your hands doing something right now ✋","Snap your favorite drink of the day ☕","Take a photo of the sky where you are right now 🌌","Snap something silly near you right now 🤪","Send a photo that shows your mood today 🎭","Snap a little corner of your room 🏠","Take a photo of something colorful near you 🎨"];
     function dayIndex(){ const now=new Date(), start=new Date(now.getFullYear(),0,0); return Math.floor((now-start)/86400000); }
-    function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; renderFeaturedTask(); $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
+    function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
     renderDailyTask();
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); renderWorld(false); } });
     function renderAssignedTask(task){
-      assignedForMe=task && authUser && task.forUid===authUser.uid ? task : null; renderFeaturedTask();
+      assignedForMe=task && authUser && task.forUid===authUser.uid ? task : null;
       const box=$("assignedTaskView");
       if(!task || !authUser){ box.textContent=""; return; }
       if(task.forUid===authUser.uid) box.textContent=`💌 Your partner's task for you: "${task.text}"`;
@@ -1888,7 +1839,7 @@
     }
     const shuffle = list => { const copy=list.slice(); for(let i=copy.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]]; } return copy; };
     const randomId = () => Math.random().toString(36).slice(2,10);
-    const setBadge = (id,text) => { const el=$(id), changed=el.textContent!==(text||""); el.textContent=text||""; el.classList.toggle("hidden",!text); if(changed) renderFeatured(); };
+    const setBadge = (id,text) => { const el=$(id), changed=el.textContent!==(text||""); el.textContent=text||""; el.classList.toggle("hidden",!text); if(text && changed) markUnread("play"); };
 
     // ---- Home: greeting, characters, moments, moods, days together, love level -----------------------------
     function renderGreeting(){
@@ -1992,10 +1943,6 @@
       "tab-send": mk("0 0 24 24",`<rect class="duo" x="3.5" y="6" width="17" height="12.5" rx="3"/><rect x="3.5" y="6" width="17" height="12.5" rx="3"/><path d="m4.4 8.2 7.6 5.3 7.6-5.3"/>`),
       "tab-play": mk("0 0 24 24",`<path class="duo" d="M7 8.5h10a4 4 0 0 1 3.9 4.6l-.5 3.2a2.6 2.6 0 0 1-4.5 1.3L14.5 16h-5l-1.4 1.6a2.6 2.6 0 0 1-4.5-1.3l-.5-3.2A4 4 0 0 1 7 8.5Z"/><path d="M7 8.5h10a4 4 0 0 1 3.9 4.6l-.5 3.2a2.6 2.6 0 0 1-4.5 1.3L14.5 16h-5l-1.4 1.6a2.6 2.6 0 0 1-4.5-1.3l-.5-3.2A4 4 0 0 1 7 8.5Z"/><path d="M8.5 11v3M7 12.5h3"/><circle cx="15.6" cy="11.8" r=".8" fill="currentColor" stroke="none"/><circle cx="17.4" cy="13.6" r=".8" fill="currentColor" stroke="none"/>`),
       "tab-snaps": mk("0 0 24 24",`<path class="duo" d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3V19H4Z"/><path d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3V19H4Z"/><circle cx="12" cy="13.5" r="3.3"/>`),
-      // small activity icons
-      "act-poke": mk("0 0 24 24",`<circle class="duo" cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7" opacity=".5"/>`),
-      "act-note": mk("0 0 24 24",`<rect class="duo" x="3.5" y="6" width="17" height="12.5" rx="3"/><rect x="3.5" y="6" width="17" height="12.5" rx="3"/><path d="m4.4 8.2 7.6 5.3 7.6-5.3"/>`),
-      "act-chat": mk("0 0 24 24",`<path class="duo" d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/>`),
       // moments (64px illustrations)
       "moment-hug": mk("0 0 64 64",`<path d="${heartPath(32,30,24)}" fill="url(#gRose)"/><path d="M9 30c3 14 14 22 25 21" fill="none" stroke="url(#gPeach)" stroke-width="8" stroke-linecap="round"/><path d="M55 30c-3 14-14 22-25 21" fill="none" stroke="url(#gPeach)" stroke-width="8" stroke-linecap="round"/><circle cx="34" cy="51" r="5" fill="#ffc7a3"/><circle cx="30" cy="51" r="5" fill="#ffb98f"/>`),
       "moment-kiss": mk("0 0 64 64",`<path d="M8 33c7-9 16-10 24-4 8-6 17-5 24 4-5 13-13 20-24 20S13 46 8 33Z" fill="url(#gRose)"/><path d="M8 33c8 3 16 3 24-1 8 4 16 4 24 1" fill="none" stroke="#b81f57" stroke-width="2.6" stroke-linecap="round"/><path d="M14 38c6 5 13 7 18 7" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/><path d="${heartPath(50,14,7)}" fill="url(#gLilac)"/>`),
@@ -2012,8 +1959,6 @@
       // home cards
       "pill-days": mk("0 0 32 32",`<path d="${heartPath(16,15,11)}" fill="url(#gRose)"/><path d="M9 21q7 6 14 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>`),
       "pill-level": mk("0 0 32 32",`<path d="M9 6h14v6a7 7 0 0 1-14 0Z" fill="url(#gSun)"/><path d="M9 8H5.5a3 3 0 0 0 3.2 4.6M23 8h3.5a3 3 0 0 1-3.2 4.6" fill="none" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/><path d="M13 19h6v3h-6zM10.5 25h11" fill="#ffb347" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/>`),
-      "feat-play": mk("0 0 48 48",`<path d="M13 15h22a8 8 0 0 1 7.8 9.3l-1 6a5 5 0 0 1-8.7 2.6L30 30H18l-3.1 2.9a5 5 0 0 1-8.7-2.6l-1-6A8 8 0 0 1 13 15Z" fill="url(#gLilac)"/><path d="M16 21v6M13 24h6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="31" cy="22.5" r="2" fill="#fff"/><circle cx="35" cy="26.5" r="2" fill="#fff"/>`),
-      "feat-task": mk("0 0 48 48",`<path d="M7 17h7l3-5h14l3 5h7v22H7Z" fill="url(#gRose)"/><circle cx="24" cy="28" r="8" fill="#fff"/><circle cx="24" cy="28" r="5" fill="url(#gSky)"/><circle cx="37" cy="22" r="1.8" fill="#fff"/>`),
       "feat-photos": mk("0 0 48 48",`<rect x="6" y="8" width="36" height="32" rx="7" fill="url(#gSun)"/><rect x="10.5" y="12.5" width="27" height="23" rx="4" fill="url(#gSky)"/><circle cx="31" cy="19" r="3.4" fill="#fff" opacity=".9"/><path d="${heartPath(21,27,7)}" fill="#fff"/>`)
     };
     const ico = name => ICONS[name] || "";
@@ -2356,24 +2301,6 @@
     const openSince=()=>{ $("sinceInput").value=currentSince; $("sinceInput").max=new Date().toISOString().slice(0,10); openDialog($("sinceDialog")); };
     $("sinceBtn").onclick=openSince; $("daysBtn").onclick=openSince; $("worldDaysBtn").onclick=openSince;
 
-
-    // ---- "Today, together" cards --------------------------------------------------------------------------
-    const gamePicks=[["wyr","🤔","Would You Rather","Same brain, or opposites?"],["tap","💗","Tap Together","10 seconds. One heart. Go!"],["memory","🃏","Memory Match","Take turns and find the pairs"],["wheel","🎡","Spin the Wheel","Truth, dare, date ideas & sweet words"],["trivia","🧠","Couple Trivia","How well do you know each other?"]];
-    const hotGames=[["badgeTap","tap","💗","Tap Together","Your partner is live — join in!"],["badgeMemory","memory","🃏","Memory Match","It’s your turn!"],["badgeWheel","wheel","🎡","Spin the Wheel","Your partner spun — see what came up"],["badgeWyr","wyr","🤔","Would You Rather","Your partner picked — your turn"],["badgeTrivia","trivia","🧠","Couple Trivia","Your partner answered — your turn"]];
-    let featuredGame="wyr";
-    function renderFeatured(){
-      const hot=hotGames.find(([badge])=>!$(badge).classList.contains("hidden"));
-      const daily=gamePicks[dayIndex()%gamePicks.length];
-      const pick=hot?{game:hot[1],emoji:hot[2],title:hot[3],sub:hot[4]}:{game:daily[0],emoji:daily[1],title:"Play "+daily[2],sub:daily[3]};
-      featuredGame=pick.game; $("featPlayEmoji").innerHTML=ico("game-"+pick.game); $("featPlayTitle").textContent=pick.title; $("featPlaySub").textContent=pick.sub;
-      $("featPlay").classList.toggle("hot",!!hot);
-    }
-    function renderFeaturedTask(){
-      $("featTaskTitle").textContent=assignedForMe?"Your partner’s task for you":"Today’s snap task";
-      $("featTaskText").textContent=assignedForMe?assignedForMe.text:$("dailyTaskText").textContent;
-    }
-    $("featPlay").onclick=()=>{ openTab("play"); openGame(featuredGame); };
-    $("featTask").onclick=()=>openTab("snaps");
 
     $("sinceCancel").onclick=()=>closeDialog($("sinceDialog"));
     $("sinceSave").onclick=async()=>{
