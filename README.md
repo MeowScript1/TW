@@ -80,5 +80,10 @@ using in-app alerts only.
   Cloud console (APIs & Services → Credentials) and consider enabling Firebase App Check.
 - AI-flavoured features fall back to built-in templates until `AI_ENDPOINT` in `index.html` points at your own proxy
   that holds the API key server-side.
+- The home screen has a Daily question for two: you each answer in private and the card flips to show both answers once
+  you have both answered (answers live in your couple space like everything else, and your partner's is only shown in the
+  app after you have answered too). Answering together, or feeding Mochi together, keeps your streak going.
+- The optional Heart lock (Settings) puts a 4-digit code screen over TW on that phone. Only a salted hash of the code is
+  kept in the browser; it hides the app, it does not encrypt anything. "Forgot the code?" logs you out and resets it.
 - Your partner can read your phone's push address (that is how a push finds it), but only your Vercel function holds the
   key needed to send one.

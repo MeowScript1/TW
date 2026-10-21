@@ -28,13 +28,16 @@
       --tabbar-h:70px; --tabbar-gap:10px;
     }
     body.dark {
-      --bg:#121014; --bg-2:#17121b; --app:rgba(24,18,25,.75);
-      --surface:#1d171e; --surface-2:#261f28; --line:#352b38;
-      --ink:#f2e9f0; --muted:#b4a5b0;
-      --accent-soft:#3a2230; --accent-text:#ffb3cd;
-      --purple:#b9a0f6; --purple-soft:#2a2234;
+      --bg:#110E1B; --bg-2:#1A162B; --app:rgba(17,14,27,0);
+      --surface:#1A162B; --surface-2:#231E38; --line:rgba(255,255,255,.1);
+      --ink:#F4EEFF; --muted:#ABA2C6;
+      --accent:#f0457c; --accent-soft:rgba(255,91,136,.16); --accent-text:#ff9bb9; --pink:#ff5b88;
+      --purple:#9d7bff; --purple-soft:rgba(157,123,255,.16);
       --mint:#1f332d; --mint-ink:#7fd9b3; --danger:#ff8a80;
+      --glass:rgba(255,255,255,.06); --glass-line:rgba(255,255,255,.12);
       --shadow:none;
+      background:radial-gradient(120% 60% at 12% -8%,rgba(157,123,255,.28),transparent 60%),radial-gradient(90% 50% at 105% 18%,rgba(255,91,136,.2),transparent 62%),radial-gradient(80% 40% at 50% 112%,rgba(157,123,255,.18),transparent 70%),linear-gradient(180deg,#110E1B,#1A162B);
+      background-attachment:fixed;
     }
 
     /* ---- Base ---------------------------------------------------------------------------------------- */
@@ -101,14 +104,14 @@
     /* The tab bar floats over the page as frosted glass, so whatever scrolls underneath shows through softly. */
     .tabbar { position:absolute; z-index:5; left:max(12px,env(safe-area-inset-left)); right:max(12px,env(safe-area-inset-right)); bottom:calc(var(--tabbar-gap) + env(safe-area-inset-bottom)); display:grid; grid-template-columns:repeat(5,1fr); gap:2px; padding:6px; border-radius:32px; background:rgba(255,255,255,.52); border:1px solid rgba(255,255,255,.78); -webkit-backdrop-filter:blur(26px) saturate(190%); backdrop-filter:blur(26px) saturate(190%); box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.3), 0 14px 34px rgba(86,40,70,.2), 0 2px 8px rgba(86,40,70,.1); }
     .tabbar::before { content:""; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,0) 58%); pointer-events:none; }
-    body.dark .tabbar { background:rgba(40,30,46,.5); border-color:rgba(255,255,255,.16); box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(255,255,255,.05), 0 14px 34px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3); }
+    body.dark .tabbar { background:rgba(26,22,43,.55); border-color:rgba(255,255,255,.14); box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(255,255,255,.05), 0 14px 34px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3); }
     body.dark .tabbar::before { background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 58%); }
     .tab { position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 0; color:var(--muted); font-size:.68rem; font-weight:700; }
     .tab .pill { display:grid; place-items:center; width:54px; height:30px; border-radius:999px; transition:background .2s,color .2s,box-shadow .2s,transform .18s cubic-bezier(.2,1.4,.4,1); }
     .tab:active .pill { transform:scale(.9); }
     .tab.active { color:var(--accent-text); }
-    .tab.active .pill { background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,222,234,.82)); box-shadow:inset 0 1px 0 #fff, 0 1px 2px rgba(214,51,108,.2), 0 5px 12px rgba(214,51,108,.16); }
-    body.dark .tab.active .pill { background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.1)); box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 4px 12px rgba(0,0,0,.35); }
+    .tabbar::after { content:""; position:absolute; z-index:-1; top:6px; bottom:6px; left:6px; width:calc((100% - 20px)/5); border-radius:26px; background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,222,234,.8)); box-shadow:inset 0 1px 0 #fff, 0 1px 2px rgba(214,51,108,.2), 0 8px 18px -4px rgba(214,51,108,.34); transform:translateX(calc(var(--i,0)*(100% + 2px))); transition:transform .45s cubic-bezier(.3,1.35,.4,1); }
+    body.dark .tabbar::after { background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.06)); box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 0 20px rgba(255,91,136,.38), 0 10px 20px -6px rgba(255,91,136,.55); }
     .tab .dot { position:absolute; top:2px; left:calc(50% + 8px); width:10px; height:10px; border-radius:50%; background:var(--accent); border:2px solid var(--surface); }
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) { .tabbar { background:var(--surface); } }
     @media (prefers-reduced-transparency:reduce) { .tabbar { background:var(--surface); -webkit-backdrop-filter:none; backdrop-filter:none; } .tabbar::before { display:none; } }
@@ -318,9 +321,10 @@
     .scene-body { padding:14px 18px 18px; }
     .scene.mode-portrait .scene-body { padding-top:16px; }
 
-    .scene.mode-portrait .world, .scene.mode-portrait .come-closer, .scene.mode-portrait #sinceBtn, .scene.mode-portrait .mood-names { display:none; }
+    .scene.mode-portrait .world, .scene.mode-portrait .come-closer, .scene.mode-portrait .mood-names { display:none; }
+    .scene.mode-portrait .hero-actions { grid-template-columns:1fr; }
     .scene.mode-portrait .scene-pills { grid-template-columns:1fr; }
-    .scene.mode-world .portrait, .scene.mode-world .who-row, #sinceBtn { display:none; }
+    .scene.mode-world .portrait, .scene.mode-world .who-row { display:none; }
     .scene-pills { grid-template-columns:1fr !important; }
     .scene.mode-portrait .mood-line.idle { display:none; }
     .scene-bg { z-index:1; }
@@ -489,10 +493,142 @@
       *, *:before, *:after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
       .confetti-layer { display:none; }
     }
+
+    /* ---- Twilight: glass surfaces, ambient glow, couple avatars -------------------------------------- */
+    .app { z-index:1; }
+    .ambient { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; opacity:.4; }
+    body.dark .ambient { opacity:.75; }
+    .ambient i { position:absolute; bottom:-30px; width:16px; height:16px; background:center/contain no-repeat; opacity:0; animation:ambientRise 16s linear infinite; }
+    .ambient i.h { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z' fill='%23ff7aa5'/%3E%3C/svg%3E"); }
+    .ambient i.s { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z' fill='%239d7bff'/%3E%3C/svg%3E"); }
+    .ambient i:nth-child(1) { left:6%; animation-delay:0s; }
+    .ambient i:nth-child(2) { left:19%; width:12px; height:12px; animation-delay:3.5s; animation-duration:19s; }
+    .ambient i:nth-child(3) { left:33%; width:20px; height:20px; animation-delay:7s; animation-duration:15s; }
+    .ambient i:nth-child(4) { left:48%; width:13px; height:13px; animation-delay:1.5s; animation-duration:18s; }
+    .ambient i:nth-child(5) { left:61%; width:15px; height:15px; animation-delay:9s; }
+    .ambient i:nth-child(6) { left:74%; width:22px; height:22px; animation-delay:5s; animation-duration:14s; }
+    .ambient i:nth-child(7) { left:86%; width:12px; height:12px; animation-delay:11s; animation-duration:20s; }
+    .ambient i:nth-child(8) { left:94%; animation-delay:2.5s; animation-duration:17s; }
+    @keyframes ambientRise { 0% { transform:translate(0,0) rotate(0); opacity:0; } 10% { opacity:.7; } 50% { transform:translate(14px,-48vh) rotate(14deg); } 90% { opacity:.5; } 100% { transform:translate(-10px,-105vh) rotate(-12deg); opacity:0; } }
+    @media (prefers-reduced-motion:reduce) { .ambient { display:none; } }
+    body.dark .card, body.dark .presence, body.dark .mood-chip:not(.selected), body.dark .bubble:not(.mine), body.dark .chat-form { background:var(--glass); border-color:var(--glass-line); -webkit-backdrop-filter:blur(16px) saturate(140%); backdrop-filter:blur(16px) saturate(140%); }
+    body.dark .card { box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 10px 30px rgba(0,0,0,.25); }
+    .couple { display:flex; }
+    .av { position:relative; display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:linear-gradient(150deg,#fff,#ffe0ec); border:2px solid var(--bg); box-shadow:0 4px 12px rgba(214,51,108,.22); }
+    .av + .av { margin-left:-12px; background:linear-gradient(150deg,#fff,#e9e0ff); }
+    .av svg { width:28px; height:28px; overflow:visible; animation:none; filter:none; }
+    body.dark .av { background:linear-gradient(150deg,rgba(255,255,255,.18),rgba(255,255,255,.06)); box-shadow:0 0 14px rgba(255,91,136,.25); }
+    body.dark .av + .av { box-shadow:0 0 14px rgba(157,123,255,.28); }
+    .av.online:after { content:""; position:absolute; right:-2px; bottom:-2px; width:12px; height:12px; border-radius:50%; background:#2fc48d; border:2px solid var(--bg); box-shadow:0 0 8px rgba(47,196,141,.85); }
+    .brand { gap:10px; }
+
+    /* ---- Send love, feeding sheet, signal ------------------------------------------------------------- */
+    .hero-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+    .hero-actions .come-closer { margin-top:0; }
+    .glow-pill { display:flex; align-items:center; justify-content:center; gap:8px; min-width:0; padding:11px 14px; border-radius:20px; color:#fff; font-size:.9rem; font-weight:800; background:linear-gradient(135deg,#ff5b88,#d63a8a 55%,#9d7bff); box-shadow:0 10px 24px -6px rgba(255,91,136,.7), inset 0 1px 0 rgba(255,255,255,.4); transition:transform .14s cubic-bezier(.2,1.4,.4,1), box-shadow .2s; }
+    .glow-pill:active { transform:scale(.94); box-shadow:0 4px 12px -4px rgba(255,91,136,.7), inset 0 1px 0 rgba(255,255,255,.4); }
+    .glow-pill svg { width:18px; height:18px; animation:beat 1.6s ease-in-out infinite; }
+    @keyframes beat { 0%,100% { transform:scale(1); } 14% { transform:scale(1.22); } 28% { transform:scale(1); } 42% { transform:scale(1.14); } }
+    .mood-line { display:flex; align-items:center; justify-content:center; gap:8px; width:fit-content; max-width:100%; min-height:0; margin:10px auto 14px; padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.8); font-size:.82rem; font-weight:700; line-height:1.3; opacity:1; }
+    body.dark .mood-line { background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.16); }
+    .mood-line:before { content:""; flex:none; width:8px; height:8px; border-radius:50%; background:#b9a9c9; }
+    .mood-line.on:before { background:#2fc48d; box-shadow:0 0 0 4px rgba(47,196,141,.2), 0 0 10px rgba(47,196,141,.8); }
+    .mood-line.love:before { background:#ff5b88; box-shadow:0 0 0 4px rgba(255,91,136,.22), 0 0 12px rgba(255,91,136,.9); animation:beat 1.6s ease-in-out infinite; }
+    .burst { position:fixed; z-index:130; width:16px; height:16px; margin:-8px 0 0 -8px; pointer-events:none; background:center/contain no-repeat; animation:burst .9s cubic-bezier(.15,.8,.3,1) forwards; }
+    .burst.h { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z' fill='%23ff5b88'/%3E%3C/svg%3E"); }
+    .burst.s { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z' fill='%23ffd479'/%3E%3C/svg%3E"); }
+    @keyframes burst { from { transform:translate(0,0) scale(.3); opacity:1; } to { transform:translate(var(--dx),var(--dy)) scale(var(--s)); opacity:0; } }
+    .foods { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0 8px; }
+    .food { display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 4px 10px; border-radius:20px; background:var(--surface-2); border:1px solid var(--line); font-size:.78rem; font-weight:800; color:var(--muted); transition:transform .15s cubic-bezier(.2,1.4,.4,1), border-color .15s, box-shadow .15s; }
+    .food svg { display:block; width:46px; height:46px; }
+    .food:hover, .food:focus-visible { border-color:var(--pink); box-shadow:0 0 18px -4px rgba(255,91,136,.55); }
+    .food:active { transform:scale(.9); }
+    .fly-food { position:fixed; z-index:140; width:48px; height:48px; pointer-events:none; }
+    .fly-food svg { display:block; width:100%; height:100%; }
+
+    /* ---- Milestones, streak, unlocks ------------------------------------------------------------------ */
+    .ms-card { display:grid; grid-template-columns:1fr 1fr; gap:14px 10px; width:100%; margin:0; padding:16px 14px 14px; text-align:center; cursor:pointer; color:inherit; transition:transform .14s ease; }
+    .ms-card:active { transform:scale(.985); }
+    .ms-head { grid-column:1/-1; display:flex; align-items:baseline; justify-content:space-between; padding:0 4px; text-align:left; }
+    .ms-head b { font-size:1.05rem; font-weight:800; letter-spacing:-.01em; }
+    .ms-more { font-size:.78rem; font-weight:800; color:var(--accent-text); }
+    .ms-item { display:grid; justify-items:center; align-content:start; gap:10px; min-width:0; }
+    .ms-ring { position:relative; display:block; width:96px; height:96px; }
+    .ms-ring svg { display:block; width:100%; height:100%; transform:rotate(-90deg); overflow:visible; }
+    .ring-bg { fill:none; stroke:rgba(140,110,170,.18); stroke-width:8; }
+    .ring-fg { fill:none; stroke-width:8; stroke-linecap:round; stroke-dasharray:251.33; stroke-dashoffset:251.33; transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1); filter:drop-shadow(0 0 5px rgba(255,91,136,.45)); }
+    .ms-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1; }
+    .ms-center b { font-size:1.4rem; font-weight:900; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+    .ms-center small { margin-top:2px; font-size:.64rem; font-weight:700; color:var(--muted); }
+    .ms-label { display:grid; gap:2px; min-width:0; }
+    .ms-label b { font-size:.9rem; font-weight:800; }
+    .ms-label small { font-size:.72rem; line-height:1.3; color:var(--muted); font-weight:600; }
+    .ms-foot { grid-column:1/-1; padding-top:2px; font-size:.82rem; font-weight:700; color:var(--muted); }
+    .ms-list { display:grid; gap:8px; margin-top:12px; }
+    .ms-row { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:16px; background:var(--surface-2); border:1px solid var(--line); }
+    .ms-dot { flex:none; display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--line); color:var(--muted); font-size:.8rem; font-weight:900; }
+    .ms-row b { display:block; font-size:.92rem; font-weight:800; }
+    .ms-row small { display:block; font-size:.74rem; color:var(--muted); font-weight:600; }
+    .ms-when { margin-left:auto; flex:none; font-size:.74rem; font-weight:800; color:var(--muted); }
+    .ms-row.done .ms-dot { background:linear-gradient(135deg,#ff5b88,#9d7bff); color:#fff; }
+    .ms-row.next { border-color:var(--pink); box-shadow:0 0 18px -6px rgba(255,91,136,.6); }
+    .ms-row.next .ms-dot { background:var(--accent-soft); color:var(--accent-text); }
+    .unlock { display:block; margin-top:5px; font-size:.7rem; font-weight:700; opacity:.85; }
+    .streak { flex:none; display:grid; justify-items:center; align-content:center; min-width:58px; margin-left:auto; padding:6px 8px; border-radius:16px; background:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.7); line-height:1.05; }
+    body.dark .streak { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.14); }
+    .streak b { font-size:1.35rem; font-weight:900; font-variant-numeric:tabular-nums; }
+    .streak small { font-size:.58rem; font-weight:800; opacity:.75; text-transform:uppercase; letter-spacing:.04em; }
+    .streak.alive { border-color:rgba(255,91,136,.7); box-shadow:0 0 16px -2px rgba(255,91,136,.55); }
+    .streak.alive b { background:linear-gradient(135deg,#ff5b88,#ffd479); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+    /* ---- Daily question: a card that flips once you have both answered ---------------------------------- */
+    .dq { padding:16px; overflow:hidden; }
+    .dq-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .dq-head b { font-size:1.05rem; font-weight:800; letter-spacing:-.01em; }
+    .dq-state { flex:none; padding:3px 10px; border-radius:999px; background:var(--accent-soft); color:var(--accent-text); font-size:.72rem; font-weight:800; }
+    .dq-flip { perspective:1100px; }
+    .dq-inner { display:grid; transform-style:preserve-3d; transition:transform .85s cubic-bezier(.3,1.15,.4,1); }
+    .dq-inner.flipped { transform:rotateY(180deg); }
+    .dq-face { grid-area:1/1; display:grid; gap:12px; align-content:start; padding:16px; border-radius:20px; border:1px solid var(--line); -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+    .dq-front { background:linear-gradient(150deg,rgba(255,91,136,.13),rgba(157,123,255,.16)); }
+    .dq-back { transform:rotateY(180deg); background:linear-gradient(150deg,rgba(255,212,121,.2),rgba(255,91,136,.15)); }
+    .dq-q { font-size:1.04rem; font-weight:800; line-height:1.35; }
+    .dq-form { display:grid; gap:10px; }
+    .dq-form textarea { min-height:64px; resize:none; }
+    .dq-wait { display:flex; align-items:flex-start; gap:10px; font-size:.9rem; font-weight:700; line-height:1.35; }
+    .dq-wait svg { flex:none; width:22px; height:22px; fill:none; stroke:var(--accent-text); stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+    .dq-wait i { display:block; margin-top:2px; font-style:normal; font-weight:600; color:var(--muted); overflow-wrap:anywhere; }
+    .dq-hint { font-size:.78rem; font-weight:600; color:var(--muted); line-height:1.4; }
+    .dq-answers { display:grid; gap:10px; }
+    .dq-ans { padding:10px 12px; border-radius:16px; background:rgba(255,255,255,.55); border-left:3px solid var(--pink); }
+    body.dark .dq-ans { background:rgba(255,255,255,.08); }
+    .dq-ans.them { border-left-color:var(--purple); }
+    .dq-ans small { font-size:.66rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+    .dq-ans p { margin:2px 0 0; font-size:.96rem; line-height:1.4; overflow-wrap:anywhere; }
+    @media (prefers-reduced-motion:reduce) { .dq-inner { transition:none; } }
+
+    /* ---- Heart lock ------------------------------------------------------------------------------------- */
+    dialog.lock { width:100%; max-width:none; height:100%; max-height:none; margin:0; padding:0; border:0; color:var(--ink); background:linear-gradient(160deg,var(--bg),var(--bg-2)); }
+    dialog.lock[open] { display:grid; place-items:center; overflow:auto; }
+    dialog.lock::backdrop { background:transparent; backdrop-filter:none; }
+    .lock-card { width:min(100%,340px); padding:24px 20px calc(24px + env(safe-area-inset-bottom)); text-align:center; }
+    .lock-card h2 { margin-top:2px; font-size:1.4rem; font-weight:800; }
+    .lock-card .btn { margin-top:10px; min-height:40px; }
+    .lock-dots { display:flex; justify-content:center; gap:14px; margin:16px 0 20px; }
+    .lock-dots i { width:15px; height:15px; border-radius:50%; border:2px solid var(--pink); transition:background .15s, box-shadow .15s, transform .15s; }
+    .lock-dots i.on { background:var(--pink); box-shadow:0 0 14px rgba(255,91,136,.85); transform:scale(1.12); }
+    .lock-dots.shake { animation:lockShake .45s; }
+    @keyframes lockShake { 20%,60% { transform:translateX(-9px); } 40%,80% { transform:translateX(9px); } }
+    .lock-pad { display:grid; grid-template-columns:repeat(3,66px); justify-content:center; gap:12px; }
+    .lock-pad button { height:66px; border-radius:50%; font-size:1.55rem; font-weight:700; background:var(--surface-2); border:1px solid var(--line); transition:transform .1s, background .15s, box-shadow .15s; }
+    .lock-pad button:active { transform:scale(.9); background:var(--accent-soft); box-shadow:0 0 18px -4px rgba(255,91,136,.6); }
+    .lock-pad button:disabled { opacity:.4; }
+    .lock-pad .blank { visibility:hidden; }
+    .lock-pad .back svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
   </style>
 </head>
 <body>
-  <script>try { var savedDark = localStorage.getItem("ty-dark-mode"); if (savedDark === "1" || (savedDark === null && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark"); } catch (error) {}</script>
+  <script>try { var savedDark = localStorage.getItem("ty-dark-mode"); if (savedDark !== "0") document.body.classList.add("dark"); } catch (error) {}</script>
 
   <!-- Shared drawing parts for the two heart characters -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -558,10 +694,12 @@
     </div>
   </div>
 
+  <div class="ambient" aria-hidden="true"><i class="h"></i><i class="s"></i><i class="h"></i><i class="h"></i><i class="s"></i><i class="h"></i><i class="s"></i><i class="h"></i></div>
+
   <!-- The app -->
   <main class="app hidden" id="app">
     <header class="topbar">
-      <div class="brand"><img class="logo" src="icon-192.png" alt="" width="34" height="34"> TW</div>
+      <div class="brand"><span class="couple" aria-hidden="true"><span class="av" id="youAvatarTop"></span><span class="av" id="themAvatarTop"></span></span>TW</div>
       <div class="presence" id="presenceChip"><span class="presence-dot" id="presenceDot"></span><span id="presenceLabel">Connecting…</span></div>
       <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     </header>
@@ -612,12 +750,56 @@
             <div class="mood-names" id="moodNames"><span><b>You</b><small id="youMoodLabel"></small></span><span><b>Partner</b><small id="themMoodLabel"></small></span></div>
             <p class="mood-line" id="moodLine"></p>
             <div class="scene-pills">
-              <div class="glass-pill"><span class="pill-ico" data-ico="pill-level" aria-hidden="true"></span><span class="pill-text"><b id="levelName">Just started</b><small>Level <span id="levelNum">1</span> · <span id="effortCount">0</span> pts · <span id="levelNext"></span></small><span class="level-bar" role="progressbar" aria-label="Progress to the next love level" aria-valuemin="0" aria-valuemax="100" id="levelBar"><span id="levelFill"></span></span></span></div>
-              <button class="glass-pill" id="sinceBtn" type="button"><span class="pill-ico" data-ico="pill-days" aria-hidden="true"></span><span class="pill-text"><b id="sinceNum">Set your day</b><small id="sinceSub">Count your days together</small></span></button>
+              <div class="glass-pill"><span class="pill-ico" data-ico="pill-level" aria-hidden="true"></span><span class="pill-text"><b id="levelName">Just started</b><small>Level <span id="levelNum">1</span> · <span id="effortCount">0</span> pts · <span id="levelNext"></span></small><span class="level-bar" role="progressbar" aria-label="Progress to the next love level" aria-valuemin="0" aria-valuemax="100" id="levelBar"><span id="levelFill"></span></span><small class="unlock" id="levelUnlock"></small></span><span class="streak" id="streakBadge" title="Answer the daily question or feed Mochi together to keep your streak. Bonus points at 3, 7, 14 and 30 days."><b id="streakNum">0</b><small>day streak</small></span></div>
             </div>
-            <button class="glass-pill come-closer" id="approach" type="button" aria-pressed="false">Come closer</button>
+            <div class="hero-actions">
+              <button class="glow-pill" id="loveBtn" type="button" data-moment="love"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z" fill="currentColor"/></svg>Send love</button>
+              <button class="glass-pill come-closer" id="approach" type="button" aria-pressed="false">Come closer</button>
+            </div>
           </div>
         </div>
+
+        <section class="home-section ms-section">
+          <button class="card ms-card" id="msCard" type="button" aria-label="Open your milestones">
+            <span class="ms-head"><b>Milestones</b><span class="ms-more" id="msMore">See all ›</span></span>
+            <span class="ms-item">
+              <span class="ms-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="ringGA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5b88"/><stop offset="1" stop-color="#9d7bff"/></linearGradient></defs><circle class="ring-bg" cx="50" cy="50" r="40"/><circle class="ring-fg" id="msFgA" cx="50" cy="50" r="40" stroke="url(#ringGA)"/></svg><span class="ms-center"><b id="msCenterA">–</b><small id="msUnitA">days to go</small></span></span>
+              <span class="ms-label"><b id="msTitleA">Set your day</b><small id="msSubA">Count your days together</small></span>
+            </span>
+            <span class="ms-item">
+              <span class="ms-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="ringGB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd479"/><stop offset="1" stop-color="#ff5b88"/></linearGradient></defs><circle class="ring-bg" cx="50" cy="50" r="40"/><circle class="ring-fg" id="msFgB" cx="50" cy="50" r="40" stroke="url(#ringGB)"/></svg><span class="ms-center"><b id="msCenterB">–</b><small id="msUnitB">days to go</small></span></span>
+              <span class="ms-label"><b id="msTitleB">Anniversary</b><small id="msSubB">Next one is waiting</small></span>
+            </span>
+            <span class="ms-foot" id="msFoot">Tap to set the day you got together</span>
+          </button>
+        </section>
+
+        <section class="home-section dq-section">
+          <div class="card dq" id="dqCard">
+            <div class="dq-head"><b>Daily question for two</b><span class="dq-state" id="dqState">Open today</span></div>
+            <div class="dq-flip">
+              <div class="dq-inner" id="dqInner">
+                <div class="dq-face dq-front" id="dqFront">
+                  <p class="dq-q" id="dqQ"></p>
+                  <div class="dq-form" id="dqForm">
+                    <textarea id="dqInput" maxlength="140" rows="2" placeholder="Your answer…" aria-label="Your answer to today’s question"></textarea>
+                    <button class="btn wide" id="dqSend" type="button">Lock in my answer</button>
+                  </div>
+                  <div class="dq-wait hidden" id="dqWait"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Locked in <i id="dqMine"></i></span></div>
+                  <p class="dq-hint" id="dqHint"></p>
+                </div>
+                <div class="dq-face dq-back" id="dqBack">
+                  <p class="dq-q" id="dqQ2"></p>
+                  <div class="dq-answers">
+                    <div class="dq-ans you"><small>You</small><p id="dqAnsYou"></p></div>
+                    <div class="dq-ans them"><small>Partner</small><p id="dqAnsThem"></p></div>
+                  </div>
+                  <p class="dq-hint">A new question arrives tomorrow.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section class="home-section hidden" id="photoPrompt">
           <button class="feature feature-photo" id="featPhotos" type="button"><span class="feat-emoji" data-ico="feat-photos" aria-hidden="true"></span><span class="feat-text"><b id="featPhotosTitle">Add your photos</b><small id="featPhotosSub">Get a cute couple portrait for your home screen</small></span><span class="feat-go" aria-hidden="true">›</span></button>
@@ -843,6 +1025,9 @@
       <div class="setting"><span id="notifyStatusLabel">Notifications: not turned on yet</span><button class="btn soft" id="enableNotify" type="button" style="min-height:38px;padding:0 14px">Enable</button></div>
       <div class="setting hidden" id="notifyTestRow"><span>Send a test to this phone</span><button class="btn soft" id="testNotify" type="button" style="min-height:38px;padding:0 14px">Test</button></div>
       <p class="privacy-note hidden" id="notifyHint" style="margin-top:8px"></p>
+      <div class="setting"><label for="lockToggle">Heart lock (4-digit code)</label><input class="switch" id="lockToggle" type="checkbox"></div>
+      <div class="setting hidden" id="lockChangeRow"><span>Change your lock code</span><button class="btn soft" id="lockChange" type="button" style="min-height:38px;padding:0 14px">Change</button></div>
+      <p class="privacy-note" style="margin-top:8px">The Heart lock hides TW on this phone when you open it or come back after a minute away. It’s a screen lock, not encryption.</p>
       <div class="setting"><span>Our connection code</span><span class="code-chip" id="settingsCode">—</span></div>
       <div class="sheet-actions">
         <button class="btn soft wide" id="downloadBtn" type="button">Install the app</button>
@@ -859,6 +1044,39 @@
     <div class="row"><button class="btn ghost" id="confirmCancel" type="button">Cancel</button><button class="btn" id="confirmOk" type="button">OK</button></div>
   </dialog>
   <!-- Our photos and couple portrait -->
+  <!-- Heart lock -->
+  <dialog id="lockScreen" class="lock" aria-labelledby="lockTitle">
+    <div class="lock-card">
+      <img class="logo big" src="icon-192.png" alt="" width="72" height="72">
+      <h2 id="lockTitle">TW is locked</h2>
+      <p class="muted" id="lockSub">Enter your 4-digit code</p>
+      <div class="lock-dots" id="lockDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="lock-pad" id="lockPad"></div>
+      <button class="btn ghost wide" id="lockForgot" type="button">Forgot the code? Log out</button>
+      <button class="btn ghost wide hidden" id="lockCancel" type="button">Cancel</button>
+    </div>
+  </dialog>
+
+  <!-- Milestones -->
+  <dialog id="msDialog" class="sheet" aria-labelledby="msTitle">
+    <div class="sheet-head"><h2 id="msTitle">Our milestones</h2><button class="icon-btn" id="closeMs" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body"><div class="ms-list" id="msList"></div><button class="btn soft wide" id="msChange" type="button" style="margin-top:14px">Change our day</button></div>
+  </dialog>
+
+  <!-- Feed Mochi -->
+  <dialog id="feedSheet" class="sheet" aria-labelledby="feedTitle">
+    <div class="sheet-head"><h2 id="feedTitle">Feed Mochi</h2><button class="icon-btn" id="closeFeed" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body">
+      <p class="muted" id="feedHint">Pick a treat. Mochi is happiest when you both feed it today.</p>
+      <div class="foods" id="foods">
+        <button class="food" type="button" data-food="mochi"><span data-ico="food-mochi" aria-hidden="true"></span>Mochi</button>
+        <button class="food" type="button" data-food="berry"><span data-ico="food-berry" aria-hidden="true"></span>Berry</button>
+        <button class="food" type="button" data-food="boba"><span data-ico="food-boba" aria-hidden="true"></span>Boba</button>
+        <button class="food" type="button" data-food="cookie"><span data-ico="food-cookie" aria-hidden="true"></span>Cookie</button>
+      </div>
+    </div>
+  </dialog>
+
   <dialog id="photoDialog" class="sheet" aria-labelledby="photoTitle">
     <div class="sheet-head"><h2 id="photoTitle">Our couple portrait</h2><button class="icon-btn" id="closePhotos" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <div class="sheet-body">
@@ -927,7 +1145,7 @@
     function setDarkMode(enabled,persist){
       document.body.classList.toggle("dark",enabled);
       $("darkToggle").checked=enabled;
-      document.querySelector('meta[name="theme-color"]').content=enabled?"#121014":"#fdf4f8";
+      document.querySelector('meta[name="theme-color"]').content=enabled?"#110E1B":"#fdf4f8";
       if(persist) store.set("ty-dark-mode",enabled?"1":"0");
     }
     setDarkMode(document.body.classList.contains("dark"),false);
@@ -936,10 +1154,10 @@
     // ---- State -------------------------------------------------------------------------------------------
     let authUser=null, coupleId=null, partnerUid=null, members=[], coupleUnsubs=[];
     // Each flag flips after a listener's first snapshot, so only changes that arrive after that can notify.
-    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"" };
+    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"", streak:-1, dq:"" };
     let assignedForMe=null, worldLevel=0, lastPet=null;
     let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
-    let lastPresence={};
+    let lastPresence={}, lastShared={}, lastMoods={};
     let typingTimer=null, typingSentAt=0, audioCtx=null, selectedSnapData=null;
     let currentSnap=null, openingSnap=false, deferredInstallPrompt=null, swipeStartX=0, swipeStartY=0, swipeBlocked=false, toastTimer=null;
     const genderCache={}, genderTried={}, purging=new Set(), scoring=new Set(), celebratedTrivia=new Set();
@@ -1166,6 +1384,75 @@
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshNotifyUi(); });
     refreshNotifyUi();
 
+    // ---- Heart lock: an optional 4-digit screen lock for this phone --------------------------------------------
+    // Only a salted hash of the code is kept (in this browser, never online). It hides TW; it does not encrypt anything.
+    const LOCK_KEY="ty-lock", LOCK_AFTER_MS=60000;
+    let lockMode="unlock", lockCode="", lockFirst="", lockFails=0, lockUntil=0, lockHiddenAt=0, lockBusy=false;
+    const lockStored=()=>store.get(LOCK_KEY)||"";
+    async function lockHash(code,salt){ const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(salt+":"+code)); return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+    function refreshLockUi(){ $("lockToggle").checked=!!lockStored(); $("lockChangeRow").classList.toggle("hidden",!lockStored()); }
+    function lockPaint(message,shake){
+      [...$("lockDots").children].forEach((dot,i)=>dot.classList.toggle("on",i<lockCode.length));
+      if(message) $("lockSub").textContent=message;
+      if(shake){ $("lockDots").classList.remove("shake"); void $("lockDots").offsetWidth; $("lockDots").classList.add("shake"); haptic([40,40,40]); }
+    }
+    function showLock(mode){
+      lockMode=mode; lockCode=""; lockFirst=""; lockBusy=false;
+      $("lockTitle").textContent=mode==="unlock"?"TW is locked":mode==="disable"?"Turn off the lock":mode==="change"?"Change your code":"Set a lock code";
+      $("lockForgot").classList.toggle("hidden",mode!=="unlock"); $("lockCancel").classList.toggle("hidden",mode==="unlock");
+      lockPaint(mode==="set1"?"Choose a 4-digit code":"Enter your 4-digit code");
+      openDialog($("lockScreen"));
+    }
+    const hideLock=()=>{ lockCode=""; closeDialog($("lockScreen")); refreshLockUi(); };
+    async function lockSubmit(){
+      const code=lockCode; lockBusy=true;
+      try {
+        if(lockMode==="set1"){ lockFirst=code; lockCode=""; lockMode="set2"; lockPaint("Repeat the code to confirm"); return; }
+        if(lockMode==="set2"){
+          if(code!==lockFirst){ lockCode=""; lockFirst=""; lockMode="set1"; lockPaint("Those didn’t match — choose a code again",true); return; }
+          const salt=randomId()+randomId(); store.set(LOCK_KEY,salt+":"+await lockHash(code,salt));
+          hideLock(); toast("Heart lock is on"); return;
+        }
+        if(Date.now()<lockUntil){ lockCode=""; lockPaint(`Too many tries — wait ${Math.ceil((lockUntil-Date.now())/1000)}s`,true); return; }
+        const [salt,hash]=lockStored().split(":");
+        if(salt && hash && await lockHash(code,salt)===hash){
+          lockFails=0;
+          if(lockMode==="unlock"){ hideLock(); return; }
+          if(lockMode==="disable"){ store.set(LOCK_KEY,""); hideLock(); toast("Heart lock is off"); return; }
+          lockMode="set1"; lockCode=""; lockPaint("Choose a new 4-digit code"); return;   // change
+        }
+        lockCode=""; lockFails++;
+        if(lockFails>=5){ lockFails=0; lockUntil=Date.now()+30000; lockPaint("Too many tries — wait 30s",true); } else lockPaint("Wrong code — try again",true);
+      } finally { lockBusy=false; if(lockMode!=="set1" || lockCode.length===0) lockPaint(); }
+    }
+    function lockKey(key){
+      if(lockBusy || !$("lockScreen").open) return;
+      if(key==="back") lockCode=lockCode.slice(0,-1);
+      else if(/^\d$/.test(key) && lockCode.length<4) lockCode+=key;
+      else return;
+      haptic([8]); lockPaint();
+      if(lockCode.length===4) lockSubmit();
+    }
+    ["1","2","3","4","5","6","7","8","9","","0","back"].forEach(key=>{
+      const button=document.createElement("button"); button.type="button";
+      if(key==="") button.className="blank", button.disabled=true, button.tabIndex=-1;
+      else if(key==="back"){ button.className="back"; button.setAttribute("aria-label","Delete"); button.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-6-6 6-6Z"/><path d="M12.5 10l4 4M16.5 10l-4 4"/></svg>'; }
+      else button.textContent=key;
+      button.onclick=()=>lockKey(key); $("lockPad").appendChild(button);
+    });
+    $("lockScreen").addEventListener("keydown",event=>{ if(/^\d$/.test(event.key)) lockKey(event.key); else if(event.key==="Backspace") lockKey("back"); });
+    $("lockScreen").addEventListener("cancel",event=>{ if(lockMode==="unlock") event.preventDefault(); else { lockCode=""; refreshLockUi(); } });
+    $("lockCancel").onclick=hideLock;
+    $("lockForgot").onclick=async()=>{ store.set(LOCK_KEY,""); hideLock(); await removePushDevice(coupleId); signOut(auth); toast("Signed out — the lock was reset"); };
+    $("lockToggle").onchange=()=>{ const wantOn=$("lockToggle").checked; $("lockToggle").checked=!!lockStored(); closeDialog($("settingsDialog")); showLock(wantOn?"set1":"disable"); };
+    $("lockChange").onclick=()=>{ closeDialog($("settingsDialog")); showLock("change"); };
+    document.addEventListener("visibilitychange",()=>{
+      if(document.hidden){ lockHiddenAt=Date.now(); return; }
+      if(lockStored() && authUser && !$("lockScreen").open && lockHiddenAt && Date.now()-lockHiddenAt>LOCK_AFTER_MS) showLock("unlock");
+    });
+    refreshLockUi();
+    if(lockStored()) showLock("unlock");
+
     // ---- Screens -----------------------------------------------------------------------------------------
     function showPanel(name){
       $("authScreen").classList.remove("hidden"); $("app").classList.add("hidden");
@@ -1277,7 +1564,7 @@
     }
     onAuthStateChanged(auth,user=>{
       authUser=user; teardown(); closeDialog($("settingsDialog"));
-      if(!user){ $("authPassword").value=""; showPanel("login"); hideSplash(); return; }
+      if(!user){ $("authPassword").value=""; if($("lockScreen").open && lockMode==="unlock") hideLock(); showPanel("login"); hideSplash(); return; }
       enterApp();
     });
 
@@ -1285,7 +1572,7 @@
       const previousCouple=coupleId;
       teardown();
       coupleId=id;
-      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"" };
+      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"", streak:-1, dq:"" };
       surpriseShown=false; bouquetShown=false; sharedApproach=false; prevApproach=false; lastTriviaSig="";
       celebratedTrivia.clear(); scoring.clear(); purging.clear();
       $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show"); setActiveTab("home");
@@ -1318,6 +1605,7 @@
         return;
       }
       const data=snap.data(), shared=data.shared||{}, me=authUser.uid, live=seen.ready, previousPartner=partnerUid;
+      lastShared=shared;
       members=data.members||[];
       partnerUid=members.find(uid=>uid!==me)||null;
       if(partnerUid!==previousPartner && partnerUid) delete genderTried[partnerUid];
@@ -1354,13 +1642,13 @@
       lastTapBest=shared.tapBest||0; onTapState(shared.tap,live);
       onMemoryState(shared.memory,live);
       onWheelState(shared.wheel,live);
-      renderMoods(shared.moods||{},live); renderSince(shared.since); renderLevel(data.effort||0,live);
+      renderMoods(shared.moods||{},live); renderSince(shared.since); renderLevel(data.effort||0,live); renderStreak(shared,live); renderDaily(shared,live);
       const moment=shared.lastMoment, momentKey=moment?moment.emoji+"|"+millis(moment.at):"";
       if(live && moment && moment.by!==me && momentKey!==seen.moment){ confettiBurst([moment.emoji],16); playAnim($("themFace"),"wiggle",800); playChime("pop"); }
       seen.moment=momentKey;
       lastPet=shared.pet||null; renderPet(lastPet,live);
       renderHero();
-      lastPresence=shared.presence||{}; renderPresence();
+      lastPresence=shared.presence||{}; renderPresence(); renderSignal();
 
       const task=shared.customTask;
       renderAssignedTask(task);
@@ -1381,15 +1669,15 @@
     setInterval(heartbeat,20000);
     function renderPresence(){
       const dot=$("presenceDot"), label=$("presenceLabel"), typing=$("typingIndicator");
-      if(!coupleId || !partnerUid){ dot.classList.remove("online"); label.textContent="Waiting for partner"; typing.textContent=""; return; }
+      if(!coupleId || !partnerUid){ dot.classList.remove("online"); $("themAvatarTop").classList.remove("online"); label.textContent="Waiting for partner"; typing.textContent=""; return; }
       const info=lastPresence[partnerUid]||{}, atMs=millis(info.at);
       const online=!!atMs && (Date.now()-atMs)<PRESENCE_TTL_MS;
-      dot.classList.toggle("online",online);
+      dot.classList.toggle("online",online); $("themAvatarTop").classList.toggle("online",online);
       label.textContent=online?"Partner online":(atMs?"Last seen "+timeAgo(atMs):"Partner offline");
       typing.textContent=(info.typing && online) ? "Your partner is typing…" : "";
     }
     // Re-check now and then so "Online now" fades when the partner's heartbeats stop.
-    setInterval(()=>{ if(coupleId) renderPresence(); },10000);
+    setInterval(()=>{ if(coupleId){ renderPresence(); renderSignal(); } },10000);
     async function toggleReaction(msgId,emoji,alreadyReacted){
       if(!coupleId) return;
       try { await updateDoc(doc(db,"couples",coupleId,"messages",msgId),{[`reactions.${emoji}`]: alreadyReacted?arrayRemove(authUser.uid):arrayUnion(authUser.uid)}); } catch(error){}
@@ -1496,6 +1784,7 @@
         if(on){ btn.setAttribute("aria-current","page"); btn.querySelector(".dot").classList.add("hidden"); } else btn.removeAttribute("aria-current");
       });
       document.querySelectorAll(".view").forEach(panel=>panel.classList.toggle("active",panel.id===view));
+      $("tabbar").style.setProperty("--i",Math.max(0,tabOrder.indexOf(view)));
     }
     function openTab(view){
       const target=tabOrder.includes(view)?view:"home";
@@ -1598,7 +1887,7 @@
     function dayIndex(){ const now=new Date(), start=new Date(now.getFullYear(),0,0); return Math.floor((now-start)/86400000); }
     function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
     renderDailyTask();
-    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); renderWorld(false); } });
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); renderWorld(false); renderStreak(lastShared,false); renderDaily(lastShared,false); } });
     function renderAssignedTask(task){
       assignedForMe=task && authUser && task.forUid===authUser.uid ? task : null;
       const box=$("assignedTaskView");
@@ -1853,18 +2142,33 @@
 
     // A "moment" is a one-tap sweet message: it lands in your partner's activity and plays an animation on their screen.
     const moments={
-      hug:{emoji:"🤗",text:"🤗 Sending you a big hug"},
-      kiss:{emoji:"😘",text:"😘 Sending you a kiss"},
-      miss:{emoji:"🥺",text:"🥺 I miss you"},
-      proud:{emoji:"💪",text:"💪 I’m so proud of you"},
-      cheer:{emoji:"🎉",text:"🎉 You’re amazing!"}
+      hug:{emoji:"🤗",text:"🤗 Sending you a big hug",label:"a hug"},
+      kiss:{emoji:"😘",text:"😘 Sending you a kiss",label:"a kiss"},
+      miss:{emoji:"🥺",text:"🥺 I miss you",label:"“I miss you”"},
+      proud:{emoji:"💪",text:"💪 I’m so proud of you",label:"“I’m proud of you”"},
+      cheer:{emoji:"🎉",text:"🎉 You’re amazing!",label:"a cheer"},
+      love:{emoji:"💗",text:"💗 Thinking of you",label:"some love",burst:true,haptic:[16,50,16,50,30]}
     };
+    const haptic = pattern => { try { if(navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(pattern); } catch(error){} };
+    // A little burst of drawn hearts and sparkles flying out of whatever you tapped.
+    function burstFrom(el,count=14){
+      if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const box=el.getBoundingClientRect(), cx=box.left+box.width/2, cy=box.top+box.height/2;
+      for(let i=0;i<count;i++){
+        const piece=document.createElement("i"), angle=Math.PI*2*i/count+Math.random()*.5, dist=50+Math.random()*60;
+        piece.className="burst "+(i%3===0?"s":"h"); piece.setAttribute("aria-hidden","true");
+        piece.style.cssText=`left:${cx}px;top:${cy}px;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist-24}px;--s:${(.7+Math.random()*.9).toFixed(2)};animation-delay:${Math.round(Math.random()*70)}ms`;
+        document.body.appendChild(piece); setTimeout(()=>piece.remove(),1100);
+      }
+    }
     let momentCooldown=0;
     document.querySelectorAll("[data-moment]").forEach(button=>button.onclick=async()=>{
       const moment=moments[button.dataset.moment];
       if(!coupleId || Date.now()<momentCooldown) return;
       momentCooldown=Date.now()+1500;
-      confettiBurst([moment.emoji],10); playAnim($("themFace"),"wiggle",800); playChime("pop");
+      haptic(moment.haptic||[14]);
+      if(moment.burst) burstFrom(button,16); else confettiBurst([moment.emoji],10);
+      playAnim($("themFace"),"wiggle",800); playChime("pop");
       try {
         await Promise.all([share("poke",moment.text),updateDoc(coupleRef(),{"shared.lastPoke":moment.text,"shared.lastPokeBy":authUser.uid,"shared.lastPokeAt":serverTimestamp(),"shared.lastMoment":{emoji:moment.emoji,by:authUser.uid,at:serverTimestamp()}})]);
       } catch(error){ toast("Couldn't send that — try again"); }
@@ -1892,18 +2196,36 @@
       const label=entry=>entry?entry.label:"";
       ["youMoodLabel","youMoodLabel2"].forEach(id=>$(id).textContent=label(mine)); ["themMoodLabel","themMoodLabel2"].forEach(id=>$(id).textContent=label(theirs));
       document.querySelectorAll(".mood-chip").forEach(chip=>{ const on=!!mine && chip.dataset.mood===mine.key; chip.classList.toggle("selected",on); chip.setAttribute("aria-pressed",String(on)); });
-      let line="Tap your characters — they love attention.";
-      if(!partnerUid) line="Your partner’s mood will show up here once they join.";
-      else if(theirs){
-        const hint=["sad","stressed","tired","sick"].includes(theirs.key)?" Maybe send a hug? 🤗":"";
-        line=`Your partner is feeling ${theirs.label.toLowerCase()} ${theirs.emoji}${millis(theirs.at)?" · "+timeAgo(millis(theirs.at)):""}.${hint}`;
-      }
-      $("moodLine").textContent=line; $("moodLine").classList.toggle("idle",!theirs && !!partnerUid);
+      lastMoods=all; renderSignal();
       const key=theirs?theirs.key+"|"+millis(theirs.at):"";
       if(live && theirs && key!==seen.partnerMood){ playAnim($("themFace"),"wiggle",800); toast(`Your partner is feeling ${theirs.label.toLowerCase()} ${theirs.emoji}`); }
       seen.partnerMood=key;
     }
 
+    // One line about your partner right now: something sweet they sent, how they feel, or when they were last around.
+    function renderSignal(){
+      const el=$("moodLine"); if(!authUser) return;
+      let text="Tap your characters — they love attention.", state="idle";
+      if(!partnerUid){ text="Your partner’s signal will show up here once they join."; }
+      else {
+        const info=lastPresence[partnerUid]||{}, seenAt=millis(info.at), online=!!seenAt && Date.now()-seenAt<PRESENCE_TTL_MS;
+        const theirs=freshMood(lastMoods[partnerUid]), hour=new Date().getHours();
+        const moment=lastShared.lastMoment, momentAt=moment?millis(moment.at):0;
+        const sentAt=lastShared.lastPokeBy===partnerUid?millis(lastShared.lastPokeAt):0;
+        if(moment && moment.by===partnerUid && momentAt && Date.now()-momentAt<3*3600000){
+          const known=Object.values(moments).find(item=>item.emoji===moment.emoji);
+          text=`Sent you ${known?known.label:"something sweet"} · ${timeAgo(momentAt)}`; state="love";
+        } else if(sentAt && Date.now()-sentAt<3*3600000){ text=`Sent you a note · ${timeAgo(sentAt)}`; state="love"; }
+        else if(theirs){
+          const hint=["sad","stressed","tired","sick"].includes(theirs.key)?" — maybe send a hug?":"";
+          text=`Feeling ${theirs.label.toLowerCase()}${hint}`; state=online?"on":"idle";
+        }
+        else if(online){ text=hour>=23||hour<5?"Up late too — online now":"Online right now"; state="on"; }
+        else if(seenAt){ text=`Last seen ${timeAgo(seenAt)}`; }
+        else { text="Offline — say hi when they’re back"; }
+      }
+      el.textContent=text; el.className="mood-line "+state;
+    }
     // ---- The two heart characters, drawn as SVG so their faces follow your moods -----------------------
     const INK="#43284a";
     const stroke = (d,width=4.6) => `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -1959,6 +2281,10 @@
       // home cards
       "pill-days": mk("0 0 32 32",`<path d="${heartPath(16,15,11)}" fill="url(#gRose)"/><path d="M9 21q7 6 14 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>`),
       "pill-level": mk("0 0 32 32",`<path d="M9 6h14v6a7 7 0 0 1-14 0Z" fill="url(#gSun)"/><path d="M9 8H5.5a3 3 0 0 0 3.2 4.6M23 8h3.5a3 3 0 0 1-3.2 4.6" fill="none" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/><path d="M13 19h6v3h-6zM10.5 25h11" fill="#ffb347" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/>`),
+      "food-mochi": mk("0 0 48 48",`<ellipse cx="24" cy="40" rx="15" ry="3" fill="#2b1733" opacity=".14"/><path d="M7 31c0-12 7-19 17-19s17 7 17 19c0 5-5 8-17 8S7 36 7 31Z" fill="#fff6fa" stroke="#f1c3d4" stroke-width="2"/><path d="M8 32c1 4 6 6 16 6s15-2 16-6c-2 2-7 3-16 3S10 34 8 32Z" fill="#ffc6da" opacity=".7"/><ellipse cx="16" cy="21" rx="5.5" ry="3" fill="#fff" opacity=".85" transform="rotate(-28 16 21)"/><path d="M24 12.5c0-4 3-6.5 8-6.5-.8 4.5-3.5 6.5-8 6.5Z" fill="#6fd3a0"/><circle cx="18" cy="29" r="1.9" fill="#43284a"/><circle cx="30" cy="29" r="1.9" fill="#43284a"/><ellipse cx="14.5" cy="32" rx="3" ry="1.8" fill="#ffa6c1" opacity=".8"/><ellipse cx="33.5" cy="32" rx="3" ry="1.8" fill="#ffa6c1" opacity=".8"/><path d="M22 32.5q2 2.2 4 0" fill="none" stroke="#43284a" stroke-width="1.7" stroke-linecap="round"/>`),
+      "food-berry": mk("0 0 48 48",`<ellipse cx="24" cy="43" rx="12" ry="2.6" fill="#2b1733" opacity=".14"/><path d="M24 42C13 36 7 27 9 20c1.6-6.5 9-7.4 15-3 6-4.4 13.4-3.5 15 3 2 7-4 16-15 22Z" fill="#ff4d6d"/><path d="M13 22c1-4 5-5 9-3" fill="none" stroke="#ff8ea3" stroke-width="3" stroke-linecap="round" opacity=".8"/><g fill="#ffe08a"><ellipse cx="18" cy="26" rx="1.1" ry="1.7"/><ellipse cx="25" cy="24" rx="1.1" ry="1.7"/><ellipse cx="31" cy="27" rx="1.1" ry="1.7"/><ellipse cx="22" cy="32" rx="1.1" ry="1.7"/><ellipse cx="28" cy="33" rx="1.1" ry="1.7"/></g><path d="M14 15c3.4 2.4 6.6 2.6 10 .4 3.4 2.2 6.6 2 10-.4-1.6 4.8-5.2 7-10 7s-8.4-2.2-10-7Z" fill="#53c98a"/><path d="M24 15.4V8" stroke="#3aa870" stroke-width="2.6" stroke-linecap="round"/>`),
+      "food-boba": mk("0 0 48 48",`<ellipse cx="24" cy="44" rx="11" ry="2.4" fill="#2b1733" opacity=".14"/><path d="M28.5 3l-3.2 14" stroke="#ff7aa5" stroke-width="3" stroke-linecap="round"/><path d="M12 15h24l-2.8 25.2a3 3 0 0 1-3 2.8H17.8a3 3 0 0 1-3-2.8Z" fill="#fff7ee" stroke="#f0d9c6" stroke-width="1.8"/><path d="M13.4 27h21.2l-1.4 13.2a3 3 0 0 1-3 2.8H17.8a3 3 0 0 1-3-2.8Z" fill="#e2ad7e"/><g fill="#4a2c3a"><circle cx="19" cy="38.5" r="2.5"/><circle cx="25.5" cy="39.5" r="2.5"/><circle cx="31" cy="37.5" r="2.5"/><circle cx="22" cy="33.5" r="2.5"/><circle cx="28.5" cy="33" r="2.3"/></g><ellipse cx="24" cy="15" rx="12.4" ry="3.2" fill="#ffd5e3" stroke="#f3bcd0" stroke-width="1.6"/><path d="M16 21v6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>`),
+      "food-cookie": mk("0 0 48 48",`<ellipse cx="24" cy="42" rx="14" ry="3" fill="#2b1733" opacity=".14"/><circle cx="24" cy="24" r="17" fill="#e8ae66"/><path d="M10 31c4 6 11 8 18 6 6-1.800 9-6.500 10-11.500C35 33 25 37 10 31Z" fill="#d79a52" opacity=".7"/><ellipse cx="17" cy="15" rx="6" ry="3" fill="#f7cf93" opacity=".8" transform="rotate(-30 17 15)"/><g fill="#5a3426"><ellipse cx="18" cy="21" rx="3.2" ry="2.6" transform="rotate(20 18 21)"/><ellipse cx="29" cy="17" rx="3" ry="2.4" transform="rotate(-25 29 17)"/><ellipse cx="31" cy="28" rx="3.2" ry="2.6" transform="rotate(30 31 28)"/><ellipse cx="21" cy="31" rx="2.8" ry="2.3" transform="rotate(-15 21 31)"/><ellipse cx="25" cy="24" rx="2.2" ry="1.9"/></g>`),
       "feat-photos": mk("0 0 48 48",`<rect x="6" y="8" width="36" height="32" rx="7" fill="url(#gSun)"/><rect x="10.5" y="12.5" width="27" height="23" rx="4" fill="url(#gSky)"/><circle cx="31" cy="19" r="3.4" fill="#fff" opacity=".9"/><path d="${heartPath(21,27,7)}" fill="#fff"/>`)
     };
     const ico = name => ICONS[name] || "";
@@ -1974,6 +2300,8 @@
     function renderCharacters(){
       $("youFace").innerHTML=charSvg("you",charState.youMood,charState.youGender);
       $("themFace").innerHTML=partnerUid?charSvg("them",charState.themMood,charState.themGender):charSvg("ghost");
+      $("youAvatarTop").innerHTML=charSvg("you","happy",charState.youGender);
+      $("themAvatarTop").innerHTML=partnerUid?charSvg("them","happy",charState.themGender):charSvg("ghost");
     }
 
     // ---- Our little world: a scene that follows the time of day and grows as you level up --------------------
@@ -2045,7 +2373,28 @@
     setInterval(()=>renderWorld(false),60000);
 
     // ---- The shared pet ----------------------------------------------------------------------------------
-    const dayKey = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+    const dayKeyOf = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    const dayKey = () => dayKeyOf(new Date());
+    // The streak counts days in a row on which you did something together (fed Mochi, answered the daily question).
+    const STREAK_BONUS_DAYS=[3,7,14,30,60,100];
+    function yesterdayKey(){ const d=new Date(); d.setDate(d.getDate()-1); return dayKeyOf(d); }
+    function nextStreak(shared,today){
+      const cur=shared.streak||{};
+      if(cur.last===today) return null;
+      const count=cur.last===yesterdayKey()?(cur.count||0)+1:1;
+      return { count, last:today, bonus:STREAK_BONUS_DAYS.includes(count)?3:0 };
+    }
+    function renderStreak(shared,live){
+      const cur=shared.streak||{}, keptToday=cur.last===dayKey(), alive=keptToday||cur.last===yesterdayKey(), count=alive?(cur.count||0):0;
+      $("streakNum").textContent=count; $("streakBadge").classList.toggle("alive",keptToday);
+      $("streakBadge").setAttribute("aria-label",`${count}-day streak${keptToday?", kept today":""}`);
+      if(live && seen.streak>=0 && count>seen.streak && count>0){
+        const bonus=STREAK_BONUS_DAYS.includes(count);
+        toast(bonus?`${count}-day streak — bonus points!`:`${count}-day streak`);
+        if(bonus){ confettiBurst(["💗","✨","🔥"],22); playChime("success"); }
+      }
+      seen.streak=count;
+    }
     function petSvg(state,level,night){
       const eyes=state==="hungry"
         ? `<path d="M-15 -2q5 4 10 0M5 -2q5 4 10 0" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`
@@ -2074,10 +2423,11 @@
       $("petBtn").innerHTML=petSvg(state,worldLevel,night); $("petBtn").dataset.state=state;
       $("feedBtn").textContent=fedMe?"Fed today":"Feed Mochi"; $("feedBtn").disabled=fedMe;
       const bubble=$("petBubble");
-      const text=state==="hungry"?"Mochi is hungry…":state==="full"?"Mochi is full and happy!":(fedMe?"Waiting for your partner to feed Mochi":"Your partner fed Mochi — your turn!");
+      const treat=foodNames[(pet&&pet.food&&pet.food[me])||""], theirTreat=foodNames[(pet&&pet.food&&partnerUid&&pet.food[partnerUid])||""];
+      const text=state==="hungry"?"Mochi is hungry…":state==="full"?"Mochi is full and happy!":(fedMe?`Yum, ${treat||"a treat"}! Waiting for your partner`:`Your partner gave Mochi ${theirTreat||"a treat"} — your turn!`);
       bubble.textContent=text; bubble.classList.toggle("hidden",false); bubble.classList.toggle("good",state==="full");
       const key=fedThem?today:"";
-      if(live && fedThem && key!==seen.petFed){ playAnim($("petBtn"),"squish",500); floatHeart($("petBtn"),"♥"); toast("Your partner fed Mochi"); }
+      if(live && fedThem && key!==seen.petFed){ playAnim($("petBtn"),"squish",500); floatHeart($("petBtn"),"♥"); toast(`Your partner fed Mochi ${foodNames[(pet&&pet.food&&pet.food[partnerUid])||""]||"a treat"}`); }
       seen.petFed=key;
       if(state==="full" && (pet?.awarded)!==today) awardPet(today);
     }
@@ -2089,16 +2439,33 @@
           const ref=coupleRef(), snap=await transaction.get(ref), pet=snap.data()?.shared?.pet||{}, fed=pet.fed||{};
           const both=(snap.data().members||[]).every(uid=>fed[uid]===today);
           if(!both || pet.awarded===today) return;
-          transaction.update(ref,{"shared.pet.awarded":today,effort:increment(2)});
+          const streak=nextStreak(snap.data().shared||{},today);
+          transaction.update(ref,{"shared.pet.awarded":today,effort:increment(2+(streak?streak.bonus:0)),...(streak?{"shared.streak":{count:streak.count,last:streak.last}}:{})});
         });
       } catch(error){}
     }
-    $("feedBtn").onclick=async()=>{
+    const foodNames={ mochi:"a mochi ball", berry:"a strawberry", boba:"boba tea", cookie:"a cookie" };
+    $("feedBtn").onclick=()=>{ if(coupleId && !$("feedBtn").disabled) openDialog($("feedSheet")); };
+    $("closeFeed").onclick=()=>closeDialog($("feedSheet"));
+    $("feedSheet").addEventListener("click",event=>{ if(event.target===$("feedSheet")) closeDialog($("feedSheet")); });
+    // The treat flies from the sheet to Mochi, then the feeding is saved for both of you.
+    function flyFood(key,from){
+      const a=from.getBoundingClientRect(), b=$("petBtn").getBoundingClientRect(), piece=document.createElement("span");
+      piece.className="fly-food"; piece.setAttribute("aria-hidden","true"); piece.innerHTML=ico("food-"+key);
+      piece.style.left=(a.left+a.width/2-24)+"px"; piece.style.top=(a.top+a.height/2-24)+"px"; document.body.appendChild(piece);
+      const dx=b.left+b.width/2-(a.left+a.width/2), dy=b.top+b.height/2-(a.top+a.height/2);
+      if(!piece.animate){ piece.remove(); return; }
+      piece.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:`translate(${dx*.45}px,${dy*.45-70}px) scale(1.3) rotate(110deg)`,opacity:1,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(.35) rotate(240deg)`,opacity:.2}],{duration:620,easing:"cubic-bezier(.4,0,.2,1)"}).onfinish=()=>piece.remove();
+      setTimeout(()=>piece.remove(),1200);
+    }
+    document.querySelectorAll(".food").forEach(button=>button.onclick=async()=>{
       if(!coupleId || $("feedBtn").disabled) return;
-      $("feedBtn").disabled=true; floatHeart($("petBtn"),"♥"); playAnim($("petBtn"),"squish",500); playChime("pop");
-      try { await updateDoc(coupleRef(),{[`shared.pet.fed.${authUser.uid}`]:dayKey()}); }
+      const key=button.dataset.food; $("feedBtn").disabled=true;
+      flyFood(key,button); closeDialog($("feedSheet")); haptic([12,30,12]);
+      setTimeout(()=>{ floatHeart($("petBtn"),"♥"); burstFrom($("petBtn"),8); playAnim($("petBtn"),"squish",500); playChime("pop"); },520);
+      try { await updateDoc(coupleRef(),{[`shared.pet.fed.${authUser.uid}`]:dayKey(),[`shared.pet.food.${authUser.uid}`]:key}); }
       catch(error){ $("feedBtn").disabled=false; toast("Couldn't feed Mochi — try again"); }
-    };
+    });
     $("petBtn").onclick=()=>{ playAnim($("petBtn"),"squish",500); floatHeart($("petBtn"),"♥"); playChime("pop"); };
 
     renderWorld(true);
@@ -2261,7 +2628,7 @@
     });
 
     // ---- Days together (from the day your story started) -------------------------------------------------
-    const milestones=[7,14,30,50,100,150,200,300,365,500,730,1000,1500,2000,3000];
+    const milestones=[7,14,30,50,100,150,200,300,365,500,730,1000,1500,2000,3000,4000,5000];
     let currentSince="";
     const startOfDay = d => new Date(d.getFullYear(),d.getMonth(),d.getDate());
     function parts(start,today){
@@ -2273,20 +2640,19 @@
     const plural = (n,word) => `${n} ${word}${n===1?"":"s"}`;
     function renderSince(since){
       renderSinceCore(since);
+      renderMilestones(since);
       $("worldDaysLabel").textContent=$("daysLabel").textContent; $("worldDaysBig").textContent=$("daysBig").textContent; $("worldDaysSub").textContent=$("daysSub").textContent.split(" · ")[0];
     }
     function renderSinceCore(since){
       currentSince=since||"";
-      const pill={ num:$("sinceNum"), sub:$("sinceSub") };
       if(!since){
-        pill.num.textContent="Set your day"; pill.sub.textContent="Count your days together";
         $("daysLabel").textContent="Your story"; $("daysBig").textContent="Set your day"; $("daysSub").textContent="Tap to count your days together 💞"; return;
       }
       const [y,m,d]=since.split("-").map(Number), start=new Date(y,m-1,d), today=startOfDay(new Date());
       const days=Math.round((today-start)/86400000);
       if(days<0){
         const text=`in ${plural(-days,"day")}`;
-        pill.num.textContent="Soon 💞"; pill.sub.textContent=text; $("daysLabel").textContent="Your story starts"; $("daysBig").textContent=text; $("daysSub").textContent=""; return;
+        $("daysLabel").textContent="Your story starts"; $("daysBig").textContent=text; $("daysSub").textContent=""; return;
       }
       const p=parts(start,today), breakdown=[p.y&&plural(p.y,"year"),p.m&&plural(p.m,"month"),p.d&&plural(p.d,"day")].filter(Boolean).join(", ");
       const nextMilestone=milestones.find(n=>n>days), toMilestone=nextMilestone?nextMilestone-days:Infinity;
@@ -2294,13 +2660,59 @@
       const toAnniversary=Math.round((anniversary-today)/86400000), nextAge=anniversary.getFullYear()-y;
       const upcoming=toAnniversary<=toMilestone?`${nextAge}-year anniversary in ${plural(toAnniversary,"day")}`:`${nextMilestone}-day milestone in ${plural(toMilestone,"day")}`;
       const big=days===0?"Day one":days.toLocaleString();
-      pill.num.textContent=days===0?"Day one 💞":`${days.toLocaleString()} days`; pill.sub.textContent=days===0?"Your story starts today":"Next: "+upcoming;
       $("daysLabel").textContent=days===0?"Today":"Together for"; $("daysBig").textContent=days===0?"Day one":`${big} days`;
       $("daysSub").textContent=days===0?"Your story starts today 💞":`${breakdown} · ${upcoming}`;
     }
     const openSince=()=>{ $("sinceInput").value=currentSince; $("sinceInput").max=new Date().toISOString().slice(0,10); openDialog($("sinceDialog")); };
-    $("sinceBtn").onclick=openSince; $("daysBtn").onclick=openSince; $("worldDaysBtn").onclick=openSince;
+    $("daysBtn").onclick=openSince; $("worldDaysBtn").onclick=openSince;
 
+
+    // ---- Milestones: two progress rings (next day-milestone, next anniversary) and a full list -------------
+    const RING=2*Math.PI*40, dayMs=86400000;
+    const addDays=(date,n)=>new Date(date.getFullYear(),date.getMonth(),date.getDate()+n);
+    const fmtDate=date=>date.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+    const setRing=(id,fraction)=>{ $(id).style.strokeDashoffset=String((RING*(1-Math.max(0,Math.min(1,fraction)))).toFixed(2)); };
+    function renderMilestones(since){
+      const blank=(a,b,foot)=>{ setRing("msFgA",0); setRing("msFgB",0); $("msCenterA").textContent="–"; $("msCenterB").textContent="–"; $("msUnitA").textContent="days to go"; $("msUnitB").textContent="days to go"; $("msTitleA").textContent=a; $("msSubA").textContent="Count your days together"; $("msTitleB").textContent="Anniversary"; $("msSubB").textContent=b; $("msFoot").textContent=foot; $("msMore").textContent=since?"See all ›":"Set it ›"; };
+      if(!since){ blank("Set your day","Your first one is coming","Tap to set the day you got together"); return; }
+      const [y,m,d]=since.split("-").map(Number), start=new Date(y,m-1,d), today=startOfDay(new Date()), days=Math.round((today-start)/dayMs);
+      if(days<0){ blank("Starts soon",`in ${plural(-days,"day")}`,"Your story hasn’t started yet 💞"); return; }
+      const nextN=milestones.find(n=>n>days), prevN=[...milestones].reverse().find(n=>n<=days)||0;
+      if(nextN){
+        setRing("msFgA",(days-prevN)/(nextN-prevN)); $("msCenterA").textContent=(nextN-days).toLocaleString(); $("msUnitA").textContent=nextN-days===1?"day to go":"days to go";
+        $("msTitleA").textContent=`${nextN.toLocaleString()} days`; $("msSubA").textContent=fmtDate(addDays(start,nextN));
+      } else { setRing("msFgA",1); $("msCenterA").textContent="∞"; $("msUnitA").textContent="and counting"; $("msTitleA").textContent="Every day counts"; $("msSubA").textContent="You’ve passed them all"; }
+      const onAnniversary=days>0 && today.getMonth()===m-1 && today.getDate()===d;
+      let next=new Date(today.getFullYear(),m-1,d); if(next<=today) next=new Date(today.getFullYear()+1,m-1,d);
+      let last=new Date(next.getFullYear()-1,m-1,d); if(last<start) last=start;
+      const toNext=Math.round((next-today)/dayMs), age=next.getFullYear()-y;
+      if(onAnniversary){ setRing("msFgB",1); $("msCenterB").textContent="Today"; $("msUnitB").textContent="🎉"; $("msTitleB").textContent=`${today.getFullYear()-y}-year anniversary`; $("msSubB").textContent="Happy anniversary!"; }
+      else { setRing("msFgB",(today-last)/(next-last)); $("msCenterB").textContent=toNext.toLocaleString(); $("msUnitB").textContent=toNext===1?"day to go":"days to go"; $("msTitleB").textContent=`${age}-year anniversary`; $("msSubB").textContent=fmtDate(next); }
+      const p=parts(start,today), breakdown=[p.y&&plural(p.y,"year"),p.m&&plural(p.m,"month"),p.d&&plural(p.d,"day")].filter(Boolean).join(", ");
+      $("msFoot").textContent=days===0?"Day one — your story starts today":`${breakdown||"Day one"} together · ${days.toLocaleString()} days`; $("msMore").textContent="See all ›";
+    }
+    function renderMilestoneList(){
+      const box=$("msList"); box.innerHTML="";
+      if(!currentSince){ box.innerHTML='<p class="muted center">Set the day you got together to see your milestones.</p>'; return; }
+      const [y,m,d]=currentSince.split("-").map(Number), start=new Date(y,m-1,d), today=startOfDay(new Date());
+      const items=milestones.map(n=>({ label:`${n.toLocaleString()} days`, date:addDays(start,n) })).concat(Array.from({length:40},(_,i)=>({ label:i===0?"1 year":`${i+1} years`, date:new Date(y+i+1,m-1,d) })));
+      items.sort((a,b)=>a.date-b.date);
+      const done=items.filter(item=>item.date<=today).slice(-4), upcoming=items.filter(item=>item.date>today).slice(0,7);
+      [...done,...upcoming].forEach((item,index)=>{
+        const reached=item.date<=today, isNext=!reached && index===done.length, away=Math.round((item.date-today)/dayMs);
+        const row=document.createElement("div"); row.className="ms-row"+(reached?" done":isNext?" next":"");
+        const dot=document.createElement("span"); dot.className="ms-dot"; dot.textContent=reached?"✓":"";
+        const text=document.createElement("div"), title=document.createElement("b"), sub=document.createElement("small");
+        title.textContent=item.label; sub.textContent=(reached?"Reached ":"")+fmtDate(item.date); text.appendChild(title); text.appendChild(sub);
+        row.appendChild(dot); row.appendChild(text);
+        if(!reached){ const when=document.createElement("span"); when.className="ms-when"; when.textContent=away===1?"tomorrow":`in ${away.toLocaleString()}d`; row.appendChild(when); }
+        box.appendChild(row);
+      });
+    }
+    $("msCard").onclick=()=>{ if(!currentSince){ openSince(); return; } renderMilestoneList(); openDialog($("msDialog")); };
+    $("closeMs").onclick=()=>closeDialog($("msDialog"));
+    $("msDialog").addEventListener("click",event=>{ if(event.target===$("msDialog")) closeDialog($("msDialog")); });
+    $("msChange").onclick=()=>{ closeDialog($("msDialog")); openSince(); };
 
     $("sinceCancel").onclick=()=>closeDialog($("sinceDialog"));
     $("sinceSave").onclick=async()=>{
@@ -2311,6 +2723,7 @@
     };
     $("sinceClear").onclick=async()=>{ closeDialog($("sinceDialog")); try { await updateDoc(coupleRef(),{"shared.since":""}); } catch(error){} };
 
+    const levelUnlocks=[null,"a taller tree & Mochi’s bow","a cozy little house","cherry blossoms","a rainbow & Mochi’s crown","twinkling fairy lights"];
     const levels=[{min:0,name:"Just started"},{min:15,name:"Sweethearts"},{min:40,name:"Cuddle Bugs"},{min:80,name:"Lovebirds"},{min:150,name:"Soulmates"},{min:300,name:"Forever Duo"}];
     function renderLevel(points,live){
       let index=levels.length-1; while(index>0 && points<levels[index].min) index--;
@@ -2318,9 +2731,70 @@
       $("effortCount").textContent=points; $("levelName").textContent=current.name; $("levelNum").textContent=index+1;
       $("levelFill").style.width=percent+"%"; $("levelBar").setAttribute("aria-valuenow",String(percent));
       $("levelNext").textContent=next?`${next.min-points} to go`:"top level 🎉";
+      $("levelUnlock").textContent=levelUnlocks[index+1]?`Next: ${levelUnlocks[index+1]}`:"Everything unlocked";
       if(live && seen.level>=0 && index>seen.level){ confettiBurst(["🎉","💗","✨","👑"],26); playChime("success"); toast(`Level up! You’re ${current.name}`); }
       seen.level=index; worldLevel=index; renderWorld(false); if(authUser) renderPet(lastPet,false);
     }
+
+    // ---- Daily question for two ------------------------------------------------------------------------------
+    const dailyQuestions=[
+      "What’s a small thing I do that makes you feel loved?","What’s your favorite memory of us so far?","Which song reminds you of us?","Where would you take us for a surprise weekend?",
+      "What’s something you’ve always wanted to try together?","What was the first thing you noticed about me?","What tiny ritual would you love us to start?","When did you last feel proud of us?",
+      "What’s your comfort food after a bad day?","What’s one thing I should never stop doing?","If we could live anywhere for a year, where would it be?","What’s your love language today: words, touch, time, gifts or help?",
+      "What’s the funniest thing that has happened to us?","What do you hope we’re doing in five years?","What made you smile today?","Which of my habits secretly makes you laugh?",
+      "Which movie would you rewatch with me forever?","What’s your dream date night, start to finish?","What’s one thing you’re grateful for about us?","What would you cook for me after a terrible day?",
+      "What’s the best compliment you’ve ever received?","What worried you about us at the very start?","What would our perfect rainy day look like?","What’s something about me you’d put in a time capsule?",
+      "How would you spend a lazy Sunday with me?","Which nickname of mine do you like most?","What’s a goal you’d love my help with?","Which trip of ours would you take all over again?",
+      "What do you miss most when we’re apart?","What’s something new you learned about me lately?","What’s a dream you haven’t told many people?","What would our theme song be?",
+      "What’s one thing you’d like us to do more often?","What’s your happiest childhood memory?","What food would you happily share with me?","If today were a movie scene with us, what happens?",
+      "What sweet message would you like to hear from me today?","What have we overcome that you’re proud of?","What’s your favorite thing about the way we talk?","What would you whisper to me if nobody could hear?"
+    ];
+    const dailyIndex=()=>dayIndex()%dailyQuestions.length;
+    function renderDaily(shared,live){
+      if(!authUser) return;
+      const me=authUser.uid, today=dayKey();
+      // A partner in a later time zone may already be on tomorrow's question; follow them instead of resetting it.
+      const dq=shared.dq && shared.dq.day>=today ? shared.dq : null;
+      const qi=dq && Number.isInteger(dq.qi) ? dq.qi : dailyIndex(), question=dailyQuestions[qi%dailyQuestions.length];
+      const answers=(dq&&dq.answers)||{}, mine=answers[me], theirs=partnerUid?answers[partnerUid]:undefined;
+      const iAnswered=typeof mine==="string", theyAnswered=typeof theirs==="string", both=iAnswered && theyAnswered;
+      $("dqQ").textContent=question; $("dqQ2").textContent=question;
+      $("dqForm").classList.toggle("hidden",iAnswered); $("dqWait").classList.toggle("hidden",!iAnswered || both);
+      $("dqMine").textContent=iAnswered?`“${mine}”`:"";
+      $("dqHint").textContent=iAnswered?"Revealed as soon as your partner answers too.":theyAnswered?"Your partner has answered — add yours to reveal both.":!partnerUid?"Invite your partner to reveal your answers together.":"Answers stay hidden until you’ve both answered.";
+      $("dqState").textContent=both?"Revealed":iAnswered?"Sealed":"Open today";
+      $("dqAnsYou").textContent=both?mine:""; $("dqAnsThem").textContent=both?theirs:"";   // your partner’s answer stays out of the page until you’ve both answered
+      $("dqInner").classList.toggle("flipped",both); $("dqFront").inert=both; $("dqBack").inert=!both;
+      const key=both?dq.day:"";
+      if(live && both && key!==seen.dq){ burstFrom($("dqCard"),18); confettiBurst(["💗","✨"],12); playChime("success"); toast("You both answered — +3 love points"); }
+      seen.dq=key;
+    }
+    $("dqSend").onclick=()=>busy($("dqSend"),async()=>{
+      const text=$("dqInput").value.trim();
+      if(!text || !coupleId) { toast("Write your answer first"); return; }
+      const me=authUser.uid, today=dayKey();
+      let bothNow=false;
+      try {
+        await runTransaction(db,async transaction=>{
+          const ref=coupleRef(), snap=await transaction.get(ref), data=snap.data()||{}, shared=data.shared||{};
+          const current=shared.dq && shared.dq.day>=today ? shared.dq : { day:today, qi:dailyIndex(), answers:{} };
+          const dq={ ...current, answers:{ ...(current.answers||{}), [me]:text } };
+          const members=data.members||[], both=members.length>=2 && members.every(uid=>typeof dq.answers[uid]==="string");
+          bothNow=both;
+          const update={};
+          if(both && dq.awarded!==dq.day){
+            dq.awarded=dq.day;
+            const streak=nextStreak(shared,today);
+            update.effort=increment(3+(streak?streak.bonus:0));
+            if(streak) update["shared.streak"]={ count:streak.count, last:streak.last };
+          }
+          update["shared.dq"]=dq;
+          transaction.update(ref,update);
+        });
+        $("dqInput").value=""; haptic([12]);
+        notifyPartner(bothNow?"Answers revealed 💗":"Today’s question 💭",bothNow?"You both answered — open TW to see them.":"Your partner answered — add yours to reveal both.","tw-question");
+      } catch(error){ toast("Couldn’t save that — try again"); }
+    });
 
     // ---- Games hub ----------------------------------------------------------------------------------------
     let openGameId=null;
