@@ -1211,6 +1211,12 @@
       "unavailable":"No connection — check your internet and try again.",
       "permission-denied":"TW isn't allowed to do that yet — the Firebase security rules may need updating."
     };
+    // Explains a failed save. Firebase answers "permission-denied" when the published security rules don't know about a feature yet.
+    const saveFailure = (error,fallback) => {
+      console.warn("TW: save failed",error?.code||error);
+      if(error?.code==="permission-denied") return "Firebase refused this because TW’s database rules are out of date. Publish the latest firestore.rules (Firebase → Firestore → Rules), then try again.";
+      return fallback+(error?.code?` (${error.code})`:"");
+    };
     const friendlyError = error => errorMessages[error?.code] || (error?.message||"Something went wrong.").replace(/^Firebase: /,"");
     function timeAgo(ms){ const s=Math.floor((Date.now()-ms)/1000); if(s<45) return "just now"; const m=Math.floor(s/60); if(m<60) return m+"m ago"; const h=Math.floor(m/60); if(h<24) return h+"h ago"; return Math.floor(h/24)+"d ago"; }
     // Disables a button while its action runs, but never leaves it stuck if the network hangs.
@@ -1261,7 +1267,7 @@
     const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
     const isInstalled = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
     const pushSupported = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
-    let pushState = "off";   // "on" once this phone's push address is saved, "error" if setting it up failed
+    let pushState = "off", pushErrorCode = "";   // "on" once this phone's push address is saved, "error" if setting it up failed
     let pushChain = Promise.resolve();
     const pushJob = task => { pushChain = pushChain.then(task).catch(error=>console.warn("TW: notifications",error?.message||error)); return pushChain; };
     const keyBytes = text => Uint8Array.from(atob((text+"=".repeat((4-text.length%4)%4)).replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
@@ -1296,7 +1302,7 @@
       return pushJob(async()=>{
         if(!$("notifyToggle").checked || !pushSupported() || !coupleId) { pushState="off"; return; }
         try { pushState=(await subscribePush(!!ask))==="on" ? "on" : "off"; }
-        catch(error){ pushState="error"; console.warn("TW: could not turn on notifications",error?.message||error); }
+        catch(error){ pushState="error"; pushErrorCode=error?.code||""; console.warn("TW: could not turn on notifications",error?.message||error); }
       }).then(()=>refreshNotifyUi());
     }
     // Forgets this phone for a couple (turning notifications off, logging out, or moving to a new code).
@@ -1333,6 +1339,7 @@
         text="Notifications: on for this phone";
       } else if(pushState==="error"){
         text="Notifications: couldn't finish setting up"; showButton=true; buttonText="Try again";
+        if(pushErrorCode==="permission-denied") help="Firebase refused to save this phone because TW’s database rules are out of date. Publish the latest firestore.rules, then tap Try again.";
       } else { text="Notifications: setting up…"; }
       label.textContent=text; button.textContent=buttonText; button.style.display=showButton?"":"none";
       hint.textContent=help; hint.classList.toggle("hidden",!help);
@@ -1961,7 +1968,7 @@
         notifyPartner("A snap arrived 📸",caption||"Tap to view it.","tw-snap");
         $("snapStatus").textContent="Snap sent! 📸"; playChime("pop"); confettiBurst(["📸","💗","✨"],10);
         clearSnapSelection();
-      } catch(error){ $("snapStatus").textContent="Could not send that snap — check your connection and try again."; }
+      } catch(error){ $("snapStatus").textContent=saveFailure(error,"Could not send that snap — check your connection and try again"); }
     });
     // A snap is spent for the receiver as soon as it has been opened.
     const isExpired = item => item.viewed && item.authorId!==authUser.uid;
@@ -2593,7 +2600,7 @@
         const data=await preparePhoto(file,420000,[[720,.78],[600,.7],[480,.62],[360,.55]]);
         await setDoc(doc(db,"couples",coupleId,"photos",authUser.uid),{authorId:authUser.uid,data,aiOk:$("aiConsent").checked,createdAt:serverTimestamp()});
         $("photoStatus").textContent="Photo saved 💗";
-      } catch(error){ $("photoStatus").textContent="Couldn’t save that photo — try another one."; }
+      } catch(error){ $("photoStatus").textContent=saveFailure(error,"Couldn’t save that photo — try another one"); }
     };
     $("photoFile").addEventListener("change",onProfilePhoto); $("photoFileCam").addEventListener("change",onProfilePhoto);
     $("aiConsent").onchange=async()=>{
