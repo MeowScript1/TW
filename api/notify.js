@@ -72,7 +72,7 @@ module.exports = async function handler(request, response) {
     .filter(device => PUSH_ENDPOINT.test(device.endpoint) && device.keys.p256dh && device.keys.auth);
   if (!devices.length) return response.status(200).json({ sent: 0, devices: 0 });
 
-  webpush.setVapidDetails(process.env.VAPID_SUBJECT || "https://ay-five-umber.vercel.app", publicKey, privateKey);
+  webpush.setVapidDetails(process.env.VAPID_SUBJECT || "https://our-tw.vercel.app", publicKey, privateKey);
   const payload = JSON.stringify({ title, body: message, tag, url: "./" });
   const results = await Promise.allSettled(devices.map(device => webpush.sendNotification(device, payload, { TTL: 3600, urgency: "high" })));
   return response.status(200).json({ sent: results.filter(result => result.status === "fulfilled").length, devices: devices.length });

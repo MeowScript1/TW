@@ -26,7 +26,8 @@ Then open <http://localhost:8765>. Sign-in and sync talk to the real Firebase pr
 
 ## Deploy
 
-The site deploys from the repo root on Vercel. **The security rules are not part of that deploy** — publish them
+The site deploys from the repo root on Vercel (project `tw`, live at <https://our-tw.vercel.app>; the older
+`ay-five-umber.vercel.app` address still works too). **The security rules are not part of that deploy** — publish them
 whenever `firestore.rules` changes, either with the Firebase CLI:
 
 ```bash
