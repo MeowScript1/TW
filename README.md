@@ -88,6 +88,14 @@ using in-app alerts only.
   of affirmations, and calming sound with a timer. The sounds (soft pads, rain, ocean, singing bowls) are generated on the
   phone with the Web Audio API, so there is nothing to download, and everything stays on the device. The screen is kept
   awake while a session runs; if a phone locks its screen anyway, some browsers pause the sound.
+- The cycle tracker is **off for everyone** until a person switches it on in Settings (a short three-step setup asks for the
+  last period, usual lengths, and who may see it: "Just me" or "Me & my partner"). Once on, it shows a cycle wheel, the next
+  period, ovulation and the fertile window (estimated from the cycles logged so far), a calendar, and a log for pain, flow,
+  symptoms and a note, all entered by hand. A partner sees it only if the person chose to share, with a "Send a hug"
+  shortcut and no way to edit it. Each person's data is their own document, `couples/{id}/cycle/{their uid}`: only they can
+  write it, and the Firestore rules let their partner read it only while it is both on and shared, so turning sharing off
+  really hides it. Push alerts about it are deliberately vague. Predictions are estimates, not medical advice or
+  contraception. This feature needs the latest `firestore.rules` published.
 - The optional Heart lock (Settings) puts a 4-digit code screen over TW on that phone. Only a salted hash of the code is
   kept in the browser; it hides the app, it does not encrypt anything. "Forgot the code?" logs you out and resets it.
 - Your partner can read your phone's push address (that is how a push finds it), but only your Vercel function holds the

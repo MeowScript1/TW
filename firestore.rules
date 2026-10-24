@@ -147,6 +147,26 @@ service cloud.firestore {
           && request.resource.data.createdAt == request.time;
         allow delete: if memberOf(coupleId);
       }
+
+      // The cycle tracker is off for everyone until a person turns it on. Each person's cycle is their own document,
+      // couples/{id}/cycle/{their uid}: only they can write it. Their partner can read it only while it is both switched on
+      // and shared, so turning sharing off really hides it (it is not just hidden on screen).
+      match /cycle/{ownerId} {
+        function validCycle() {
+          let d = request.resource.data;
+          return d.keys().hasOnly(['on', 'share', 'cycleLength', 'periodLength', 'periods', 'log', 'updatedAt'])
+            && d.on is bool && d.share is bool
+            && d.cycleLength is int && d.cycleLength >= 15 && d.cycleLength <= 60
+            && d.periodLength is int && d.periodLength >= 1 && d.periodLength <= 14
+            && d.periods is list && d.periods.size() <= 60
+            && d.log is map && d.log.size() <= 800
+            && d.updatedAt == request.time;
+        }
+        allow read: if memberOf(coupleId)
+          && (ownerId == request.auth.uid || resource == null || (resource.data.on == true && resource.data.share == true));
+        allow create, update: if memberOf(coupleId) && ownerId == request.auth.uid && validCycle();
+        allow delete: if memberOf(coupleId) && ownerId == request.auth.uid;
+      }
     }
   }
 }

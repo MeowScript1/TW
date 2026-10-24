@@ -693,6 +693,125 @@
     .calm-ctrls .btn { flex:1; min-height:44px; padding:0 10px; font-size:.88rem; }
     .calm-done-title { margin-top:4px; font-size:1.6rem; font-weight:800; }
     .calm-done-sub { margin-top:4px; color:#b9b0d6; }
+
+    /* ---- Cycle tracker (opt-in) ------------------------------------------------------------------------- */
+    .set-sub { display:block; margin-top:2px; font-size:.76rem; font-weight:600; line-height:1.35; color:var(--muted); }
+    .setting label b { font-weight:700; }
+    .cycle-card { padding:16px; }
+    .cycle-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .cycle-head b { font-size:1.05rem; font-weight:800; letter-spacing:-.01em; }
+    .cycle-chip { flex:none; padding:3px 10px; border-radius:999px; background:var(--accent-soft); color:var(--accent-text); font-size:.72rem; font-weight:800; }
+    .cycle-chip.period { background:rgba(255,77,109,.16); color:#e0405d; }
+    body.dark .cycle-chip.period { color:#ff8da1; }
+    .cycle-chip.fert { background:rgba(60,190,140,.18); color:#2c9a70; }
+    body.dark .cycle-chip.fert { color:#6fe0b0; }
+    .cycle-chip.pms { background:rgba(157,123,255,.18); color:#7a5cd6; }
+    body.dark .cycle-chip.pms { color:#c2adff; }
+    .cycle-chip.late { background:rgba(255,160,60,.2); color:#c4720a; }
+    body.dark .cycle-chip.late { color:#ffc27a; }
+    .cycle-body { display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center; }
+    .cycle-wheel { position:relative; width:128px; height:128px; }
+    .cycle-wheel svg { display:block; width:100%; height:100%; overflow:visible; }
+    .wh { fill:none; stroke-width:9; }
+    .wh-track { stroke:rgba(140,110,170,.16); }
+    .wh-per { stroke:#ff4d6d; }
+    .wh-fert { stroke:#3cbe8c; }
+    .wh-pms { stroke:#9d7bff; opacity:.75; }
+    .wh-ov { fill:#fff; stroke:#3cbe8c; stroke-width:2.4; }
+    .wh-today { fill:#fff; stroke:#ff5b88; stroke-width:3; filter:drop-shadow(0 0 4px rgba(255,91,136,.85)); }
+    .wh-today.late { stroke:#ffa03c; filter:drop-shadow(0 0 4px rgba(255,160,60,.85)); }
+    .wheel-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.05; text-align:center; }
+    .wheel-center small { font-size:.6rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); }
+    .wheel-center b { font-size:2.1rem; font-weight:900; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+    .wheel-center i { font-style:normal; font-size:.7rem; font-weight:700; color:var(--muted); }
+    .cycle-tiles { display:grid; gap:8px; min-width:0; }
+    .cy-tile { padding:9px 12px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); }
+    body.dark .cy-tile { background:rgba(255,255,255,.05); }
+    .cy-tile small { display:block; font-size:.64rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+    .cy-tile b { display:block; margin-top:1px; font-size:1.02rem; font-weight:800; line-height:1.25; }
+    .cy-tile span { display:block; font-size:.76rem; font-weight:600; color:var(--muted); }
+    .cycle-today { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:12px; }
+    .cycle-today small { margin-right:2px; font-size:.64rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+    .cy-chip { padding:3px 10px; border-radius:999px; background:var(--accent-soft); color:var(--accent-text); font-size:.74rem; font-weight:800; }
+    .cy-none { font-size:.8rem; font-weight:600; color:var(--muted); }
+    .cycle-quote { margin-top:6px; font-size:.84rem; font-style:italic; font-weight:600; color:var(--muted); overflow-wrap:anywhere; }
+    .cycle-note { margin-top:12px; padding:10px 12px; border-radius:14px; background:var(--accent-soft); color:var(--accent-text); font-size:.84rem; font-weight:700; line-height:1.4; }
+    .cycle-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .cycle-actions .btn { flex:1 1 auto; min-height:42px; padding:0 14px; font-size:.86rem; }
+    .cyc-summary { display:grid; gap:10px; margin:4px 0 14px; padding:14px; border-radius:18px; background:var(--surface-2); border:1px solid var(--line); }
+    .cyc-sum-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; }
+    .cyc-sum-top b { font-size:1rem; font-weight:800; }
+    .cyc-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .cyc-stat { padding:8px 10px; border-radius:12px; background:var(--surface); border:1px solid var(--line); text-align:center; }
+    .cyc-stat small { display:block; font-size:.62rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+    .cyc-stat b { font-size:.92rem; font-weight:800; }
+    .cyc-ovline { font-size:.82rem; font-weight:600; color:var(--muted); line-height:1.4; }
+    .cyc-readonly { margin:2px 0 12px; padding:10px 12px; border-radius:14px; background:var(--purple-soft); color:var(--purple); font-size:.82rem; font-weight:700; line-height:1.4; }
+    .cal-head { display:flex; align-items:center; justify-content:space-between; margin:4px 0 8px; }
+    .cal-head b { font-size:1rem; font-weight:800; }
+    .cal-week, .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+    .cal-week span { text-align:center; font-size:.66rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+    .cd { position:relative; display:grid; place-items:center; aspect-ratio:1; border-radius:50%; font-size:.86rem; font-weight:700; color:var(--ink); border:2px solid transparent; transition:transform .12s; }
+    .cd:active { transform:scale(.9); }
+    .cd.other { opacity:.35; }
+    .cd.period { background:#ff4d6d; color:#fff; }
+    .cd.pred { border:2px dashed #ff5b88; }
+    .cd.fert { background:rgba(60,190,140,.2); }
+    .cd.ov { background:rgba(60,190,140,.45); border-color:#3cbe8c; }
+    .cd.today { box-shadow:0 0 0 2px var(--purple); }
+    .cd.sel { box-shadow:0 0 0 3px var(--ink); }
+    .cd.logged:after { content:""; position:absolute; bottom:3px; width:5px; height:5px; border-radius:50%; background:var(--purple); }
+    .cd.period.logged:after { background:#fff; }
+    .cal-legend { display:flex; flex-wrap:wrap; gap:6px 14px; justify-content:center; margin:10px 0 4px; font-size:.74rem; font-weight:700; color:var(--muted); }
+    .cal-legend .lg { display:inline-block; width:12px; height:12px; margin-right:5px; border-radius:50%; vertical-align:-1px; }
+    .lg.period { background:#ff4d6d; } .lg.pred { border:2px dashed #ff5b88; } .lg.fert { background:rgba(60,190,140,.35); } .lg.ov { background:rgba(60,190,140,.7); border:2px solid #3cbe8c; }
+    .cyc-day { display:grid; gap:8px; margin:12px 0; padding:14px; border-radius:18px; background:var(--surface-2); border:1px solid var(--line); }
+    .cyc-day b { font-size:.95rem; font-weight:800; }
+    .cyc-day small { font-size:.84rem; font-weight:600; color:var(--muted); line-height:1.45; }
+    .cyc-tags { display:flex; flex-wrap:wrap; gap:6px; }
+    .cyc-tag { padding:3px 10px; border-radius:999px; background:var(--accent-soft); color:var(--accent-text); font-size:.74rem; font-weight:800; }
+    .cyc-day .btn { min-height:40px; padding:0 14px; font-size:.86rem; }
+    .cyc-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+    .cyc-btns .btn { min-height:46px; }
+    .cyc-form { display:grid; gap:10px; margin-bottom:12px; padding:14px; border-radius:18px; background:var(--surface-2); border:1px solid var(--line); }
+    .cyc-form .row { display:flex; gap:8px; }
+    .cyc-label { display:block; margin-bottom:6px; font-size:.72rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+    .cchips.light .cchip { display:inline-flex; align-items:center; gap:6px; color:var(--ink); background:var(--surface); border:1px solid var(--line); }
+    .cchips.light .cchip svg { width:14px; height:14px; }
+    .cchips.light .cchip[aria-pressed=true] { color:#fff; border-color:transparent; background:linear-gradient(135deg,#ff5b88,#9d7bff); }
+    .cchips.pain .cchip[aria-pressed=true][data-level="0"] { background:linear-gradient(135deg,#9d8fc4,#7f73ad); }
+    .cchips.pain .cchip[aria-pressed=true][data-level="1"] { background:linear-gradient(135deg,#ffd45e,#ffb347); color:#4a2c00; }
+    .cchips.pain .cchip[aria-pressed=true][data-level="2"] { background:linear-gradient(135deg,#ffa24d,#ff7a3d); }
+    .cchips.pain .cchip[aria-pressed=true][data-level="3"] { background:linear-gradient(135deg,#ff5b6e,#e0284a); }
+    .cyc-h { margin:16px 2px 8px; font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .seg2 { display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:4px; border-radius:16px; background:var(--surface-2); border:1px solid var(--line); }
+    .seg2 button { min-height:42px; border-radius:12px; font-size:.88rem; font-weight:800; color:var(--muted); transition:background .15s, color .15s; }
+    .seg2 button[aria-pressed=true] { color:#fff; background:linear-gradient(135deg,#ff5b88,#9d7bff); box-shadow:0 6px 16px -6px rgba(255,91,136,.7); }
+    .cyc-steps { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0; }
+    .stepper { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:4px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); }
+    .stepper button { width:40px; height:40px; border-radius:11px; font-size:1.3rem; font-weight:800; color:var(--accent-text); background:var(--accent-soft); }
+    .stepper b { min-width:2ch; text-align:center; font-size:1.1rem; font-weight:900; font-variant-numeric:tabular-nums; }
+    .cyc-small { margin:8px 2px 12px; font-size:.78rem; line-height:1.45; color:var(--muted); }
+    .onb-dots { display:flex; justify-content:center; gap:8px; margin:4px 0 14px; }
+    .onb-dots i { width:26px; height:5px; border-radius:99px; background:var(--line); transition:background .2s; }
+    .onb-dots i.on { background:linear-gradient(90deg,#ff5b88,#9d7bff); }
+    .onb-pane h3 { margin:0 0 6px; font-size:1.25rem; font-weight:800; letter-spacing:-.01em; }
+    .onb-art { display:grid; place-items:center; margin:0 auto 10px; }
+    .onb-art .cycle-wheel { width:150px; height:150px; }
+    .onb-list { margin:12px 0 4px; padding:0; list-style:none; display:grid; gap:8px; }
+    .onb-list li { position:relative; padding-left:26px; font-size:.9rem; font-weight:600; line-height:1.4; }
+    .onb-list li:before { content:""; position:absolute; left:2px; top:5px; width:12px; height:12px; border-radius:50%; background:linear-gradient(135deg,#ff5b88,#9d7bff); }
+    .share-cards { display:grid; gap:10px; margin-top:14px; }
+    .share-card { display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:center; padding:14px; text-align:left; border-radius:20px; background:var(--surface-2); border:2px solid var(--line); transition:border-color .15s, box-shadow .15s, transform .12s; }
+    .share-card:active { transform:scale(.985); }
+    .share-card[aria-checked=true] { border-color:#ff5b88; box-shadow:0 0 0 4px rgba(255,91,136,.14); }
+    .sc-ico { display:grid; place-items:center; width:44px; height:44px; border-radius:14px; background:var(--accent-soft); color:var(--accent-text); }
+    .sc-ico svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .sc-text b { display:block; font-size:1rem; font-weight:800; }
+    .sc-text small { display:block; margin-top:2px; font-size:.8rem; line-height:1.4; font-weight:600; color:var(--muted); }
+    .onb-nav { position:sticky; bottom:0; display:flex; gap:10px; margin:16px -22px 0; padding:12px 22px calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(to top,var(--surface) 78%,rgba(0,0,0,0)); }
+    .onb-nav .btn { flex:1; }
+    @media (prefers-reduced-motion:reduce) { .cd, .share-card { transition:none; } }
   </style>
 </head>
 <body>
@@ -837,6 +956,8 @@
             </div>
           </div>
         </section>
+
+        <section class="home-section hidden" id="cycleSection"><div id="cycleHost"></div></section>
 
         <section class="home-section ms-section">
           <button class="card ms-card" id="msCard" type="button" aria-label="Open your milestones">
@@ -1104,6 +1225,13 @@
       <div class="setting"><span id="notifyStatusLabel">Notifications: not turned on yet</span><button class="btn soft" id="enableNotify" type="button" style="min-height:38px;padding:0 14px">Enable</button></div>
       <div class="setting hidden" id="notifyTestRow"><span>Send a test to this phone</span><button class="btn soft" id="testNotify" type="button" style="min-height:38px;padding:0 14px">Test</button></div>
       <p class="privacy-note hidden" id="notifyHint" style="margin-top:8px"></p>
+      <div class="setting"><label for="cycleToggle"><b>Cycle tracker</b><small class="set-sub">Track your period and ovulation. Off unless you turn it on.</small></label><input class="switch" id="cycleToggle" type="checkbox" disabled></div>
+      <div id="cycleSettingsMore" class="hidden">
+        <div class="setting"><label for="cycleShareToggle">Share it with my partner</label><input class="switch" id="cycleShareToggle" type="checkbox"></div>
+        <div class="setting"><span>My tracker</span><button class="btn soft" id="cycleOpenBtn" type="button" style="min-height:38px;padding:0 14px">Open</button></div>
+      </div>
+      <p class="privacy-note hidden" id="cycleSettingsNote" style="margin-top:8px"></p>
+      <p class="status" id="cycleSettingsSay" role="status"></p>
       <div class="setting"><label for="lockToggle">Heart lock (4-digit code)</label><input class="switch" id="lockToggle" type="checkbox"></div>
       <div class="setting hidden" id="lockChangeRow"><span>Change your lock code</span><button class="btn soft" id="lockChange" type="button" style="min-height:38px;padding:0 14px">Change</button></div>
       <p class="privacy-note" style="margin-top:8px">The Heart lock hides TW on this phone when you open it or come back after a minute away. It’s a screen lock, not encryption.</p>
@@ -1123,6 +1251,81 @@
     <div class="row"><button class="btn ghost" id="confirmCancel" type="button">Cancel</button><button class="btn" id="confirmOk" type="button">OK</button></div>
   </dialog>
   <!-- Our photos and couple portrait -->
+  <!-- Cycle tracker: the sheet (calendar and log) -->
+  <dialog id="cycleDialog" class="sheet" aria-labelledby="cycleDlgTitle">
+    <div class="sheet-head"><h2 id="cycleDlgTitle">My cycle</h2><button class="icon-btn" id="closeCycle" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body">
+      <p class="status" id="cycleStatus" role="status"></p>
+      <p class="cyc-readonly hidden" id="cycleReadonly">Shared with you by your partner. You can look and send love, but only they can change it.</p>
+      <div class="cyc-summary" id="cycleSummary"></div>
+      <div class="cal-head"><button class="icon-btn" id="calPrev" type="button" aria-label="Previous month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><b id="cycleMonth"></b><button class="icon-btn" id="calNext" type="button" aria-label="Next month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div>
+      <div class="cal-week" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      <div class="cal-grid" id="cycleGrid"></div>
+      <div class="cal-legend"><span><i class="lg period"></i>Period</span><span><i class="lg pred"></i>Expected</span><span><i class="lg fert"></i>Fertile</span><span><i class="lg ov"></i>Ovulation</span></div>
+      <div class="cyc-day" id="cycleDayBox"></div>
+      <div id="cycleOwner" class="hidden">
+        <div class="cyc-btns"><button class="btn" id="cycStart" type="button">Period started</button><button class="btn soft" id="cycEnd" type="button">Period ended</button></div>
+        <form class="cyc-form hidden" id="cycleDateForm"><label id="cycleDateLabel" for="cycleDateInput">Date</label><input type="date" id="cycleDateInput"><div class="row"><button class="btn" type="submit">Save</button><button class="btn soft" id="cycleDateCancel" type="button">Cancel</button></div></form>
+        <form class="cyc-form hidden" id="cycleLogForm">
+          <b id="cycleLogTitle">How are you today?</b>
+          <span class="cyc-label">Pain</span><div class="cchips light pain" id="logPain" role="group" aria-label="Pain"></div>
+          <span class="cyc-label">Flow</span><div class="cchips light" id="logFlow" role="group" aria-label="Flow"></div>
+          <span class="cyc-label">Body</span><div class="cchips light" id="logBody" role="group" aria-label="Body symptoms"></div>
+          <span class="cyc-label">Mood &amp; energy</span><div class="cchips light" id="logFeel" role="group" aria-label="Mood and energy"></div>
+          <input type="text" id="logNote" maxlength="140" placeholder="A little note (optional)" aria-label="Note">
+          <div class="row"><button class="btn" type="submit">Save</button><button class="btn soft" id="cycleLogCancel" type="button">Cancel</button></div>
+        </form>
+        <div class="cyc-settings">
+          <h3 class="cyc-h">Who can see this</h3>
+          <div class="seg2" id="cycShareSeg" role="group" aria-label="Who can see this"><button type="button" data-share="0">Just me</button><button type="button" data-share="1">Me &amp; my partner</button></div>
+          <p class="cyc-small" id="cycShareHint"></p>
+          <h3 class="cyc-h">Usual lengths</h3>
+          <div class="cyc-steps">
+            <div><span class="cyc-label">Cycle (days)</span><div class="stepper" id="cycCycle"><button type="button" data-step="-1" aria-label="One day less">−</button><b>28</b><button type="button" data-step="1" aria-label="One day more">+</button></div></div>
+            <div><span class="cyc-label">Period (days)</span><div class="stepper" id="cycPeriod"><button type="button" data-step="-1" aria-label="One day less">−</button><b>5</b><button type="button" data-step="1" aria-label="One day more">+</button></div></div>
+          </div>
+          <p class="cyc-small">Once you have logged a few cycles, TW uses your own average instead.</p>
+          <button class="btn soft wide" id="cycOff" type="button">Turn off the tracker</button>
+          <button class="btn danger wide" id="cycDelete" type="button" style="margin-top:8px">Delete my cycle data</button>
+        </div>
+      </div>
+      <p class="privacy-note">Predictions are estimates based on what is logged. They are not medical advice, and they are not a form of contraception.</p>
+    </div>
+  </dialog>
+
+  <!-- Cycle tracker: turning it on (three short steps) -->
+  <dialog id="cycleOnboard" class="sheet" aria-labelledby="onbTitle">
+    <div class="sheet-head"><h2 id="onbTitle">Cycle tracker</h2><button class="icon-btn" id="onbClose" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="onb-dots" id="onbDots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="onb-pane" data-step="0">
+        <div class="onb-art" id="onbArt" aria-hidden="true"></div>
+        <h3>Your cycle, your call</h3>
+        <p class="muted">Keep track of your period, ovulation, pain and symptoms in one calm place. It is switched off for everyone until you turn it on, and nothing is shared unless you choose to.</p>
+        <ul class="onb-list"><li>Log your period and how you feel, whenever you like</li><li>See what is coming: next period, ovulation, fertile days</li><li>Let your partner follow along, only if you want them to</li></ul>
+      </div>
+      <div class="onb-pane hidden" data-step="1">
+        <h3>A few details</h3>
+        <p class="muted">Rough numbers are fine. They are replaced by your own averages as you log.</p>
+        <div class="field"><label for="onbStart">First day of your last period</label><input type="date" id="onbStart"></div>
+        <div class="cyc-steps">
+          <div><span class="cyc-label">Usual cycle (days)</span><div class="stepper" id="onbCycle"><button type="button" data-step="-1" aria-label="One day less">−</button><b>28</b><button type="button" data-step="1" aria-label="One day more">+</button></div></div>
+          <div><span class="cyc-label">Usual period (days)</span><div class="stepper" id="onbPeriod"><button type="button" data-step="-1" aria-label="One day less">−</button><b>5</b><button type="button" data-step="1" aria-label="One day more">+</button></div></div>
+        </div>
+      </div>
+      <div class="onb-pane hidden" data-step="2">
+        <h3>Who can see this?</h3>
+        <p class="muted">Pick one. You can change it any time, and turning sharing off hides everything straight away.</p>
+        <div class="share-cards" role="radiogroup" aria-label="Who can see your cycle">
+          <button class="share-card" type="button" role="radio" aria-checked="false" data-share="0"><span class="sc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="sc-text"><b>Just me</b><small>Only you see your cycle. Your partner sees nothing.</small></span></button>
+          <button class="share-card" type="button" role="radio" aria-checked="false" data-share="1"><span class="sc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18s-5-3-5-7a3 3 0 0 1 5-2 3 3 0 0 1 5 2c0 4-5 7-5 7Z"/><path d="M15 20.500s-4-2.500-4-5.600a2.600 2.600 0 0 1 4-2 2.600 2.600 0 0 1 4 2c0 3.100-4 5.600-4 5.600Z" opacity=".6"/></svg></span><span class="sc-text"><b>Me &amp; my partner</b><small>Your partner sees your dates, pain, symptoms and notes, so they can look after you. Only you can change anything.</small></span></button>
+        </div>
+      </div>
+      <p class="status" id="onbStatus" role="status"></p>
+      <div class="onb-nav"><button class="btn soft hidden" id="onbBack" type="button">Back</button><button class="btn" id="onbNext" type="button">Get started</button></div>
+    </div>
+  </dialog>
+
   <!-- Calm corner -->
   <dialog id="calmScreen" class="calm" aria-labelledby="calmTitle">
     <div class="calm-view" id="calmMenu">
@@ -1282,7 +1485,7 @@
     // ---- State -------------------------------------------------------------------------------------------
     let authUser=null, coupleId=null, partnerUid=null, members=[], coupleUnsubs=[];
     // Each flag flips after a listener's first snapshot, so only changes that arrive after that can notify.
-    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"", streak:-1, dq:"" };
+    let seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"", streak:-1, dq:"", cycle:"" };
     let assignedForMe=null, worldLevel=0, lastPet=null;
     let surpriseShown=false, bouquetShown=false, sharedApproach=false, prevApproach=false, lastTriviaSig="";
     let lastPresence={}, lastShared={}, lastMoods={};
@@ -1621,7 +1824,7 @@
       try { await sendPasswordResetEmail(auth,email); setAuthMessage("If that email has an account, a reset link is on its way."); }
       catch(error){ setAuthMessage(friendlyError(error)); }
     };
-    $("settingsBtn").onclick=()=>{ refreshNotifyUi(); openDialog($("settingsDialog")); };
+    $("settingsBtn").onclick=()=>{ refreshNotifyUi(); renderCycleSettings(); openDialog($("settingsDialog")); };
     $("closeSettings").onclick=()=>closeDialog($("settingsDialog"));
     $("settingsDialog").addEventListener("click",event=>{ if(event.target===$("settingsDialog")) closeDialog($("settingsDialog")); });
     $("logoutBtn").onclick=async()=>{ closeDialog($("settingsDialog")); await removePushDevice(coupleId); signOut(auth); };
@@ -1695,7 +1898,7 @@
       clearTimeout(typingTimer); typingSentAt=0; currentSnap=null; openingSnap=false;
       clearInterval(tapTimer); tapTimer=null; tapRun=null; tapState=null; memoryState=null; memoryTimers.clear();
       lastWyrSig=""; lastSpinId=""; spinning=false; memoryCelebrated=""; showHub();
-      photos={}; portraitDoc=null; collageCache={ key:"", url:"" }; collageToken++; worldKey=""; lastPet=null;
+      photos={}; portraitDoc=null; collageCache={ key:"", url:"" }; collageToken++; worldKey=""; lastPet=null; cycleMine=null; cycleTheirs=null; cycleMineLoaded=false; cycleMineDenied=false; cycleTheirsFor=""; $("cycleHost").innerHTML=""; $("cycleSection").classList.add("hidden");
     }
     onAuthStateChanged(auth,user=>{
       authUser=user; teardown(); closeDialog($("settingsDialog"));
@@ -1707,7 +1910,7 @@
       const previousCouple=coupleId;
       teardown();
       coupleId=id;
-      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"", streak:-1, dq:"" };
+      seen={ ready:false, chat:false, snaps:false, poke:"", note:"", task:"", moment:"", partnerMood:"", level:-1, photos:false, portrait:false, petFed:"", streak:-1, dq:"", cycle:"" };
       surpriseShown=false; bouquetShown=false; sharedApproach=false; prevApproach=false; lastTriviaSig="";
       celebratedTrivia.clear(); scoring.clear(); purging.clear();
       $("chatMessages").innerHTML=""; $("snapGallery").innerHTML=""; $("pokeStatus").textContent=""; $("noteResult").classList.remove("show"); setActiveTab("home");
@@ -1717,6 +1920,9 @@
       coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"messages"),orderBy("createdAt","desc"),limit(MESSAGE_LIMIT)),onMessagesSnapshot,listenError("messages")));
       coupleUnsubs.push(onSnapshot(collection(db,"couples",id,"photos"),onPhotosSnapshot,listenError("photos")));
       coupleUnsubs.push(onSnapshot(doc(db,"couples",id,"portraits","current"),onPortraitSnapshot,listenError("portrait")));
+      cycleMineLoaded=false;
+      coupleUnsubs.push(onSnapshot(cycleRefFor(authUser.uid),onMineSnapshot,error=>{ if(coupleId!==id) return; cycleMineLoaded=true; cycleMine=null; cycleMineDenied=error?.code==="permission-denied"; if(!cycleMineDenied) console.warn("TW: could not listen to the cycle tracker",error?.code||error); renderCycle(); renderCycleDialog(); renderCycleSettings(); }));
+      coupleUnsubs.push(()=>{ if(cycleTheirsStop){ cycleTheirsStop(); cycleTheirsStop=null; } cycleTheirsFor=""; });
       coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"snaps"),orderBy("createdAt","desc"),limit(SNAP_LIMIT)),onSnapsSnapshot,listenError("snaps")));
       if(previousCouple && previousCouple!==id) removePushDevice(previousCouple);
       syncPush(false);
@@ -1744,6 +1950,7 @@
       members=data.members||[];
       partnerUid=members.find(uid=>uid!==me)||null;
       if(partnerUid!==previousPartner && partnerUid) delete genderTried[partnerUid];
+      watchPartnerCycle();
       renderInvite(snap.id,members.length<2); $("settingsCode").textContent=snap.id;
       renderApproach(!!shared.approach,live);
 
@@ -2022,7 +2229,7 @@
     function dayIndex(){ const now=new Date(), start=new Date(now.getFullYear(),0,0); return Math.floor((now-start)/86400000); }
     function renderDailyTask(){ $("dailyTaskText").textContent=dailyTasks[dayIndex()%dailyTasks.length]; $("dailyTaskDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}); }
     renderDailyTask();
-    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); renderWorld(false); renderStreak(lastShared,false); renderDaily(lastShared,false); } });
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ heartbeat(); renderDailyTask(); renderGreeting(); renderSince(currentSince); renderWorld(false); renderStreak(lastShared,false); renderDaily(lastShared,false); renderCycle(); renderCycleDialog(); renderCycleSettings(); } });
     function renderAssignedTask(task){
       assignedForMe=task && authUser && task.forUid===authUser.uid ? task : null;
       const box=$("assignedTaskView");
@@ -3292,6 +3499,377 @@
     buildCalm();
     $("calmOpen").onclick=openCalm;
     $("calmNow").onclick=()=>{ openCalm(); calmBegin({ id:"overthink" }); };
+
+    // ---- Cycle tracker (opt-in) -----------------------------------------------------------------------------------
+    // Nobody sees any of this until a person switches it on in Settings. Each person's cycle is their own document,
+    // couples/{id}/cycle/{their uid}: only they can write it, and their partner can read it only while it is on AND shared.
+    const CYCLE_SYMPTOMS=[["cramps","Cramps","body"],["backache","Back pain","body"],["headache","Headache","body"],["bloating","Bloating","body"],["nausea","Nausea","body"],["breasts","Tender breasts","body"],["acne","Acne","body"],["spotting","Spotting","body"],["tired","Tired","feel"],["mood","Mood swings","feel"],["irritable","Irritable","feel"],["low","Feeling low","feel"],["cravings","Cravings","feel"]];
+    const CYCLE_SYM_LABELS=Object.fromEntries(CYCLE_SYMPTOMS.map(([key,label])=>[key,label]));
+    const CYCLE_PAIN=["None","Mild","Moderate","Severe"], CYCLE_FLOW=["None","Spotting","Light","Medium","Heavy"], CYCLE_DROPS=[0,1,1,2,3];
+    let cycleMine=null, cycleTheirs=null, cycleMineLoaded=false, cycleMineDenied=false, cycleView="mine", cycleTheirsStop=null, cycleTheirsFor="";
+    let cycleDay="", cycleMonth=new Date(), cycleMode="", logPain=0, logFlow=0, logSyms=new Set(), onboardStep=0, onboardShare=null, cycleSayTimer=0;
+    const cycleRefFor=uid=>doc(db,"couples",coupleId,"cycle",uid);
+    const cycleMineOn=()=>!!cycleMine && cycleMine.on!==false;
+    const cycleTheirsOn=()=>!!cycleTheirs && cycleTheirs.on!==false && cycleTheirs.share===true;
+    const cycleData=()=>cycleView==="theirs"?cycleTheirs:cycleMine;
+    const cycleIsMine=()=>cycleView==="mine";
+    const elt=(tag,cls,text)=>{ const node=document.createElement(tag); if(cls) node.className=cls; if(text!==undefined) node.textContent=text; return node; };
+    const dparse=key=>{ const [y,m,d]=key.split("-").map(Number); return new Date(y,m-1,d); };
+    const dnum=key=>{ const [y,m,d]=key.split("-").map(Number); return Math.round(Date.UTC(y,m-1,d)/86400000); };
+    const dplus=(key,n)=>{ const date=dparse(key); date.setDate(date.getDate()+n); return dayKeyOf(date); };
+    const ddiff=(a,b)=>dnum(b)-dnum(a);
+    const logId=key=>"d"+key.replace(/-/g,"");
+    const prettyDay=key=>dparse(key).toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"});
+    const shortDay=key=>dparse(key).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+    const avgOf=list=>Math.round(list.reduce((sum,n)=>sum+n,0)/list.length);
+
+    // Predictions from what has been logged: average cycle and period length, next period, ovulation 14 days before it.
+    function cycleStats(data,today){
+      const periods=((data&&data.periods)||[]).filter(item=>item && typeof item.s==="string").map(item=>({ s:item.s, e:typeof item.e==="string"?item.e:"" })).sort((a,b)=>a.s<b.s?-1:a.s>b.s?1:0);
+      if(!periods.length) return null;
+      const gaps=[]; for(let i=1;i<periods.length;i++){ const gap=ddiff(periods[i-1].s,periods[i].s); if(gap>=15 && gap<=60) gaps.push(gap); }
+      const cycleLen=gaps.length?avgOf(gaps.slice(-6)):(data.cycleLength||28);
+      const lengths=periods.filter(item=>item.e).map(item=>ddiff(item.s,item.e)+1).filter(n=>n>=1 && n<=14);
+      const periodLen=lengths.length?avgOf(lengths.slice(-6)):(data.periodLength||5);
+      const last=periods[periods.length-1], nextStart=dplus(last.s,cycleLen);
+      let ov=dplus(nextStart,-14); if(ddiff(ov,today)>1) ov=dplus(ov,cycleLen);   // this cycle's fertile window is over: show the next one
+      const day=ddiff(last.s,today)+1, toNext=ddiff(today,nextStart);
+      const inPeriod=day>=1 && (last.e ? today<=last.e : day<=periodLen);
+      let phase;
+      if(day<1) phase="Upcoming";
+      else if(inPeriod) phase="Period";
+      else if(toNext<0) phase="Late";
+      else if(today===ov) phase="Ovulation day";
+      else if(ddiff(dplus(ov,-5),today)>=0 && ddiff(today,dplus(ov,1))>=0) phase="Fertile window";
+      else if(toNext<=5) phase="Pre-period";
+      else if(ddiff(today,ov)>0) phase="Follicular"; else phase="Luteal";
+      const kind=inPeriod?"period":phase==="Late"?"late":(phase==="Fertile window"||phase==="Ovulation day")?"fert":phase==="Pre-period"?"pms":"";
+      return { periods, last, cycleLen, periodLen, nextStart, toNext, ov, fertileFrom:dplus(ov,-5), fertileTo:dplus(ov,1), day, inPeriod, phase, kind };
+    }
+    function cycleMarks(st){
+      if(!st) return null;
+      return {
+        periodRanges:st.periods.map(item=>({ s:item.s, e:item.e||dplus(item.s,st.periodLen-1) })),
+        predRanges:[1,2,3].map(k=>{ const start=dplus(st.last.s,st.cycleLen*k); return { s:start, e:dplus(start,st.periodLen-1) }; }),
+        ovs:st.periods.slice(1).map(item=>dplus(item.s,-14)).concat([1,2,3,4].map(k=>dplus(st.last.s,st.cycleLen*k-14)))
+      };
+    }
+    function cycleFlagsFor(key,marks,data){
+      const flags={ period:false, periodDay:0, pred:false, fert:false, ov:false, logged:false };
+      if(marks){
+        marks.periodRanges.forEach(range=>{ if(key>=range.s && key<=range.e){ flags.period=true; flags.periodDay=ddiff(range.s,key)+1; } });
+        if(!flags.period) marks.predRanges.forEach(range=>{ if(key>=range.s && key<=range.e) flags.pred=true; });
+        marks.ovs.forEach(ov=>{ if(key===ov) flags.ov=true; if(key>=dplus(ov,-5) && key<=dplus(ov,1)) flags.fert=true; });
+      }
+      const entry=data&&data.log&&data.log[logId(key)];
+      flags.logged=!!(entry && (entry.pain || entry.flow || (entry.symptoms&&entry.symptoms.length) || entry.note));
+      return flags;
+    }
+    function logParts(entry){
+      if(!entry) return [];
+      return [entry.pain?`${CYCLE_PAIN[entry.pain]} pain`:"", entry.flow?`${CYCLE_FLOW[entry.flow]} flow`:"", ...(entry.symptoms||[]).map(key=>CYCLE_SYM_LABELS[key]||key)].filter(Boolean);
+    }
+    const describeLog=entry=>{ const parts=logParts(entry); return parts.join(" · ")+(entry&&entry.note?(parts.length?" — ":"")+"“"+entry.note+"”":""); };
+    function cycleLines(st){
+      const today=dayKey();
+      const next=st.inPeriod?`Period day ${st.day} · next ~ ${shortDay(st.nextStart)}`
+        :st.toNext<0?`Period is ${plural(-st.toNext,"day")} late`
+        :st.toNext===0?"Period expected today"
+        :st.toNext===1?"Period expected tomorrow"
+        :`Period in ${st.toNext} days · ${prettyDay(st.nextStart)}`;
+      const ov=today===st.ov?"Ovulation today":`Ovulation ~ ${shortDay(st.ov)} · fertile ${shortDay(st.fertileFrom)}–${shortDay(st.fertileTo)}`;
+      return { next, ov };
+    }
+    // The cycle wheel: the whole cycle as a ring (period, fertile window, pre-period days), with ovulation and today marked.
+    function cycleWheel(st){
+      const n=st.cycleLen, C=2*Math.PI*40, ovIdx=n-14, late=st.toNext<0;
+      const arc=(from,to,cls)=>{
+        const a=Math.max(0,from), b=Math.min(n-1,to); if(b<a) return "";
+        const len=Math.max((b-a+1)/n*C-1.4,.5);
+        return `<circle class="wh ${cls}" cx="50" cy="50" r="40" stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${(-(a/n)*C-.7).toFixed(2)}"/>`;
+      };
+      const at=idx=>{ const angle=(Math.min(Math.max(idx,0),n-1)+.5)/n*2*Math.PI-Math.PI/2; return [50+40*Math.cos(angle),50+40*Math.sin(angle)]; };
+      const [ox,oy]=at(ovIdx), [tx,ty]=at(late?n-1:st.day-1);
+      return `<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(-90 50 50)"><circle class="wh wh-track" cx="50" cy="50" r="40"/>${arc(n-5,n-1,"wh-pms")}${arc(ovIdx-5,ovIdx+1,"wh-fert")}${arc(0,st.periodLen-1,"wh-per")}</g><circle class="wh-ov" cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="3.4"/><circle class="wh-today${late?" late":""}" cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="5.2"/></svg>`;
+    }
+    const wheelCenter=st=>{ const late=st.toNext<0; return `<span class="wheel-center"><small>${late?"Late by":"Day"}</small><b>${late?-st.toNext:Math.max(st.day,1)}</b><i>${late?(-st.toNext===1?"day":"days"):"of "+st.cycleLen}</i></span>`; };
+    const dropsSvg=n=>'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.200 4.200 5.500 7 5.500 10a5.500 5.500 0 0 1-11 0C6.500 10 8.800 7.200 12 3Z" fill="currentColor"/></svg>'.repeat(n);
+
+    function cycleSay(text,ok){
+      $("cycleStatus").textContent=text||""; $("cycleSettingsSay").textContent=text||"";
+      clearTimeout(cycleSayTimer); if(text && ok) cycleSayTimer=setTimeout(()=>cycleSay(""),3500);
+    }
+    const cycleWrite=fields=>updateDoc(cycleRefFor(authUser.uid),{ ...fields, updatedAt:serverTimestamp() });
+    const cycleHeadsUp=()=>notifyPartner("Cycle update 🌸","A gentle heads-up is waiting for you in TW.","tw-cycle");
+
+    // ---- Home: one card for your own tracker (if you turned it on) and one for your partner's (if they share it) ----------
+    function buildCycleCard(kind,data){
+      const mine=kind==="mine", today=dayKey(), st=cycleStats(data,today);
+      const card=elt("div","card cycle-card "+kind), head=elt("div","cycle-head"), chip=elt("span","cycle-chip");
+      head.appendChild(elt("b","",mine?"My cycle":"Your partner’s cycle")); head.appendChild(chip); card.appendChild(head);
+      const body=elt("div","cycle-body"), wheel=elt("div","cycle-wheel"), tiles=elt("div","cycle-tiles"), actions=elt("div","cycle-actions");
+      const tile=(label,big,sub)=>{ const box=elt("div","cy-tile"); box.appendChild(elt("small","",label)); box.appendChild(elt("b","",big)); if(sub) box.appendChild(elt("span","",sub)); tiles.appendChild(box); };
+      const add=(label,cls,fn)=>{ const button=elt("button","btn "+cls,label); button.type="button"; button.onclick=()=>fn(button); actions.appendChild(button); };
+      body.appendChild(wheel); body.appendChild(tiles); card.appendChild(body);
+      if(!st){
+        chip.textContent="Getting started";
+        wheel.innerHTML='<svg viewBox="0 0 100 100" aria-hidden="true"><circle class="wh wh-track" cx="50" cy="50" r="40"/></svg><span class="wheel-center"><small>Day</small><b>–</b></span>';
+        if(mine){ tile("Next step","Log a period","Tap “Period started” to begin"); add("Period started","",()=>openCycle("mine","start")); }
+        else { tile("Nothing yet","Nothing logged"); add("Send a hug","",button=>sendMoment("hug",button)); }
+        add("Open","soft",()=>openCycle(kind)); card.appendChild(actions); return card;
+      }
+      chip.className="cycle-chip "+st.kind; chip.textContent=st.phase;
+      wheel.innerHTML=cycleWheel(st)+wheelCenter(st);
+      if(st.inPeriod){
+        const endDay=st.last.e||dplus(st.last.s,st.periodLen-1);
+        tile("Period",`Day ${st.day}`,`until ${shortDay(endDay)}`); tile("Next period",`~ ${shortDay(st.nextStart)}`,`in ${plural(st.toNext,"day")}`);
+      } else if(st.toNext<0){
+        tile("Period is",`${plural(-st.toNext,"day")} late`,`expected ${shortDay(st.nextStart)}`); tile("Ovulation",shortDay(st.ov),`fertile ${shortDay(st.fertileFrom)}–${shortDay(st.fertileTo)}`);
+      } else {
+        tile("Next period",st.toNext===0?"Today":st.toNext===1?"Tomorrow":`in ${st.toNext} days`,prettyDay(st.nextStart));
+        tile("Ovulation",today===st.ov?"Today":shortDay(st.ov),`fertile ${shortDay(st.fertileFrom)}–${shortDay(st.fertileTo)}`);
+      }
+      const entry=data.log&&data.log[logId(today)], parts=logParts(entry), row=elt("div","cycle-today");
+      row.appendChild(elt("small","","Today"));
+      if(parts.length) parts.forEach(text=>row.appendChild(elt("span","cy-chip",text))); else row.appendChild(elt("span","cy-none",mine?"Nothing logged yet":"Nothing logged"));
+      card.appendChild(row);
+      if(entry&&entry.note) card.appendChild(elt("p","cycle-quote","“"+entry.note+"”"));
+      const hurting=!!entry && entry.pain>=2;
+      if(!mine && (st.inPeriod || st.kind==="pms" || hurting)) card.appendChild(elt("p","cycle-note",hurting?"They’re in real pain today. A warm drink, a heating pad and a hug would mean a lot.":"A tender few days. A warm drink, patience and a hug go a long way."));
+      if(mine){
+        if(st.inPeriod && !st.last.e) add("Period ended","soft",()=>openCycle("mine","end")); else if(!st.inPeriod) add("Period started","",()=>openCycle("mine","start"));
+        add("Log today","soft",()=>openCycle("mine","log"));
+      } else add("Send a hug","",button=>sendMoment("hug",button));
+      add("Open","soft",()=>openCycle(kind));
+      card.appendChild(actions); return card;
+    }
+    function renderCycle(){
+      if(!authUser || !coupleId) return;
+      const host=$("cycleHost"); host.innerHTML="";
+      if(cycleMineOn()) host.appendChild(buildCycleCard("mine",cycleMine));
+      if(cycleTheirsOn()) host.appendChild(buildCycleCard("theirs",cycleTheirs));
+      $("cycleSection").classList.toggle("hidden",!host.children.length);
+    }
+
+    // ---- The sheet: summary, calendar, the day, and (for the owner) logging and settings -------------------------------
+    function renderCycleCalendar(st,data){
+      const marks=cycleMarks(st), first=new Date(cycleMonth.getFullYear(),cycleMonth.getMonth(),1), today=dayKey();
+      $("cycleMonth").textContent=first.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+      const grid=$("cycleGrid"); grid.innerHTML="";
+      const start=new Date(first); start.setDate(1-((first.getDay()+6)%7));   // weeks start on Monday
+      for(let i=0;i<42;i++){
+        const date=new Date(start); date.setDate(start.getDate()+i); const key=dayKeyOf(date), flags=cycleFlagsFor(key,marks,data);
+        const button=elt("button","cd"+(date.getMonth()!==first.getMonth()?" other":"")+(flags.period?" period":"")+(flags.pred?" pred":"")+(flags.fert?" fert":"")+(flags.ov?" ov":"")+(flags.logged?" logged":"")+(key===today?" today":"")+(key===cycleDay?" sel":""),String(date.getDate()));
+        button.type="button";
+        button.setAttribute("aria-label",[prettyDay(key),flags.period?"period":"",flags.pred?"period expected":"",flags.ov?"ovulation":flags.fert?"fertile window":"",flags.logged?"something logged":""].filter(Boolean).join(", "));
+        button.onclick=()=>{ cycleDay=key; renderCycleDialog(); };
+        grid.appendChild(button);
+      }
+    }
+    function renderCycleDayBox(st,data,owner){
+      const box=$("cycleDayBox"); box.innerHTML=""; const key=cycleDay, today=dayKey(), flags=cycleFlagsFor(key,cycleMarks(st),data), entry=data.log&&data.log[logId(key)];
+      box.appendChild(elt("b","",prettyDay(key)+(key===today?" · today":"")));
+      const tags=elt("div","cyc-tags");
+      [flags.period?`Period day ${flags.periodDay}`:flags.pred?"Period expected":"", flags.ov?"Ovulation day":flags.fert?"Fertile window":""].filter(Boolean).forEach(text=>tags.appendChild(elt("span","cyc-tag",text)));
+      if(tags.children.length) box.appendChild(tags);
+      box.appendChild(elt("small","",describeLog(entry)||(key>today?"Nothing to log yet.":"Nothing logged for this day.")));
+      if(!owner) return;
+      if(key<=today){ const log=elt("button","btn soft",entry?"Edit this day":"Log this day"); log.type="button"; log.onclick=()=>showCycleForm("log"); box.appendChild(log); }
+      if(st && st.periods.some(item=>item.s===key)){
+        const remove=elt("button","btn soft","Remove this period"); remove.type="button";
+        remove.onclick=async()=>{ if(!await askConfirm("Remove the period that started on "+prettyDay(key)+"?",{ok:"Remove"})) return; try { await cycleWrite({ periods:cycleMine.periods.filter(item=>item.s!==key) }); cycleSay(""); } catch(error){ cycleSay(saveFailure(error,"Couldn’t save that")); } };
+        box.appendChild(remove);
+      }
+    }
+    function renderCycleDialog(){
+      if(!$("cycleDialog").open) return;
+      const data=cycleData(), owner=cycleIsMine();
+      if(!data || !(owner?cycleMineOn():cycleTheirsOn())){ closeDialog($("cycleDialog")); return; }
+      $("cycleDlgTitle").textContent=owner?"My cycle":"Your partner’s cycle"; $("cycleReadonly").classList.toggle("hidden",owner);
+      const today=dayKey(), st=cycleStats(data,today), sum=$("cycleSummary"); sum.innerHTML="";
+      if(st){
+        const lines=cycleLines(st), top=elt("div","cyc-sum-top"), chip=elt("span","cycle-chip "+st.kind,st.phase);
+        top.appendChild(chip); top.appendChild(elt("b","",lines.next)); sum.appendChild(top);
+        const stats=elt("div","cyc-stats");
+        [["Cycle",`${st.cycleLen} days`],["Period",`${st.periodLen} days`],["Logged",`${st.periods.length} ${st.periods.length===1?"cycle":"cycles"}`]].forEach(([label,value])=>{ const box=elt("div","cyc-stat"); box.appendChild(elt("small","",label)); box.appendChild(elt("b","",value)); stats.appendChild(box); });
+        sum.appendChild(stats); sum.appendChild(elt("small","cyc-ovline",lines.ov));
+      } else sum.appendChild(elt("small","cyc-ovline",owner?"Tap “Period started” to add your last period.":"Nothing has been logged yet."));
+      renderCycleCalendar(st,data); renderCycleDayBox(st,data,owner);
+      $("cycleOwner").classList.toggle("hidden",!owner);
+      if(owner){
+        $("cycEnd").disabled=!(st && st.periods.length && !st.periods[st.periods.length-1].e);
+        const shared=data.share===true;
+        $("cycShareSeg").querySelectorAll("button").forEach(button=>button.setAttribute("aria-pressed",String((button.dataset.share==="1")===shared)));
+        $("cycShareHint").textContent=shared?"Your partner can see your dates, pain, symptoms and notes. Only you can change anything.":"Only you can see your cycle right now.";
+        setStepper($("cycCycle"),data.cycleLength||28); setStepper($("cycPeriod"),data.periodLength||5);
+      }
+    }
+    function paintLogChips(){
+      $("logPain").querySelectorAll(".cchip").forEach((chip,i)=>chip.setAttribute("aria-pressed",String(i===logPain)));
+      $("logFlow").querySelectorAll(".cchip").forEach((chip,i)=>chip.setAttribute("aria-pressed",String(i===logFlow)));
+      document.querySelectorAll("#logBody .cchip, #logFeel .cchip").forEach(chip=>chip.setAttribute("aria-pressed",String(logSyms.has(chip.dataset.key))));
+    }
+    function showCycleForm(mode){
+      cycleMode=mode;
+      $("cycleDateForm").classList.toggle("hidden",mode!=="start" && mode!=="end"); $("cycleLogForm").classList.toggle("hidden",mode!=="log");
+      if(mode==="start" || mode==="end"){
+        $("cycleDateLabel").textContent=mode==="start"?"Period started on":"Period ended on";
+        $("cycleDateInput").max=dayKey(); $("cycleDateInput").value=cycleDay<=dayKey()?cycleDay:dayKey();
+      }
+      if(mode==="log"){
+        const entry=(cycleMine&&cycleMine.log&&cycleMine.log[logId(cycleDay)])||{};
+        logPain=entry.pain||0; logFlow=entry.flow||0; logSyms=new Set(entry.symptoms||[]); $("logNote").value=entry.note||"";
+        $("cycleLogTitle").textContent=cycleDay===dayKey()?"How are you today?":"How was "+prettyDay(cycleDay)+"?"; paintLogChips();
+      }
+      if(mode) $("cycleOwner").scrollIntoView({ block:"nearest" });
+    }
+    function openCycle(kind,form){
+      if(!coupleId) return;
+      cycleView=kind==="theirs"?"theirs":"mine";
+      if(cycleIsMine()?!cycleMineOn():!cycleTheirsOn()) return;
+      cycleDay=dayKey(); cycleMonth=dparse(cycleDay); cycleSay(""); showCycleForm("");
+      openDialog($("cycleDialog")); renderCycleDialog();
+      if(form && cycleIsMine()) showCycleForm(form);
+    }
+
+    // ---- Settings: the switch, and what happens when it is flipped ---------------------------------------------------------
+    function renderCycleSettings(){
+      const on=cycleMineOn();
+      $("cycleToggle").checked=on; $("cycleToggle").disabled=!cycleMineLoaded;
+      $("cycleSettingsMore").classList.toggle("hidden",!on);
+      $("cycleShareToggle").checked=on && cycleMine.share===true;
+      $("cycleSettingsNote").textContent=cycleMineDenied?"The cycle tracker can’t open yet: TW’s database rules need the latest update (Firebase → Firestore → Rules → paste firestore.rules → Publish).":"";
+      $("cycleSettingsNote").classList.toggle("hidden",!cycleMineDenied);
+    }
+    async function setCycleShare(on){
+      try { await cycleWrite({ share:on }); cycleSay(on?"Your partner can now see your cycle.":"Hidden from your partner.",true); if(on) cycleHeadsUp(); }
+      catch(error){ cycleSay(saveFailure(error,"Couldn’t save that")); }
+      renderCycleSettings(); renderCycleDialog();
+    }
+    async function turnOffCycle(){
+      if(!await askConfirm("Turn off the cycle tracker? It will be hidden from you and from your partner. Your entries are kept, so you can turn it back on later.",{ok:"Turn off"})) return;
+      try { await cycleWrite({ on:false }); cycleSay("Cycle tracker is off.",true); } catch(error){ cycleSay(saveFailure(error,"Couldn’t save that")); }
+      renderCycleSettings();
+    }
+    function paintOnboard(){
+      document.querySelectorAll("#cycleOnboard .onb-pane").forEach(pane=>pane.classList.toggle("hidden",Number(pane.dataset.step)!==onboardStep));
+      [...$("onbDots").children].forEach((dot,i)=>dot.classList.toggle("on",i<=onboardStep));
+      $("onbBack").classList.toggle("hidden",onboardStep===0);
+      $("onbNext").textContent=onboardStep===0?"Get started":onboardStep===1?"Continue":"Start tracking";
+      $("onbNext").disabled=onboardStep===2 && onboardShare===null;
+      document.querySelectorAll("#cycleOnboard .share-card").forEach(card=>card.setAttribute("aria-checked",String(onboardShare!==null && card.dataset.share===(onboardShare?"1":"0"))));
+    }
+    function openOnboarding(){
+      onboardStep=0; onboardShare=null; $("onbStatus").textContent="";
+      $("onbStart").max=dayKey(); $("onbStart").value=""; setStepper($("onbCycle"),28); setStepper($("onbPeriod"),5);
+      $("onbArt").innerHTML='<div class="cycle-wheel">'+cycleWheel({ cycleLen:28, periodLen:5, day:11, toNext:18 })+wheelCenter({ cycleLen:28, day:11, toNext:18 })+'</div>';
+      paintOnboard(); openDialog($("cycleOnboard"));
+    }
+    async function onboardNext(){
+      $("onbStatus").textContent="";
+      if(onboardStep===0){ onboardStep=1; paintOnboard(); return; }
+      const start=$("onbStart").value, today=dayKey();
+      if(onboardStep===1){
+        if(!start || start>today || ddiff(start,today)>400){ $("onbStatus").textContent="Pick the first day of your last period."; return; }
+        onboardStep=2; paintOnboard(); return;
+      }
+      if(onboardShare===null) return;
+      $("onbNext").disabled=true;
+      try {
+        await setDoc(cycleRefFor(authUser.uid),{ on:true, share:onboardShare, cycleLength:stepperValue($("onbCycle")), periodLength:stepperValue($("onbPeriod")), periods:[{ s:start, e:"" }], log:{}, updatedAt:serverTimestamp() });
+        closeDialog($("cycleOnboard")); toast(onboardShare?"Cycle tracker is on, and your partner can follow along":"Cycle tracker is on, just for you");
+        if(onboardShare) cycleHeadsUp();
+      } catch(error){ $("onbStatus").textContent=saveFailure(error,"Couldn’t save that"); $("onbNext").disabled=false; }
+    }
+
+    // ---- Live data: your own document, and your partner's (which only arrives if they switched it on and share it) ----
+    function onMineSnapshot(snap){
+      cycleMineLoaded=true; cycleMineDenied=false; cycleMine=snap.exists()?snap.data():null;
+      renderCycle(); renderCycleDialog(); renderCycleSettings();
+    }
+    function watchPartnerCycle(){
+      if(cycleTheirsFor===(partnerUid||"")) return;
+      if(cycleTheirsStop){ cycleTheirsStop(); cycleTheirsStop=null; }
+      cycleTheirsFor=partnerUid||""; cycleTheirs=null; seen.cycle=""; renderCycle();
+      if(!partnerUid) return;
+      const id=coupleId, uid=partnerUid; let first=true;
+      cycleTheirsStop=onSnapshot(cycleRefFor(uid),snap=>{
+        if(coupleId!==id || partnerUid!==uid) return;
+        cycleTheirs=snap.exists()?snap.data():null;
+        const key=cycleTheirsOn()?String(millis(cycleTheirs.updatedAt)):"";
+        if(!first && key && key!==seen.cycle) toast(seen.cycle?"Your partner updated their cycle tracker":"Your partner shared their cycle tracker with you",()=>openCycle("theirs"));
+        first=false; seen.cycle=key; renderCycle(); renderCycleDialog();
+      },()=>{ if(coupleId!==id || partnerUid!==uid) return; cycleTheirs=null; first=false; seen.cycle=""; renderCycle(); renderCycleDialog(); });   // refused = not shared: show nothing
+    }
+    function bindStepper(el,min,max,onChange){
+      el.querySelectorAll("button").forEach(button=>button.onclick=()=>{ const next=Math.max(min,Math.min(max,Number(el.querySelector("b").textContent)+Number(button.dataset.step))); el.querySelector("b").textContent=next; onChange(next); });
+    }
+    const setStepper=(el,value)=>{ el.querySelector("b").textContent=String(value); };
+    const stepperValue=el=>Number(el.querySelector("b").textContent);
+    function buildCycle(){
+      CYCLE_PAIN.forEach((label,i)=>{ const chip=elt("button","cchip",label); chip.type="button"; chip.dataset.level=String(i); chip.onclick=()=>{ logPain=i; paintLogChips(); }; $("logPain").appendChild(chip); });
+      CYCLE_FLOW.forEach((label,i)=>{ const chip=elt("button","cchip"); chip.type="button"; chip.dataset.level=String(i); chip.innerHTML=dropsSvg(CYCLE_DROPS[i]); chip.appendChild(document.createTextNode(label)); chip.onclick=()=>{ logFlow=i; paintLogChips(); }; $("logFlow").appendChild(chip); });
+      CYCLE_SYMPTOMS.forEach(([key,label,group])=>{ const chip=elt("button","cchip",label); chip.type="button"; chip.dataset.key=key; chip.onclick=()=>{ if(logSyms.has(key)) logSyms.delete(key); else logSyms.add(key); paintLogChips(); }; $(group==="body"?"logBody":"logFeel").appendChild(chip); });
+      bindStepper($("onbCycle"),15,60,()=>{}); bindStepper($("onbPeriod"),1,14,()=>{});
+      bindStepper($("cycCycle"),15,60,value=>cycleWrite({ cycleLength:value }).catch(error=>cycleSay(saveFailure(error,"Couldn’t save that"))));
+      bindStepper($("cycPeriod"),1,14,value=>cycleWrite({ periodLength:value }).catch(error=>cycleSay(saveFailure(error,"Couldn’t save that"))));
+      $("closeCycle").onclick=()=>closeDialog($("cycleDialog"));
+      $("cycleDialog").addEventListener("click",event=>{ if(event.target===$("cycleDialog")) closeDialog($("cycleDialog")); });
+      $("calPrev").onclick=()=>{ cycleMonth=new Date(cycleMonth.getFullYear(),cycleMonth.getMonth()-1,1); renderCycleDialog(); };
+      $("calNext").onclick=()=>{ cycleMonth=new Date(cycleMonth.getFullYear(),cycleMonth.getMonth()+1,1); renderCycleDialog(); };
+      $("cycStart").onclick=()=>showCycleForm("start"); $("cycEnd").onclick=()=>showCycleForm("end");
+      $("cycleDateCancel").onclick=()=>showCycleForm(""); $("cycleLogCancel").onclick=()=>showCycleForm("");
+      $("cycleDateForm").onsubmit=async event=>{
+        event.preventDefault();
+        const date=$("cycleDateInput").value, today=dayKey();
+        if(!date || date>today || ddiff(date,today)>400){ cycleSay("Pick a date that has already happened."); return; }
+        try {
+          if(cycleMode==="start"){
+            const periods=(cycleMine.periods||[]).filter(item=>item.s!==date).concat([{ s:date, e:"" }]).sort((a,b)=>a.s<b.s?-1:1).slice(-36);
+            await cycleWrite({ periods });
+            if(cycleMine.share===true) cycleHeadsUp();
+          } else {
+            const periods=(cycleMine.periods||[]).map(item=>({ ...item })).sort((a,b)=>a.s<b.s?-1:1), index=periods.map(item=>item.s).filter(start=>start<=date).length-1;
+            if(index<0){ cycleSay("Add the day this period started first."); return; }
+            if(ddiff(periods[index].s,date)>14){ cycleSay("That’s more than 14 days after it started. Please check the date."); return; }
+            periods[index].e=date; await cycleWrite({ periods });
+          }
+          cycleSay(""); showCycleForm("");
+        } catch(error){ cycleSay(saveFailure(error,"Couldn’t save that")); }
+      };
+      $("cycleLogForm").onsubmit=async event=>{
+        event.preventDefault();
+        const entry={ pain:logPain, flow:logFlow, symptoms:[...logSyms], note:$("logNote").value.trim().slice(0,140) };
+        try {
+          await cycleWrite({ [`log.${logId(cycleDay)}`]:entry });
+          if(cycleMine.share===true && logPain>=2 && cycleDay===dayKey()) cycleHeadsUp();
+          cycleSay(""); showCycleForm("");
+        } catch(error){ cycleSay(saveFailure(error,"Couldn’t save that")); }
+      };
+      $("cycShareSeg").querySelectorAll("button").forEach(button=>button.onclick=()=>setCycleShare(button.dataset.share==="1"));
+      $("cycleShareToggle").onchange=()=>setCycleShare($("cycleShareToggle").checked);
+      $("cycOff").onclick=turnOffCycle;
+      $("cycDelete").onclick=async()=>{
+        if(!await askConfirm("Delete all your cycle data? This can’t be undone.",{ok:"Delete"})) return;
+        try { await deleteDoc(cycleRefFor(authUser.uid)); closeDialog($("cycleDialog")); cycleSay("Cycle data deleted.",true); } catch(error){ cycleSay(saveFailure(error,"Couldn’t delete that")); }
+      };
+      $("cycleOpenBtn").onclick=()=>{ closeDialog($("settingsDialog")); openCycle("mine"); };
+      $("cycleToggle").onchange=async()=>{
+        const want=$("cycleToggle").checked;
+        $("cycleToggle").checked=!want;   // it only flips once the change has really happened
+        if(want){
+          if(cycleMine){ try { await cycleWrite({ on:true }); cycleSay("Cycle tracker is on.",true); } catch(error){ cycleSay(saveFailure(error,"Couldn’t save that")); } }
+          else { closeDialog($("settingsDialog")); openOnboarding(); }
+        } else await turnOffCycle();
+        renderCycleSettings();
+      };
+      $("onbClose").onclick=()=>closeDialog($("cycleOnboard"));
+      $("onbBack").onclick=()=>{ onboardStep=Math.max(0,onboardStep-1); $("onbStatus").textContent=""; paintOnboard(); };
+      $("onbNext").onclick=onboardNext;
+      document.querySelectorAll("#cycleOnboard .share-card").forEach(card=>card.onclick=()=>{ onboardShare=card.dataset.share==="1"; paintOnboard(); });
+      $("cycleOnboard").addEventListener("close",()=>renderCycleSettings());
+    }
+    buildCycle();
 
     // ---- Games hub ----------------------------------------------------------------------------------------
     let openGameId=null;
