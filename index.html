@@ -625,6 +625,74 @@
     .lock-pad button:disabled { opacity:.4; }
     .lock-pad .blank { visibility:hidden; }
     .lock-pad .back svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* ---- Calm corner ----------------------------------------------------------------------------------- */
+    .calm-card { display:grid; grid-template-columns:auto 1fr; gap:8px 14px; align-items:center; padding:16px; }
+    .calm-moon svg { display:block; width:54px; height:54px; filter:drop-shadow(0 0 14px rgba(255,217,138,.5)); }
+    .calm-text b { display:block; font-size:1.05rem; font-weight:800; letter-spacing:-.01em; }
+    .calm-text small { display:block; margin-top:2px; font-size:.8rem; line-height:1.4; font-weight:600; color:var(--muted); }
+    .calm-actions { grid-column:1/-1; display:grid; grid-template-columns:1.5fr 1fr; gap:10px; margin-top:4px; }
+    .calm-actions .glow-pill, .calm-actions .btn { min-height:46px; }
+    dialog.calm { width:100%; max-width:none; height:100%; max-height:none; margin:0; padding:0; border:0; color:#f4eeff; background:radial-gradient(90% 55% at 12% 0%,rgba(157,123,255,.34),transparent 60%),radial-gradient(80% 50% at 100% 32%,rgba(64,196,186,.2),transparent 62%),linear-gradient(170deg,#0d0a1c,#17143a 55%,#123049); }
+    dialog.calm[open] { display:block; overflow:hidden; }
+    dialog.calm::backdrop { background:transparent; backdrop-filter:none; }
+    .calm-sky { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+    .calm-sky i { position:absolute; border-radius:50%; background:#fff; animation:calmTwinkle 4s ease-in-out infinite; }
+    @keyframes calmTwinkle { 0%,100% { opacity:.15; transform:scale(.8); } 50% { opacity:.85; transform:scale(1.15); } }
+    .calm-view { position:absolute; inset:0; overflow-y:auto; padding:max(14px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left)); }
+    .calm-view:not(.hidden).calm-run { display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .calm-head { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-bottom:6px; }
+    .calm-head h2 { font-size:1.5rem; font-weight:800; }
+    .calm-x { color:#f4eeff; }
+    .calm-x:hover { background:rgba(255,255,255,.1); }
+    .calm-lead { margin-bottom:16px; font-size:.95rem; color:#b9b0d6; }
+    .calm-big { width:100%; min-height:58px; border-radius:22px; font-size:1.02rem; }
+    .calm-h { margin:26px 2px 10px; font-size:.76rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:#a89ccb; }
+    .calm-list { display:grid; gap:10px; }
+    .calm-session { display:grid; grid-template-columns:1fr auto; gap:2px 12px; align-items:center; padding:14px 16px; text-align:left; border-radius:20px; color:#f4eeff; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); transition:transform .14s, border-color .15s, box-shadow .15s; }
+    .calm-session:active { transform:scale(.98); }
+    .calm-session:hover, .calm-session:focus-visible { border-color:#ff5b88; box-shadow:0 0 18px -6px rgba(255,91,136,.6); }
+    .calm-session b { font-size:1rem; font-weight:800; }
+    .calm-session small { grid-column:1; font-size:.8rem; line-height:1.4; color:#b9b0d6; }
+    .calm-session .mins { grid-row:1/3; grid-column:2; padding:5px 11px; border-radius:999px; background:rgba(157,123,255,.22); color:#d8ccff; font-size:.76rem; font-weight:800; white-space:nowrap; }
+    .calm-aff { display:grid; gap:8px; width:100%; padding:22px 20px; text-align:center; color:#fff; border-radius:24px; background:linear-gradient(150deg,rgba(255,91,136,.2),rgba(157,123,255,.22)); border:1px solid rgba(255,255,255,.15); }
+    .calm-aff span { font-size:1.25rem; font-weight:800; line-height:1.35; text-wrap:balance; }
+    .calm-aff small { font-size:.74rem; color:#c9bfe6; }
+    .calm-panel { display:grid; gap:16px; padding:16px; border-radius:22px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); }
+    .calm-label { margin-bottom:8px; font-size:.74rem; font-weight:800; letter-spacing:.05em; color:#a89ccb; }
+    .cchips { display:flex; flex-wrap:wrap; gap:8px; }
+    .cchip { min-height:38px; padding:0 14px; border-radius:999px; color:#e8e0ff; font-size:.86rem; font-weight:700; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); transition:background .15s, box-shadow .15s; }
+    .cchip[aria-pressed=true] { color:#fff; border-color:transparent; background:linear-gradient(135deg,#ff5b88,#9d7bff); box-shadow:0 0 16px -4px rgba(255,91,136,.7); }
+    .calm-range { width:100%; accent-color:#ff5b88; }
+    .calm-switch { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:.92rem; font-weight:700; }
+    dialog.calm .switch { background:rgba(255,255,255,.22); }
+    dialog.calm .switch:checked { background:var(--accent); }
+    dialog.calm .btn.soft { color:#f4eeff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
+    dialog.calm .btn:not(.soft):not(.ghost) { background:linear-gradient(135deg,#ff5b88,#c0407e); }
+    .calm-voicepick { display:grid; grid-template-columns:1fr auto; gap:8px; }
+    .calm-voicepick select { min-height:44px; padding:0 12px; color:#f4eeff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); border-radius:14px; }
+    .calm-voicepick select option { color:#1d171e; }
+    .calm-voicepick .btn { min-height:44px; padding:0 16px; }
+    .calm-hint { margin-top:8px; font-size:.76rem; line-height:1.5; color:#9d93bd; }
+    .calm-note { margin:16px 4px 0; font-size:.78rem; line-height:1.5; color:#9d93bd; }
+    .calm-time { font-variant-numeric:tabular-nums; font-size:1.05rem; font-weight:800; color:#d8ccff; }
+    .orb-wrap { flex:1; display:grid; place-items:center; width:100%; min-height:250px; }
+    .orb { position:relative; width:min(52vw,220px); aspect-ratio:1; --s:.62; transform:scale(var(--s)); will-change:transform; }
+    .orb i { position:absolute; inset:0; border-radius:50%; }
+    .orb i:nth-child(1) { background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),#ff9dc0 34%,#9d7bff 70%,#4a3cc0); box-shadow:0 0 60px 8px rgba(157,123,255,.55), 0 0 120px 30px rgba(255,91,136,.25); }
+    .orb i:nth-child(2) { inset:-15%; border:1.5px solid rgba(255,255,255,.22); }
+    .orb i:nth-child(3) { inset:-32%; border:1px solid rgba(255,255,255,.12); }
+    .orb.done { --s:.9; animation:orbGlow 4s ease-in-out infinite; }
+    @keyframes orbGlow { 50% { transform:scale(.97); } }
+    .orb-phase { min-height:1.6em; margin-top:2px; font-size:1.3rem; font-weight:800; letter-spacing:.02em; text-shadow:0 2px 14px rgba(0,0,0,.5); }
+    .calm-line { min-height:4.4em; max-width:30ch; margin:8px auto 14px; font-size:1.15rem; font-weight:700; line-height:1.45; text-wrap:balance; transition:opacity .45s; }
+    .calm-line.fade { opacity:0; }
+    .calm-bar { width:100%; height:5px; margin-bottom:16px; border-radius:99px; background:rgba(255,255,255,.12); overflow:hidden; }
+    .calm-bar span { display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,#ff5b88,#9d7bff); transition:width .3s linear; }
+    .calm-ctrls { display:flex; gap:10px; width:100%; }
+    .calm-ctrls .btn { flex:1; min-height:44px; padding:0 10px; font-size:.88rem; }
+    .calm-done-title { margin-top:4px; font-size:1.6rem; font-weight:800; }
+    .calm-done-sub { margin-top:4px; color:#b9b0d6; }
   </style>
 </head>
 <body>
@@ -758,6 +826,17 @@
             </div>
           </div>
         </div>
+
+        <section class="home-section calm-section">
+          <div class="card calm-card">
+            <span class="calm-moon" data-ico="calm-moon" aria-hidden="true"></span>
+            <div class="calm-text"><b>Calm corner</b><small>Overthinking? Take a quiet minute: guided breathing, affirmations and soft sounds.</small></div>
+            <div class="calm-actions">
+              <button class="glow-pill" id="calmNow" type="button">I’m overthinking</button>
+              <button class="btn soft" id="calmOpen" type="button">Open</button>
+            </div>
+          </div>
+        </section>
 
         <section class="home-section ms-section">
           <button class="card ms-card" id="msCard" type="button" aria-label="Open your milestones">
@@ -1044,6 +1123,55 @@
     <div class="row"><button class="btn ghost" id="confirmCancel" type="button">Cancel</button><button class="btn" id="confirmOk" type="button">OK</button></div>
   </dialog>
   <!-- Our photos and couple portrait -->
+  <!-- Calm corner -->
+  <dialog id="calmScreen" class="calm" aria-labelledby="calmTitle">
+    <div class="calm-view" id="calmMenu">
+      <div class="calm-head"><h2 id="calmTitle">Calm corner</h2><button class="icon-btn calm-x" id="calmClose" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <p class="calm-lead">A quiet minute for a busy mind.</p>
+      <button class="glow-pill calm-big" id="calmOverthink" type="button">I’m overthinking — help me slow down</button>
+      <h3 class="calm-h">Guided meditations</h3>
+      <div class="calm-list" id="calmList"></div>
+      <h3 class="calm-h">An affirmation for you</h3>
+      <button class="calm-aff" id="calmAff" type="button" aria-live="polite"><span id="calmAffText"></span><small>Tap for another</small></button>
+      <button class="btn soft wide" id="calmAffSpeak" type="button" style="margin-top:10px">Read it to me</button>
+      <h3 class="calm-h">Sound &amp; timer</h3>
+      <div class="calm-panel">
+        <div><div class="calm-label">Sound</div><div class="cchips" id="calmSounds" role="group" aria-label="Sound"></div></div>
+        <div><div class="calm-label">Volume</div><input class="calm-range" id="calmVol" type="range" min="5" max="100" aria-label="Volume"></div>
+        <div><div class="calm-label">Timer</div><div class="cchips" id="calmTimers" role="group" aria-label="Timer"></div></div>
+        <label class="calm-switch"><span>Voice guide in meditations</span><input class="switch" id="calmVoice" type="checkbox"></label>
+        <div id="calmVoiceBox">
+          <div class="calm-label">Voice</div>
+          <div class="calm-voicepick"><select id="calmVoicePick" aria-label="Choose a voice"></select><button class="btn soft" id="calmVoiceTry" type="button">Preview</button></div>
+          <p class="calm-hint" id="calmVoiceHint"></p>
+        </div>
+        <button class="btn wide" id="calmStartMusic" type="button">Start sound &amp; timer</button>
+      </div>
+      <p class="calm-note">Sounds are made right on your phone, so there is nothing to download. Keep the screen on while you meditate.</p>
+    </div>
+
+    <div class="calm-view calm-run hidden" id="calmSession">
+      <div class="calm-head"><button class="icon-btn calm-x" id="calmEnd" type="button" aria-label="End session"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button><span class="calm-time" id="calmTime" aria-live="off">0:00</span></div>
+      <div class="orb-wrap"><div class="orb" id="orb" aria-hidden="true"><i></i><i></i><i></i></div></div>
+      <div class="orb-phase" id="orbPhase" aria-live="off">Breathe in</div>
+      <p class="calm-line" id="calmLine" aria-live="polite"></p>
+      <div class="calm-bar"><span id="calmBarFill"></span></div>
+      <div class="calm-ctrls"><button class="btn soft" id="calmPause" type="button">Pause</button><button class="btn soft" id="calmMute" type="button">Sound on</button><button class="btn soft" id="calmVoiceBtn" type="button">Voice on</button></div>
+    </div>
+
+    <div class="calm-view calm-run hidden" id="calmDone">
+      <div class="orb-wrap"><div class="orb done" aria-hidden="true"><i></i><i></i><i></i></div></div>
+      <h2 class="calm-done-title">Beautifully done</h2>
+      <p class="calm-done-sub" id="calmDoneSub"></p>
+      <p class="calm-line" id="calmDoneAff"></p>
+      <div class="calm-ctrls" style="flex-direction:column">
+        <button class="glow-pill hidden" id="calmSendLove" type="button">Send love to my partner</button>
+        <button class="btn soft" id="calmAgain" type="button">Another one</button>
+        <button class="btn soft" id="calmDoneClose" type="button">Done</button>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Heart lock -->
   <dialog id="lockScreen" class="lock" aria-labelledby="lockTitle">
     <div class="lock-card">
@@ -2157,6 +2285,8 @@
       love:{emoji:"💗",text:"💗 Thinking of you",label:"some love",burst:true,haptic:[16,50,16,50,30]}
     };
     const haptic = pattern => { try { if(navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(pattern); } catch(error){} };
+    // Open dialogs sit above the page, so effects started inside one have to live inside it.
+    const fxHost = () => { const open=document.querySelectorAll("dialog[open]"); return open.length?open[open.length-1]:document.body; };
     // A little burst of drawn hearts and sparkles flying out of whatever you tapped.
     function burstFrom(el,count=14){
       if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -2165,21 +2295,23 @@
         const piece=document.createElement("i"), angle=Math.PI*2*i/count+Math.random()*.5, dist=50+Math.random()*60;
         piece.className="burst "+(i%3===0?"s":"h"); piece.setAttribute("aria-hidden","true");
         piece.style.cssText=`left:${cx}px;top:${cy}px;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist-24}px;--s:${(.7+Math.random()*.9).toFixed(2)};animation-delay:${Math.round(Math.random()*70)}ms`;
-        document.body.appendChild(piece); setTimeout(()=>piece.remove(),1100);
+        fxHost().appendChild(piece); setTimeout(()=>piece.remove(),1100);
       }
     }
     let momentCooldown=0;
-    document.querySelectorAll("[data-moment]").forEach(button=>button.onclick=async()=>{
-      const moment=moments[button.dataset.moment];
-      if(!coupleId || Date.now()<momentCooldown) return;
+    async function sendMoment(key,source){
+      const moment=moments[key];
+      if(!moment || !coupleId || Date.now()<momentCooldown) return false;
       momentCooldown=Date.now()+1500;
       haptic(moment.haptic||[14]);
-      if(moment.burst) burstFrom(button,16); else confettiBurst([moment.emoji],10);
+      if(moment.burst) burstFrom(source,16); else confettiBurst([moment.emoji],10);
       playAnim($("themFace"),"wiggle",800); playChime("pop");
       try {
         await Promise.all([share("poke",moment.text),updateDoc(coupleRef(),{"shared.lastPoke":moment.text,"shared.lastPokeBy":authUser.uid,"shared.lastPokeAt":serverTimestamp(),"shared.lastMoment":{emoji:moment.emoji,by:authUser.uid,at:serverTimestamp()}})]);
-      } catch(error){ toast("Couldn't send that — try again"); }
-    });
+        return true;
+      } catch(error){ toast("Couldn't send that — try again"); return false; }
+    }
+    document.querySelectorAll("[data-moment]").forEach(button=>button.onclick=()=>sendMoment(button.dataset.moment,button));
 
     const moods=[{key:"happy",emoji:"😊",label:"Happy"},{key:"loved",emoji:"🥰",label:"Loved"},{key:"tired",emoji:"😴",label:"Tired"},{key:"sad",emoji:"😢",label:"Sad"},{key:"stressed",emoji:"😤",label:"Stressed"},{key:"sick",emoji:"🤒",label:"Unwell"}];
     const MOOD_FRESH_MS=24*3600*1000;
@@ -2190,7 +2322,7 @@
         chip.appendChild(icon); chip.appendChild(document.createTextNode(mood.label));
         chip.onclick=async()=>{
           if(!coupleId) return;
-          try { await updateDoc(coupleRef(),{[`shared.moods.${authUser.uid}`]:{key:mood.key,emoji:mood.emoji,label:mood.label,at:serverTimestamp()}}); toast(`Feeling ${mood.label.toLowerCase()} — your partner can see it`); }
+          try { await updateDoc(coupleRef(),{[`shared.moods.${authUser.uid}`]:{key:mood.key,emoji:mood.emoji,label:mood.label,at:serverTimestamp()}}); if(mood.key==="stressed" || mood.key==="sad") toast(`Feeling ${mood.label.toLowerCase()} — tap for a calm minute`,openCalm); else toast(`Feeling ${mood.label.toLowerCase()} — your partner can see it`); }
           catch(error){ toast("Couldn't save that — try again"); }
         };
         $("moodRow").appendChild(chip);
@@ -2288,6 +2420,7 @@
       // home cards
       "pill-days": mk("0 0 32 32",`<path d="${heartPath(16,15,11)}" fill="url(#gRose)"/><path d="M9 21q7 6 14 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>`),
       "pill-level": mk("0 0 32 32",`<path d="M9 6h14v6a7 7 0 0 1-14 0Z" fill="url(#gSun)"/><path d="M9 8H5.5a3 3 0 0 0 3.2 4.6M23 8h3.5a3 3 0 0 1-3.2 4.6" fill="none" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/><path d="M13 19h6v3h-6zM10.5 25h11" fill="#ffb347" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/>`),
+      "calm-moon": mk("0 0 48 48",`<path d="M27 5A19 19 0 1 0 43 33 15.500 15.500 0 0 1 27 5Z" fill="#ffd98a"/><path d="M27 5a19 19 0 0 0-9 3c6 1 12 7 12 15 0 9-7 15-16 15 4 4 10 6 16 5A19 19 0 0 0 43 33 15.500 15.500 0 0 1 27 5Z" fill="#f2b457" opacity=".45"/><ellipse cx="14" cy="17" rx="4" ry="2.400" fill="#fff" opacity=".6" transform="rotate(-35 14 17)"/><path d="M38 7l1.300 3.500 3.500 1.300-3.500 1.300L38 16.600l-1.300-3.500-3.500-1.300 3.500-1.300Z" fill="#fff"/><path d="M42 20l.800 2.200 2.200.8-2.200.8-.8 2.200-.8-2.200-2.200-.8 2.200-.8Z" fill="#ffb3cc"/>`),
       "food-mochi": mk("0 0 48 48",`<ellipse cx="24" cy="40" rx="15" ry="3" fill="#2b1733" opacity=".14"/><path d="M7 31c0-12 7-19 17-19s17 7 17 19c0 5-5 8-17 8S7 36 7 31Z" fill="#fff6fa" stroke="#f1c3d4" stroke-width="2"/><path d="M8 32c1 4 6 6 16 6s15-2 16-6c-2 2-7 3-16 3S10 34 8 32Z" fill="#ffc6da" opacity=".7"/><ellipse cx="16" cy="21" rx="5.5" ry="3" fill="#fff" opacity=".85" transform="rotate(-28 16 21)"/><path d="M24 12.5c0-4 3-6.5 8-6.5-.8 4.5-3.5 6.5-8 6.5Z" fill="#6fd3a0"/><circle cx="18" cy="29" r="1.9" fill="#43284a"/><circle cx="30" cy="29" r="1.9" fill="#43284a"/><ellipse cx="14.5" cy="32" rx="3" ry="1.8" fill="#ffa6c1" opacity=".8"/><ellipse cx="33.5" cy="32" rx="3" ry="1.8" fill="#ffa6c1" opacity=".8"/><path d="M22 32.5q2 2.2 4 0" fill="none" stroke="#43284a" stroke-width="1.7" stroke-linecap="round"/>`),
       "food-berry": mk("0 0 48 48",`<ellipse cx="24" cy="43" rx="12" ry="2.6" fill="#2b1733" opacity=".14"/><path d="M24 42C13 36 7 27 9 20c1.6-6.5 9-7.4 15-3 6-4.4 13.4-3.5 15 3 2 7-4 16-15 22Z" fill="#ff4d6d"/><path d="M13 22c1-4 5-5 9-3" fill="none" stroke="#ff8ea3" stroke-width="3" stroke-linecap="round" opacity=".8"/><g fill="#ffe08a"><ellipse cx="18" cy="26" rx="1.1" ry="1.7"/><ellipse cx="25" cy="24" rx="1.1" ry="1.7"/><ellipse cx="31" cy="27" rx="1.1" ry="1.7"/><ellipse cx="22" cy="32" rx="1.1" ry="1.7"/><ellipse cx="28" cy="33" rx="1.1" ry="1.7"/></g><path d="M14 15c3.4 2.4 6.6 2.6 10 .4 3.4 2.2 6.6 2 10-.4-1.6 4.8-5.2 7-10 7s-8.4-2.2-10-7Z" fill="#53c98a"/><path d="M24 15.4V8" stroke="#3aa870" stroke-width="2.6" stroke-linecap="round"/>`),
       "food-boba": mk("0 0 48 48",`<ellipse cx="24" cy="44" rx="11" ry="2.4" fill="#2b1733" opacity=".14"/><path d="M28.5 3l-3.2 14" stroke="#ff7aa5" stroke-width="3" stroke-linecap="round"/><path d="M12 15h24l-2.8 25.2a3 3 0 0 1-3 2.8H17.8a3 3 0 0 1-3-2.8Z" fill="#fff7ee" stroke="#f0d9c6" stroke-width="1.8"/><path d="M13.4 27h21.2l-1.4 13.2a3 3 0 0 1-3 2.8H17.8a3 3 0 0 1-3-2.8Z" fill="#e2ad7e"/><g fill="#4a2c3a"><circle cx="19" cy="38.5" r="2.5"/><circle cx="25.5" cy="39.5" r="2.5"/><circle cx="31" cy="37.5" r="2.5"/><circle cx="22" cy="33.5" r="2.5"/><circle cx="28.5" cy="33" r="2.3"/></g><ellipse cx="24" cy="15" rx="12.4" ry="3.2" fill="#ffd5e3" stroke="#f3bcd0" stroke-width="1.6"/><path d="M16 21v6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>`),
@@ -2802,6 +2935,363 @@
         notifyPartner(bothNow?"Answers revealed 💗":"Today’s question 💭",bothNow?"You both answered — open TW to see them.":"Your partner answered — add yours to reveal both.","tw-question");
       } catch(error){ toast("Couldn’t save that — try again"); }
     });
+
+    // ---- Calm corner: guided meditations, affirmations and calming sound with a timer ---------------------------
+    const CALM_PREFS_KEY="ty-calm";
+    const calmPrefs=Object.assign({ sound:"pads", volume:55, timer:10, voice:true, voiceName:"" },(()=>{ try { return JSON.parse(store.get(CALM_PREFS_KEY)||"{}"); } catch(error){ return {}; } })());
+    const saveCalm=()=>store.set(CALM_PREFS_KEY,JSON.stringify(calmPrefs));
+    const calmSoundList=[["pads","Soft pads"],["rain","Rain"],["ocean","Ocean"],["bowls","Bowls"],["off","Silent"]];
+    const calmTimerList=[5,10,15,20,30];
+    const affirmations=[
+      "My thoughts are not facts.","I am allowed to rest.","I don’t need to figure it all out today.","This feeling is temporary, and it will pass.",
+      "I trust myself to handle what comes.","I am loved, and I am enough.","I choose peace over perfect.","I let go of what I can’t control.",
+      "One breath at a time is enough.","I am safe in this moment.","I can thank my mind for worrying, and let the worry go.","I forgive myself for what I didn’t know yet.",
+      "I am doing better than I think.","My worth is not measured by what I get done.","I can be calm and still care deeply.","Not every thought needs an answer.",
+      "I am allowed to take up space.","I am growing, even when it feels slow.","I deserve gentleness, especially from myself.","The future isn’t here yet. Right now, I am okay.",
+      "I am not alone. I am held by love.","It’s okay to start again, as many times as I need.","I put down the story my mind is telling and come back to now.","Today I choose to be kind to myself."
+    ];
+    let affBag=[], affCurrent="";
+    function nextAffirmation(){ if(!affBag.length) affBag=shuffle(affirmations.filter(text=>text!==affCurrent)); affCurrent=affBag.pop(); return affCurrent; }
+
+    // Each step is [what to say, seconds]. `breath` is the circle's rhythm: in, hold, out, hold (seconds).
+    const calmSessions=[
+      { id:"overthink", title:"Overthinking reset", blurb:"Slow a racing mind: breathe, name the thoughts, let them float by.", breath:[4,0,6,0], steps:[
+        ["Find a comfortable position. Let your shoulders drop and your jaw soften.",9],
+        ["Take a slow breath in through your nose… and let it out through your mouth.",10],
+        ["You don’t have to solve anything right now. For the next few minutes, your only job is to breathe.",12],
+        ["Notice the thoughts that keep running around. Don’t fight them. Just say: I see you.",13],
+        ["Imagine every thought is a cloud. You are the sky: wide, calm, and still here.",14],
+        ["Breathe in for four… and out for six. Let the out-breath be long and slow.",22],
+        ["Gently ask: is this a fact, or a worry? Worries are allowed to pass.",14],
+        ["Place a hand on your chest. Feel it rise and fall. Right now, in this moment, you are safe.",16],
+        ["Whatever you can’t control, set it down for now. You can pick it up later with a clearer head.",14],
+        ["Breathe with the circle. In… and slowly out.",22],
+        ["Tell yourself: I am doing my best, and that is enough.",12],
+        ["One last deep breath. When you’re ready, open your eyes. Be gentle with yourself today.",12]
+      ]},
+      { id:"box", title:"Box breathing", blurb:"Four counts in, hold, out, hold. Calms your body fast.", breath:[4,4,4,4], steps:[
+        ["Sit tall and let your shoulders relax. Rest your hands anywhere comfortable.",10],
+        ["Follow the circle. It grows as you breathe in, and shrinks as you breathe out.",12],
+        ["In for four… hold for four… out for four… hold for four.",24],
+        ["Keep it smooth and quiet. If your mind wanders, just come back to the circle.",24],
+        ["Your heart is slowing down. Your body knows how to settle.",22],
+        ["Keep going, steady and easy. There is nowhere else you need to be.",22],
+        ["One more round, then let your breathing return to normal.",10]
+      ]},
+      { id:"ground", title:"5-4-3-2-1 grounding", blurb:"Use your senses to step out of your head and into the room.", breath:[5,0,5,0], steps:[
+        ["Take a slow breath. We’re going to bring you back to the present, using your senses.",12],
+        ["Look around. Silently name five things you can see.",28],
+        ["Now four things you can feel: your feet on the floor, your clothes, the air on your skin.",28],
+        ["Three things you can hear. Near, or far away.",24],
+        ["Two things you can smell. Or two smells you love.",20],
+        ["One thing you can taste. Or one thing you like about yourself.",20],
+        ["Breathe in slowly… and out. You are here, and you are okay.",24],
+        ["Notice how much quieter your mind feels. Take that with you.",10]
+      ]},
+      { id:"scan", title:"Sleepy body scan", blurb:"Slowly relax from head to toes. Lovely before bed.", breath:[4,2,7,0], steps:[
+        ["Lie down or sit back. Let your eyes close. Let your whole body get heavy.",14],
+        ["Breathe in slowly… and as you breathe out, let go.",18],
+        ["Bring your attention to your forehead and eyes. Let them soften.",24],
+        ["Relax your jaw, your tongue, your face. Let it all melt.",24],
+        ["Let your neck and shoulders sink. They’ve been carrying a lot.",26],
+        ["Soften your arms, hands and fingers. Let them rest.",24],
+        ["Feel your chest and belly rise and fall, slowly, on their own.",26],
+        ["Relax your back, your hips, and all the way down your legs.",28],
+        ["Let your feet and toes grow warm and heavy.",24],
+        ["Your whole body is soft and still. There’s nothing to fix tonight.",30],
+        ["Keep breathing slowly. Let sleep find you, or rest here as long as you like.",20]
+      ]},
+      { id:"heart", title:"Heart check-in", blurb:"A tender minute to think of your person and feel loved.", breath:[4,0,6,0], steps:[
+        ["Close your eyes and take a slow breath in… and out.",12],
+        ["Think of the person you love. Picture their face, their smile.",18],
+        ["Remember a moment with them that made you feel safe.",20],
+        ["Breathe that feeling in. Warm and steady. Let it fill your chest.",20],
+        ["Send them a silent thank you for something small they do.",18],
+        ["Now turn that same kindness toward yourself. You deserve it, too.",18],
+        ["Take one more slow breath. Carry this warmth with you today.",14]
+      ]}
+    ];
+    const calmTotal=session=>session.steps.reduce((sum,step)=>sum+step[1],0)+8;
+
+    // ---- Sound: soft pads, rain, ocean and singing bowls, all generated here with the Web Audio API ----------------
+    const calmAudio={ ctx:null, chain:null, muted:false, builders:{} };
+    function calmContext(){
+      if(!calmAudio.ctx){ const AudioCtx=window.AudioContext||window.webkitAudioContext; if(!AudioCtx) return null; calmAudio.ctx=new AudioCtx(); }
+      if(calmAudio.ctx.state==="suspended") calmAudio.ctx.resume().catch(()=>{});
+      return calmAudio.ctx;
+    }
+    const calmGain=()=>0.9*Math.pow(calmPrefs.volume/100,1.6);
+    function noiseBuffer(ctx,seconds,color){
+      const length=Math.floor(ctx.sampleRate*seconds), buffer=ctx.createBuffer(2,length,ctx.sampleRate);
+      for(let channel=0;channel<2;channel++){
+        const data=buffer.getChannelData(channel); let last=0,b0=0,b1=0,b2=0;
+        for(let i=0;i<length;i++){
+          const white=Math.random()*2-1;
+          if(color==="brown"){ last=(last+0.02*white)/1.02; data[i]=last*3.5; }
+          else { b0=.99765*b0+white*.099046; b1=.963*b1+white*.2965164; b2=.57*b2+white*1.0526913; data[i]=(b0+b1+b2+white*.1848)*.2; }
+        }
+      }
+      return buffer;
+    }
+    function makeReverb(ctx,seconds){
+      const length=Math.floor(ctx.sampleRate*seconds), buffer=ctx.createBuffer(2,length,ctx.sampleRate);
+      for(let channel=0;channel<2;channel++){ const data=buffer.getChannelData(channel); for(let i=0;i<length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/length,2.6); }
+      const convolver=ctx.createConvolver(); convolver.buffer=buffer; return convolver;
+    }
+    function strikeBowl(ctx,dest,freq,volume,when){
+      [[1,1],[2.756,.32],[5.404,.12]].forEach(([ratio,amount])=>{
+        const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.type="sine"; osc.frequency.value=freq*ratio;
+        gain.gain.setValueAtTime(0.0001,when); gain.gain.exponentialRampToValueAtTime(volume*amount,when+.03); gain.gain.exponentialRampToValueAtTime(0.0001,when+9);
+        osc.connect(gain); gain.connect(dest); osc.start(when); osc.stop(when+9.5);
+      });
+    }
+    calmAudio.builders.pads=function(ctx,out,chain){
+      const filter=ctx.createBiquadFilter(); filter.type="lowpass"; filter.frequency.value=1200; filter.Q.value=.2;
+      const verb=makeReverb(ctx,4.5), dry=ctx.createGain(), wet=ctx.createGain(); dry.gain.value=.5; wet.gain.value=.85;
+      filter.connect(dry); filter.connect(verb); verb.connect(wet); dry.connect(out); wet.connect(out); chain.nodes.push(filter,verb,dry,wet);
+      const chords=[[146.83,220,293.66,369.99,440],[123.47,185,246.94,293.66,369.99],[196,246.94,293.66,369.99,392],[110,164.81,220,277.18,329.63]];
+      const voices=[];
+      for(let i=0;i<5;i++){
+        const voice=ctx.createGain(); voice.gain.value=.04;
+        const lfo=ctx.createOscillator(), lfoGain=ctx.createGain(); lfo.frequency.value=.05+i*.027; lfoGain.gain.value=.022; lfo.connect(lfoGain); lfoGain.connect(voice.gain); lfo.start();
+        [["sine",0],["triangle",5]].forEach(([type,detune])=>{
+          const osc=ctx.createOscillator(); osc.type=type; osc.frequency.value=chords[0][i]; osc.detune.value=detune+(i%2?-3:3); osc.connect(voice); osc.start(); voices.push({osc,i}); chain.nodes.push(osc);
+        });
+        voice.connect(filter); chain.nodes.push(voice,lfo,lfoGain);
+      }
+      let index=0;
+      chain.timers.push(setInterval(()=>{ index=(index+1)%chords.length; const now=ctx.currentTime; voices.forEach(({osc,i})=>osc.frequency.setTargetAtTime(chords[index][i],now,2.8)); },26000));
+    };
+    calmAudio.builders.rain=function(ctx,out,chain){
+      const src=ctx.createBufferSource(); src.buffer=noiseBuffer(ctx,8,"pink"); src.loop=true;
+      const hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=450;
+      const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=6500;
+      const gain=ctx.createGain(); gain.gain.value=.55;
+      const lfo=ctx.createOscillator(), lfoGain=ctx.createGain(); lfo.frequency.value=.11; lfoGain.gain.value=.08; lfo.connect(lfoGain); lfoGain.connect(gain.gain);
+      src.connect(hp); hp.connect(lp); lp.connect(gain); gain.connect(out);
+      const rumble=ctx.createBufferSource(); rumble.buffer=noiseBuffer(ctx,10,"brown"); rumble.loop=true;
+      const rumbleLow=ctx.createBiquadFilter(); rumbleLow.type="lowpass"; rumbleLow.frequency.value=160; const rumbleGain=ctx.createGain(); rumbleGain.gain.value=.5;
+      rumble.connect(rumbleLow); rumbleLow.connect(rumbleGain); rumbleGain.connect(out);
+      src.start(); rumble.start(); lfo.start();
+      chain.nodes.push(src,hp,lp,gain,lfo,lfoGain,rumble,rumbleLow,rumbleGain);
+    };
+    calmAudio.builders.ocean=function(ctx,out,chain){
+      const src=ctx.createBufferSource(); src.buffer=noiseBuffer(ctx,12,"brown"); src.loop=true;
+      const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=650; lp.Q.value=.5;
+      const wave=ctx.createGain(); wave.gain.value=.5; src.connect(lp); lp.connect(wave); wave.connect(out);
+      const swell=ctx.createOscillator(), swellGain=ctx.createGain(); swell.frequency.value=.095; swellGain.gain.value=.38; swell.connect(swellGain); swellGain.connect(wave.gain);
+      const bright=ctx.createOscillator(), brightGain=ctx.createGain(); bright.frequency.value=.095; brightGain.gain.value=450; bright.connect(brightGain); brightGain.connect(lp.frequency);
+      const foam=ctx.createBufferSource(); foam.buffer=noiseBuffer(ctx,9,"pink"); foam.loop=true;
+      const foamHigh=ctx.createBiquadFilter(); foamHigh.type="highpass"; foamHigh.frequency.value=1800; const foamLow=ctx.createBiquadFilter(); foamLow.type="lowpass"; foamLow.frequency.value=5200;
+      const foamGain=ctx.createGain(); foamGain.gain.value=.07;
+      const foamSwell=ctx.createOscillator(), foamSwellGain=ctx.createGain(); foamSwell.frequency.value=.095; foamSwellGain.gain.value=.06; foamSwell.connect(foamSwellGain); foamSwellGain.connect(foamGain.gain);
+      foam.connect(foamHigh); foamHigh.connect(foamLow); foamLow.connect(foamGain); foamGain.connect(out);
+      src.start(); foam.start(); swell.start(); bright.start(); foamSwell.start(ctx.currentTime+2.6);
+      chain.nodes.push(src,lp,wave,swell,swellGain,bright,brightGain,foam,foamHigh,foamLow,foamGain,foamSwell,foamSwellGain);
+    };
+    calmAudio.builders.bowls=function(ctx,out,chain){
+      const verb=makeReverb(ctx,5), wet=ctx.createGain(), dry=ctx.createGain(), bus=ctx.createGain(); wet.gain.value=.9; dry.gain.value=.6;
+      verb.connect(wet); wet.connect(out); dry.connect(out); bus.connect(dry); bus.connect(verb); chain.nodes.push(verb,wet,dry,bus);
+      const notes=[196,220,261.63,293.66,329.63];
+      const hit=delay=>strikeBowl(ctx,bus,notes[Math.floor(Math.random()*notes.length)],.32,ctx.currentTime+delay);
+      hit(.4);
+      const again=()=>{ chain.timers.push(setTimeout(()=>{ hit(.05); again(); },8000+Math.random()*6000)); };
+      again();
+    };
+    function calmPlay(kind){
+      calmStopSound(.2);
+      if(kind==="off" || !calmAudio.builders[kind]) return;
+      const ctx=calmContext(); if(!ctx) return;
+      const master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination);
+      const chain={ master, nodes:[], timers:[] };
+      try { calmAudio.builders[kind](ctx,master,chain); } catch(error){ console.warn("TW: sound failed",error); }
+      const now=ctx.currentTime; master.gain.setValueAtTime(0,now); master.gain.linearRampToValueAtTime(calmAudio.muted?0:calmGain(),now+4);
+      calmAudio.chain=chain;
+    }
+    function calmStopSound(fade=2.5){
+      const chain=calmAudio.chain, ctx=calmAudio.ctx; if(!chain || !ctx) return; calmAudio.chain=null;
+      chain.timers.forEach(id=>{ clearTimeout(id); clearInterval(id); });
+      const now=ctx.currentTime;
+      try { chain.master.gain.cancelScheduledValues(now); chain.master.gain.setValueAtTime(chain.master.gain.value,now); chain.master.gain.linearRampToValueAtTime(0,now+fade); } catch(error){}
+      setTimeout(()=>{ chain.nodes.forEach(node=>{ try { if(node.stop) node.stop(); } catch(error){} try { node.disconnect(); } catch(error){} }); try { chain.master.disconnect(); } catch(error){} },fade*1000+250);
+    }
+    function calmApplyVolume(){ const chain=calmAudio.chain, ctx=calmAudio.ctx; if(chain && ctx) chain.master.gain.setTargetAtTime(calmAudio.muted?0:calmGain(),ctx.currentTime,.12); }
+
+    // ---- The voice (your phone's own speech): reads each step aloud, slowly, a phrase at a time --------------------------
+    // Phones ship voices of very different quality. We rank what is installed and pick the most natural English one;
+    // you can also choose another in the Calm corner and hear a preview.
+    const calmHasSpeech=()=>"speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+    function calmVoiceScore(voice){
+      if(!/^en/i.test(voice.lang||"")) return -1;
+      const text=(voice.name||"")+" "+(voice.lang||""); let score=0;
+      if(/natural|neural/i.test(text)) score+=100;
+      if(/premium|enhanced|siri/i.test(text)) score+=90;
+      if(/online/i.test(text)) score+=50;
+      if(/google/i.test(text)) score+=40;
+      if(/\b(samantha|ava|zoe|allison|karen|moira|tessa|serena|aria|jenny|sonia|neerja|heera|veena|libby|natasha|female)\b/i.test(text)) score+=25;
+      if(/en[-_]IN/i.test(voice.lang||"")) score+=15; else if(/en[-_]US/i.test(voice.lang||"")) score+=8; else if(/en[-_]GB/i.test(voice.lang||"")) score+=6;
+      if(voice.localService===false) score+=10;
+      if(/compact|espeak|novelty|albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|ralph|agnes|princess/i.test(text)) score-=200;
+      return score;
+    }
+    const calmVoiceList=()=>calmHasSpeech()?speechSynthesis.getVoices().filter(voice=>calmVoiceScore(voice)>=0).sort((a,b)=>calmVoiceScore(b)-calmVoiceScore(a)):[];
+    const calmVoice=()=>{ const list=calmVoiceList(); return list.find(voice=>voice.name===calmPrefs.voiceName)||list[0]||null; };
+    let calmSpeakToken=0;
+    function calmSpeak(text,force){
+      if((!calmPrefs.voice && !force) || !calmHasSpeech()) return;
+      calmSpeakStop();
+      const token=++calmSpeakToken, phrases=text.match(/[^.!?…:]+[.!?…:]*/g)||[text], voice=calmVoice();
+      let index=0;
+      const next=()=>{
+        if(token!==calmSpeakToken || index>=phrases.length) return;
+        const utterance=new SpeechSynthesisUtterance(phrases[index++].trim());
+        utterance.rate=.78; utterance.pitch=.92; if(voice){ utterance.voice=voice; utterance.lang=voice.lang; }
+        utterance.onend=()=>{ if(index<phrases.length) setTimeout(next,700); };
+        utterance.onerror=()=>{};
+        try { speechSynthesis.speak(utterance); } catch(error){}
+      };
+      next();
+    }
+    function calmSpeakStop(){ calmSpeakToken++; try { if(calmHasSpeech()) speechSynthesis.cancel(); } catch(error){} }
+    function fillVoicePicker(){
+      const box=$("calmVoiceBox"), pick=$("calmVoicePick"), list=calmVoiceList();
+      box.classList.toggle("hidden",!calmHasSpeech());
+      if(!calmHasSpeech()) return;
+      pick.innerHTML=""; const auto=document.createElement("option"); auto.value=""; auto.textContent=list[0]?`Best available (${list[0].name})`:"Phone default"; pick.appendChild(auto);
+      list.forEach(voice=>{ const option=document.createElement("option"); option.value=voice.name; option.textContent=`${voice.name} · ${voice.lang}${calmVoiceScore(voice)>=90?" · natural":""}`; pick.appendChild(option); });
+      pick.value=list.some(voice=>voice.name===calmPrefs.voiceName)?calmPrefs.voiceName:"";
+      const best=list[0] && calmVoiceScore(list[0])>=90;
+      $("calmVoiceHint").textContent=best?"A natural voice is installed, so meditations should sound warm and human.":"Sounds a bit robotic? Install a better voice on your phone (Android: Settings → Text-to-speech → install voice data; iPhone: Settings → Accessibility → Spoken Content → Voices → Enhanced). It will show up here.";
+    }
+
+    // ---- The session: breathing circle, guidance lines, timer -----------------------------------------------------------
+    const calmRun={ active:false, session:null, total:0, started:0, pausedAt:0, pausedTotal:0, step:-1, line:-1, phase:"", breath:[4,0,6,0], raf:0, tick:0, wake:null };
+    const calmClock=seconds=>{ const whole=Math.max(0,Math.ceil(seconds)); return Math.floor(whole/60)+":"+String(whole%60).padStart(2,"0"); };
+    const calmElapsed=()=>((calmRun.pausedAt||performance.now())-calmRun.started-calmRun.pausedTotal)/1000;
+    const calmShow=view=>["calmMenu","calmSession","calmDone"].forEach(id=>$(id).classList.toggle("hidden",id!==view));
+    function calmLabels(){
+      $("calmMute").textContent=calmAudio.muted?"Sound off":"Sound on";
+      $("calmVoiceBtn").textContent=calmPrefs.voice?"Voice on":"Voice off";
+      $("calmPause").textContent=calmRun.pausedAt?"Resume":"Pause";
+    }
+    function calmSetLine(text,speak){
+      const el=$("calmLine"); el.classList.add("fade");
+      setTimeout(()=>{ el.textContent=text; el.classList.remove("fade"); },380);
+      if(speak) calmSpeak(text);
+    }
+    async function calmWake(){ try { if(navigator.wakeLock && calmRun.active && document.visibilityState==="visible") calmRun.wake=await navigator.wakeLock.request("screen"); } catch(error){} }
+    function calmUnwake(){ try { if(calmRun.wake) calmRun.wake.release(); } catch(error){} calmRun.wake=null; }
+    function calmFrame(){
+      if(!calmRun.active) return;
+      calmRun.raf=requestAnimationFrame(calmFrame);
+      if(calmRun.pausedAt) return;
+      const [breatheIn,holdIn,breatheOut,holdOut]=calmRun.breath, cycle=breatheIn+holdIn+breatheOut+holdOut, t=calmElapsed()%cycle;
+      const low=matchMedia("(prefers-reduced-motion: reduce)").matches?.82:.62, ease=p=>.5-.5*Math.cos(Math.PI*p);
+      let phase, scale;
+      if(t<breatheIn){ phase="Breathe in"; scale=low+(1-low)*ease(t/breatheIn); }
+      else if(t<breatheIn+holdIn){ phase="Hold"; scale=1; }
+      else if(t<breatheIn+holdIn+breatheOut){ phase="Breathe out"; scale=1-(1-low)*ease((t-breatheIn-holdIn)/breatheOut); }
+      else { phase="Hold"; scale=low; }
+      $("orb").style.setProperty("--s",scale.toFixed(3));
+      if(phase!==calmRun.phase){ calmRun.phase=phase; $("orbPhase").textContent=phase; }
+    }
+    function calmTick(){
+      if(!calmRun.active) return;
+      const t=calmElapsed();
+      $("calmTime").textContent=calmClock(calmRun.total-t); $("calmBarFill").style.width=Math.min(100,t/calmRun.total*100)+"%";
+      if(calmRun.pausedAt) return;
+      if(t>=calmRun.total){ calmFinish(true); return; }
+      if(calmRun.session){
+        let index=0, acc=0; const steps=calmRun.session.steps;
+        for(let i=0;i<steps.length;i++){ if(t>=acc) index=i; acc+=steps[i][1]; }
+        if(index!==calmRun.step){ calmRun.step=index; calmSetLine(steps[index][0],true); }
+      } else {
+        const index=Math.floor(t/30);
+        if(index!==calmRun.line){ calmRun.line=index; calmSetLine(index===0?"Breathe with the circle. Let your thoughts drift by like clouds.":nextAffirmation(),false); }
+      }
+    }
+    function calmBegin(options){
+      const session=options.id?calmSessions.find(item=>item.id===options.id):null;
+      if(!session && !options.minutes) return;
+      Object.assign(calmRun,{ active:true, session, started:performance.now(), pausedAt:0, pausedTotal:0, step:-1, line:-1, phase:"", breath:session?session.breath:[4,0,6,0] });
+      calmRun.total=session?calmTotal(session):options.minutes*60;
+      calmAudio.muted=false; $("calmLine").textContent=""; $("calmBarFill").style.width="0%"; $("orb").style.setProperty("--s",".62");
+      calmShow("calmSession"); calmLabels(); $("calmSession").scrollTop=0;
+      calmPlay(calmPrefs.sound); calmWake();
+      clearInterval(calmRun.tick); cancelAnimationFrame(calmRun.raf);
+      calmRun.tick=setInterval(calmTick,250); calmTick(); calmFrame();
+    }
+    function calmFinish(completed){
+      if(!calmRun.active) return;
+      calmRun.active=false; clearInterval(calmRun.tick); cancelAnimationFrame(calmRun.raf); calmSpeakStop(); calmUnwake();
+      const minutes=Math.max(1,Math.round(Math.min(calmElapsed(),calmRun.total)/60));
+      if(!completed){ calmStopSound(1.5); calmShow("calmMenu"); return; }
+      calmStopSound(7);
+      const ctx=calmContext(); if(ctx && !calmAudio.muted && calmPrefs.sound!=="off") strikeBowl(ctx,ctx.destination,174.6,.12+calmGain()*.2,ctx.currentTime+.1);
+      haptic([30,60,30]);
+      $("calmDoneSub").textContent=`You gave yourself ${minutes} ${minutes===1?"minute":"minutes"} of calm.`;
+      $("calmDoneAff").textContent=nextAffirmation();
+      $("calmSendLove").classList.toggle("hidden",!partnerUid); $("calmSendLove").textContent="Send love to my partner"; $("calmSendLove").disabled=false;
+      calmShow("calmDone");
+    }
+    function calmTogglePause(){
+      if(!calmRun.active) return;
+      const ctx=calmAudio.ctx;
+      if(calmRun.pausedAt){ calmRun.pausedTotal+=performance.now()-calmRun.pausedAt; calmRun.pausedAt=0; if(ctx) ctx.resume().catch(()=>{}); if(calmRun.session && calmRun.step>=0) calmSpeak(calmRun.session.steps[calmRun.step][0]); }
+      else { calmRun.pausedAt=performance.now(); if(ctx) ctx.suspend().catch(()=>{}); calmSpeakStop(); }
+      calmLabels();
+    }
+
+    // ---- The screen itself ----------------------------------------------------------------------------------------------------
+    function buildCalm(){
+      const sky=document.createElement("div"); sky.className="calm-sky"; sky.setAttribute("aria-hidden","true");
+      for(let i=0;i<16;i++){ const star=document.createElement("i"), size=1.5+Math.random()*2; star.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;animation-delay:${(Math.random()*4).toFixed(1)}s`; sky.appendChild(star); }
+      $("calmScreen").insertBefore(sky,$("calmScreen").firstChild);
+      calmSessions.forEach(session=>{
+        const button=document.createElement("button"); button.type="button"; button.className="calm-session";
+        const title=document.createElement("b"), mins=document.createElement("span"), blurb=document.createElement("small");
+        title.textContent=session.title; mins.className="mins"; mins.textContent=Math.round(calmTotal(session)/60)+" min"; blurb.textContent=session.blurb;
+        button.append(title,mins,blurb); button.onclick=()=>calmBegin({ id:session.id }); $("calmList").appendChild(button);
+      });
+      const chips=(box,items,current,onPick)=>items.forEach(([value,label])=>{
+        const chip=document.createElement("button"); chip.type="button"; chip.className="cchip"; chip.textContent=label; chip.setAttribute("aria-pressed",String(value===current()));
+        chip.onclick=()=>{ onPick(value); box.querySelectorAll(".cchip").forEach(other=>other.setAttribute("aria-pressed",String(other===chip))); };
+        box.appendChild(chip);
+      });
+      chips($("calmSounds"),calmSoundList,()=>calmPrefs.sound,value=>{ calmPrefs.sound=value; saveCalm(); });
+      chips($("calmTimers"),calmTimerList.map(m=>[m,m+" min"]),()=>calmPrefs.timer,value=>{ calmPrefs.timer=value; saveCalm(); });
+      $("calmVol").value=calmPrefs.volume;
+      $("calmVol").oninput=()=>{ calmPrefs.volume=Number($("calmVol").value); calmApplyVolume(); };
+      $("calmVol").onchange=saveCalm;
+      $("calmVoice").checked=calmPrefs.voice;
+      $("calmVoice").onchange=()=>{ calmPrefs.voice=$("calmVoice").checked; saveCalm(); if(!calmPrefs.voice) calmSpeakStop(); };
+      fillVoicePicker();
+      if(calmHasSpeech()) speechSynthesis.addEventListener("voiceschanged",fillVoicePicker);
+      $("calmVoicePick").onchange=()=>{ calmPrefs.voiceName=$("calmVoicePick").value; saveCalm(); };
+      $("calmVoiceTry").onclick=()=>calmSpeak("Hello. Take a slow breath in… and let it go. You are doing just fine.",true);
+      $("calmOverthink").onclick=()=>calmBegin({ id:"overthink" });
+      $("calmStartMusic").onclick=()=>calmBegin({ minutes:calmPrefs.timer });
+      $("calmAff").onclick=()=>{ $("calmAffText").textContent=nextAffirmation(); };
+      $("calmAffSpeak").onclick=()=>calmSpeak($("calmAffText").textContent,true);
+      $("calmClose").onclick=()=>closeDialog($("calmScreen"));
+      $("calmEnd").onclick=()=>calmFinish(false);
+      $("calmPause").onclick=calmTogglePause;
+      $("calmMute").onclick=()=>{ calmAudio.muted=!calmAudio.muted; calmApplyVolume(); calmLabels(); };
+      $("calmVoiceBtn").onclick=()=>{ calmPrefs.voice=!calmPrefs.voice; $("calmVoice").checked=calmPrefs.voice; saveCalm(); if(!calmPrefs.voice) calmSpeakStop(); calmLabels(); };
+      $("calmAgain").onclick=()=>calmShow("calmMenu");
+      $("calmDoneClose").onclick=()=>closeDialog($("calmScreen"));
+      $("calmSendLove").onclick=async()=>{ const button=$("calmSendLove"); button.disabled=true; const ok=await sendMoment("love",button); button.textContent=ok?"Sent with love":"Couldn’t send — try again"; button.disabled=ok; };
+      // Closing the screen (button, Esc) always ends the session and fades the sound out.
+      $("calmScreen").addEventListener("close",()=>{ if(calmRun.active) calmFinish(false); else { calmStopSound(1.5); calmSpeakStop(); } calmShow("calmMenu"); });
+      document.addEventListener("visibilitychange",()=>{ if(!document.hidden && calmRun.active) calmWake(); });
+    }
+    function openCalm(){
+      calmShow("calmMenu"); if(!affCurrent) $("calmAffText").textContent=nextAffirmation();
+      openDialog($("calmScreen")); $("calmMenu").scrollTop=0;
+    }
+    buildCalm();
+    $("calmOpen").onclick=openCalm;
+    $("calmNow").onclick=()=>{ openCalm(); calmBegin({ id:"overthink" }); };
 
     // ---- Games hub ----------------------------------------------------------------------------------------
     let openGameId=null;

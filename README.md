@@ -83,6 +83,11 @@ using in-app alerts only.
 - The home screen has a Daily question for two: you each answer in private and the card flips to show both answers once
   you have both answered (answers live in your couple space like everything else, and your partner's is only shown in the
   app after you have answered too). Answering together, or feeding Mochi together, keeps your streak going.
+- The Calm corner (Home) offers five short guided meditations with a breathing circle and optional spoken guidance (read slowly, a phrase at a time,
+  in the most natural English voice installed on the phone, with a picker and preview), a bank
+  of affirmations, and calming sound with a timer. The sounds (soft pads, rain, ocean, singing bowls) are generated on the
+  phone with the Web Audio API, so there is nothing to download, and everything stays on the device. The screen is kept
+  awake while a session runs; if a phone locks its screen anyway, some browsers pause the sound.
 - The optional Heart lock (Settings) puts a 4-digit code screen over TW on that phone. Only a salted hash of the code is
   kept in the browser; it hides the app, it does not encrypt anything. "Forgot the code?" logs you out and resets it.
 - Your partner can read your phone's push address (that is how a push finds it), but only your Vercel function holds the
