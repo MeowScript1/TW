@@ -32,6 +32,7 @@
       --shadow:0 1px 2px rgba(80,40,60,.04),0 10px 28px rgba(214,51,108,.08);
       --tabbar-h:70px; --tabbar-gap:10px;
       --ico-heart:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z'/%3E%3C/svg%3E");
+      --ico-camera:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M5 7h1.6l1.2-2h8.4l1.2 2H19a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-7a3 3 0 0 1 3-3Zm7 2.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z'/%3E%3C/svg%3E");
       --ico-spark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z'/%3E%3C/svg%3E");
     }
     body.dark {
@@ -179,13 +180,40 @@
     .assigned { margin-top:12px; padding:12px 14px; border-radius:var(--radius-sm); background:var(--accent-soft); color:var(--accent-text); font-weight:700; font-size:.9rem; }
     .assigned:empty { display:none; }
     .snap-preview { display:block; width:100%; max-height:260px; margin:14px 0 10px; border-radius:14px; object-fit:cover; }
-    .snap-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
-    .snap-gallery .empty { grid-column:1/-1; padding:14px 0 4px; }
-    .snap-thumb { display:grid; place-content:center; justify-items:center; gap:5px; width:100%; aspect-ratio:1; padding:6px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); font-size:1.8rem; line-height:1; }
-    .snap-thumb .snap-label { font-size:.68rem; font-weight:800; color:var(--muted); }
-    .snap-thumb.unseen { background:linear-gradient(135deg,var(--accent-soft),var(--purple-soft)); border-color:transparent; }
-    .snap-thumb.unseen .snap-label { color:var(--accent-text); }
-    .snap-thumb.opened { opacity:.65; }
+    .task-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .eyebrow { font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+    .task-card { position:relative; overflow:hidden; }
+    .task-card:before { content:""; position:absolute; right:-34px; top:-34px; width:130px; height:130px; border-radius:50%; background:radial-gradient(circle,rgba(255,125,165,.28),transparent 70%); pointer-events:none; }
+    .task-card > * { position:relative; }
+    .snap-capture { display:grid; justify-items:center; gap:3px; width:100%; margin-top:12px; padding:20px 16px 16px; border-radius:20px; border:2px dashed #e9bfd0; background:linear-gradient(160deg,rgba(255,244,248,.9),rgba(244,238,252,.9)); color:var(--ink); text-align:center; transition:transform .14s ease,border-color .15s; }
+    .snap-capture:hover { border-color:var(--pink); }
+    .snap-capture:active { transform:scale(.985); }
+    body.dark .snap-capture { border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.05); }
+    .snap-capture-ico { display:grid; place-items:center; width:52px; height:52px; margin-bottom:4px; border-radius:50%; background:var(--accent-soft); color:var(--accent-text); }
+    .snap-capture-ico:before { content:""; width:26px; height:26px; background:currentColor; -webkit-mask:var(--ico-camera) center/contain no-repeat; mask:var(--ico-camera) center/contain no-repeat; }
+    .snap-capture b { font-size:1rem; font-weight:800; }
+    .snap-capture small { color:var(--muted); font-size:.78rem; font-weight:600; }
+    #snapPickBtn { margin-top:10px; }
+    .snap-gallery { display:grid; gap:10px; margin-top:12px; }
+    .snap-gallery .empty { padding:14px 0 4px; }
+    .snap-row { display:flex; align-items:center; gap:12px; width:100%; padding:10px 12px 10px 10px; border-radius:18px; text-align:left; background:var(--surface-2); border:1px solid var(--line); transition:transform .14s ease; }
+    .snap-row:active { transform:scale(.985); }
+    .snap-art { flex:none; display:grid; place-items:center; width:54px; height:54px; border-radius:16px; background:var(--surface); border:1px solid var(--line); font-size:1.7rem; line-height:1; }
+    .snap-text { flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
+    .snap-text b { font-size:.95rem; font-weight:800; }
+    .snap-text small { color:var(--muted); font-size:.74rem; font-weight:600; line-height:1.3; }
+    .snap-action { flex:none; padding:7px 14px; border-radius:999px; background:var(--accent-soft); color:var(--accent-text); font-size:.8rem; font-weight:800; }
+    .snap-action:empty { display:none; }
+    .snap-row.unseen { background:linear-gradient(135deg,var(--accent-soft),var(--purple-soft)); border-color:transparent; }
+    .snap-row.unseen .snap-art { background:rgba(255,255,255,.7); border-color:transparent; }
+    body.dark .snap-row.unseen .snap-art { background:rgba(255,255,255,.12); }
+    .snap-row.unseen .snap-action { background:var(--accent); color:#fff; }
+    .snap-row.sent .snap-action { background:transparent; border:1px solid var(--line); color:var(--muted); }
+    .snap-row.opened { opacity:.6; }
+    details.assign-card summary { justify-content:flex-start; gap:12px; }
+    details.assign-card summary:before { content:""; flex:none; width:36px; height:36px; border-radius:50%; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f4fb8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='4' width='14' height='16' rx='3'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E") center/20px no-repeat, var(--purple-soft); }
+    body.dark details.assign-card summary:before { background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239d7bff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='4' width='14' height='16' rx='3'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E") center/20px no-repeat, var(--purple-soft); }
+    details.assign-card summary:after { margin-left:auto; }
     .snap-view-img { display:block; width:100%; max-height:60vh; object-fit:contain; border-radius:16px; background:#000; }
 
     /* Chat */
@@ -450,6 +478,9 @@
     .fine { margin:6px 0 4px; color:var(--muted); font-size:.76rem; line-height:1.5; }
 
     /* ---- Games hub ------------------------------------------------------------------------------------ */
+    .hub-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .points-chip { flex:none; display:inline-flex; align-items:center; gap:6px; margin-top:4px; padding:6px 12px; border-radius:999px; background:var(--accent-soft); border:1px solid rgba(214,51,108,.18); color:var(--accent-text); font-size:.85rem; font-weight:800; }
+    .points-chip .pc-ico { width:15px; height:15px; background:currentColor; -webkit-mask:var(--ico-heart) center/contain no-repeat; mask:var(--ico-heart) center/contain no-repeat; }
     .game-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .game-tile { position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-height:150px; padding:16px; border-radius:var(--radius); text-align:left; color:#2a2130; box-shadow:var(--shadow); transition:transform .15s ease; overflow:hidden; }
     .game-tile:active { transform:scale(.97); }
@@ -1130,7 +1161,7 @@
 
       <section id="play" class="view" aria-label="Games">
         <div id="gameHub">
-          <header class="greeting"><h1>Games</h1><p class="muted">Play together — every win earns love points 💗</p></header>
+          <header class="greeting hub-head"><div><h1>Games</h1><p class="muted">Play together — every win earns love points 💗</p></div><span class="points-chip" title="Your love points"><span class="pc-ico" aria-hidden="true"></span><b id="gamePoints">0</b> pts</span></header>
           <div class="game-grid">
             <button class="game-tile gt-trivia" type="button" data-game="trivia"><span class="gt-art" data-ico="game-trivia" aria-hidden="true"></span><span class="gt-title">Couple Trivia</span><span class="gt-sub">How well do you know each other?</span><span class="gt-badge hidden" id="badgeTrivia"></span></button>
             <button class="game-tile gt-wyr" type="button" data-game="wyr"><span class="gt-art" data-ico="game-wyr" aria-hidden="true"></span><span class="gt-title">Would You Rather</span><span class="gt-sub">Same brain, or opposites?</span><span class="gt-badge hidden" id="badgeWyr"></span></button>
@@ -1221,8 +1252,8 @@
       </section>
 
       <section id="snaps" class="view" aria-label="Snaps">
-        <article class="card">
-          <span class="chip" id="dailyTaskDate"></span>
+        <article class="card task-card">
+          <div class="task-top"><span class="eyebrow">Today’s task</span><span class="chip" id="dailyTaskDate"></span></div>
           <h2 class="task-text" id="dailyTaskText">Loading today's task…</h2>
           <div class="assigned" id="assignedTaskView"></div>
         </article>
@@ -1231,7 +1262,8 @@
           <p class="lead">Complete a task and send proof. It disappears once your partner has opened it.</p>
           <input type="file" accept="image/*" id="snapFile" class="hidden" aria-label="Choose a photo from your gallery">
           <input type="file" accept="image/*" capture="environment" id="snapFileCam" class="hidden" aria-label="Take a photo">
-          <div class="row"><button class="btn" id="snapCamBtn" type="button">Take a photo</button><button class="btn soft" id="snapPickBtn" type="button">From gallery</button></div>
+          <button class="snap-capture" id="snapCamBtn" type="button"><span class="snap-capture-ico" aria-hidden="true"></span><b>Take a photo</b><small>Opens your camera</small></button>
+          <button class="btn soft wide" id="snapPickBtn" type="button">From gallery</button>
           <div id="snapPreviewWrap" class="hidden">
             <img id="snapPreview" class="snap-preview" alt="Preview of your snap">
             <input id="snapCaption" maxlength="120" placeholder="Add a little caption (optional)" aria-label="Caption">
@@ -1244,7 +1276,7 @@
           <p class="lead">New snaps from your partner show up here. Open one and it’s gone for good.</p>
           <div class="snap-gallery" id="snapGallery"></div>
         </article>
-        <details class="card">
+        <details class="card assign-card">
           <summary>Set a task for your partner</summary>
           <p class="lead">Give them something to do — a snap of it is the proof.</p>
           <div class="field">
@@ -2538,23 +2570,36 @@
       if(!items.length){ const p=document.createElement("p"); p.className="empty"; p.textContent="No snaps yet — send one from today's task!"; box.appendChild(p); return; }
       items.forEach(item=>{
         const mine=item.authorId===authUser.uid;
-        const tile=document.createElement("button"); tile.type="button";
-        const icon=document.createElement("span"); icon.setAttribute("aria-hidden","true");
-        const label=document.createElement("span"); label.className="snap-label";
+        const row=document.createElement("button"); row.type="button";
+        const art=document.createElement("span"); art.className="snap-art"; art.setAttribute("aria-hidden","true");
+        const text=document.createElement("span"); text.className="snap-text";
+        const title=document.createElement("b"), sub=document.createElement("small");
+        const action=document.createElement("span"); action.className="snap-action";
         if(mine){
-          tile.className="snap-thumb sent"+(item.viewed?" opened":"");
-          icon.textContent=item.viewed?"👀":"✈️"; label.textContent=item.viewed?"Opened":"Sent";
-          tile.setAttribute("aria-label",item.viewed?"Snap you sent, opened":"Snap you sent, waiting to be opened. Tap to unsend");
-          tile.onclick=()=>{ if(!item.viewed) unsendSnap(item); };
+          row.className="snap-row sent"+(item.viewed?" opened":"");
+          art.textContent=item.viewed?"👀":"✈️";
+          title.textContent=item.viewed?"Opened":"You sent a snap";
+          row.dataset.what=item.viewed?"They have seen it":"Not opened yet";
+          action.textContent=item.viewed?"":"Unsend";
+          row.setAttribute("aria-label",item.viewed?"Snap you sent, opened":"Snap you sent, waiting to be opened. Tap to unsend");
+          row.onclick=()=>{ if(!item.viewed) unsendSnap(item); };
         } else {
-          tile.className="snap-thumb unseen";
-          icon.textContent="📸"; label.textContent="Tap to view";
-          tile.setAttribute("aria-label","New snap from your partner. Tap to view it once");
-          tile.onclick=()=>openSnap(item);
+          row.className="snap-row unseen";
+          art.textContent="📸"; title.textContent="New snap"; row.dataset.what="Gone once opened"; action.textContent="Open";
+          row.setAttribute("aria-label","New snap from your partner. Tap to view it once");
+          row.onclick=()=>openSnap(item);
         }
-        tile.appendChild(icon); tile.appendChild(label); box.appendChild(tile);
+        row.dataset.at=String(millis(item.createdAt)||Date.now());
+        sub.textContent=row.dataset.what+" · "+timeAgo(Number(row.dataset.at));
+        text.appendChild(title); text.appendChild(sub);
+        row.appendChild(art); row.appendChild(text); row.appendChild(action); box.appendChild(row);
       });
     }
+    // "5m ago" would go stale on a page that stays open, so the labels are refreshed in place now and then.
+    function refreshSnapTimes(){
+      document.querySelectorAll("#snapGallery .snap-row").forEach(row=>{ const sub=row.querySelector("small"); if(sub) sub.textContent=row.dataset.what+" · "+timeAgo(Number(row.dataset.at)); });
+    }
+    setInterval(refreshSnapTimes,30000);
     function onSnapsSnapshot(snap){
       const me=authUser.uid, items=snap.docs.map(d=>({id:d.id,...d.data()}));
       items.filter(isExpired).filter(item=>item.id!==currentSnap?.item.id).forEach(purgeSnap);
@@ -3291,7 +3336,7 @@
     function renderLevel(points,live){
       let index=levels.length-1; while(index>0 && points<levels[index].min) index--;
       const current=levels[index], next=levels[index+1], percent=next?Math.min(100,Math.round((points-current.min)/(next.min-current.min)*100)):100;
-      $("effortCount").textContent=points; $("levelName").textContent=current.name; $("levelNum").textContent=index+1;
+      $("effortCount").textContent=points; $("gamePoints").textContent=points; $("levelName").textContent=current.name; $("levelNum").textContent=index+1;
       $("levelFill").style.width=percent+"%"; $("levelBar").setAttribute("aria-valuenow",String(percent));
       $("levelNext").textContent=next?`${next.min-points} to go`:"top level 🎉";
       $("levelUnlock").textContent=levelUnlocks[index+1]?`Next: ${levelUnlocks[index+1]}`:"Everything unlocked";
