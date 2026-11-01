@@ -1,6 +1,6 @@
 #!/bin/zsh
-# Serves the TW site from the repo root (one level up) on this Mac only.
-cd "$(dirname "$0")/.." || exit 1
+# Serves the TW site (the public/ folder) on this Mac only.
+cd "$(dirname "$0")/../public" || exit 1
 PORT=8765
 python3 -m http.server "$PORT" --bind 127.0.0.1 &
 SERVER_PID=$!

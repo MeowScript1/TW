@@ -8,27 +8,28 @@ static site backed by Firebase (Auth and Firestore; no Storage bucket or paid pl
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The whole app (markup, styles and the module script). `our-little-world.html` just redirects here for old links. |
-| `service-worker.js`, `manifest.webmanifest`, `icon*.svg/png` | PWA: offline shell, install metadata, icons. |
+| `public/index.html` | The whole app (markup, styles and the module script). `public/our-little-world.html` just redirects here for old links. |
+| `public/service-worker.js`, `public/manifest.webmanifest`, `public/icon*.svg/png` | PWA: offline shell, install metadata, icons. |
 | `firestore.rules`, `firebase.json`, `.firebaserc` | Firestore security rules and CLI config (project `aytt-677b4`). |
 | `api/couple-portrait.js` | Optional Vercel function that draws the AI couple portrait (see below). |
 | `api/notify.js`, `package.json` | Vercel function that sends push notifications to your partner's phone (see below). |
-| `vercel.json` | Security headers and the function's timeout for the Vercel deployment. |
-| `tw-local-app/Start TW.command` | Double-click on a Mac to serve this folder on `http://localhost:8765`. |
+| `vercel.json`, `.vercelignore` | Security headers and the functions' timeouts for the Vercel deployment; files a command-line deploy must never upload. |
+| `tw-local-app/Start TW.command` | Double-click on a Mac to serve `public/` on `http://localhost:8765`. |
 
 ## Run it locally
 
 ```bash
-python3 -m http.server 8765 --bind 127.0.0.1
+cd public && python3 -m http.server 8765 --bind 127.0.0.1
 ```
 
 Then open <http://localhost:8765>. Sign-in and sync talk to the real Firebase project, so use real accounts there.
 
 ## Deploy
 
-The site deploys from the repo root on Vercel (project `tw`, live at <https://our-tw.vercel.app>; the older
+Only the `public/` folder is served as the website (so the rules, Firebase config and helper scripts at the repo root are
+never downloadable); `api/` holds the serverless functions. It deploys on Vercel (project `tw`, live at <https://our-tw.vercel.app>; the older
 `ay-five-umber.vercel.app` address still works too). **The security rules are not part of that deploy** — publish them
-whenever `firestore.rules` changes, either with the Firebase CLI:
+whenever `firestore.rules` changes (the cycle tracker and account deletion both need the latest ones), either with the Firebase CLI:
 
 ```bash
 firebase deploy --only firestore:rules --project aytt-677b4
@@ -99,5 +100,12 @@ using in-app alerts only.
   contraception. This feature needs the latest `firestore.rules` published.
 - The optional Heart lock (Settings) puts a 4-digit code screen over TW on that phone. Only a salted hash of the code is
   kept in the browser; it hides the app, it does not encrypt anything. "Forgot the code?" logs you out and resets it.
+- **Delete my account and data** (Settings, and on the pairing screen) asks for your password, then removes your profile,
+  your photo, your cycle tracker, the snaps you sent, your moods and answers, your phones' push addresses and finally the
+  login itself. If your partner is still in the space you just leave it: they keep it with the same code (and can invite
+  someone new), and your messages stay in their chat unless you tick "Also delete the messages and notes I sent". If you
+  are the last one in a space, the whole space is erased with you. The app only asks Firebase for what the security rules
+  allow, so this needs the latest `firestore.rules` published; with older rules it stops at the first step and says that
+  nothing was deleted. Afterwards the phone also forgets its local settings and Firebase's offline copy of the chat.
 - Your partner can read your phone's push address (that is how a push finds it), but only your Vercel function holds the
   key needed to send one.

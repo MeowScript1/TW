@@ -59,6 +59,8 @@
     .btn.soft { background:var(--accent-soft); color:var(--accent-text); }
     .btn.ghost { background:transparent; color:var(--purple); }
     .btn.danger { background:transparent; color:var(--danger); border:1px solid var(--line); }
+    .btn.danger-solid { background:var(--danger); color:#fff; }
+    body.dark .btn.danger-solid { color:#2b0a08; }
     .btn.wide { width:100%; }
     .link-btn { background:none; color:var(--purple); font-weight:700; font-size:.85rem; padding:10px; text-decoration:underline; }
     .icon-btn { display:grid; place-items:center; width:42px; height:42px; border-radius:50%; color:var(--ink); }
@@ -231,6 +233,10 @@
     .sheet-head { display:flex; align-items:center; justify-content:space-between; padding:14px 8px 4px 22px; }
     .sheet-head h2 { font-size:1.2rem; font-weight:800; }
     .sheet-actions { display:grid; gap:10px; margin-top:14px; }
+    .del-lead { margin-top:4px; line-height:1.5; }
+    .del-list { display:grid; gap:6px; margin:10px 0 6px; padding-left:20px; font-size:.9rem; line-height:1.45; color:var(--muted); }
+    .del-label { font-size:.86rem; font-weight:700; }
+    .link-btn.del-link { color:var(--danger); font-weight:600; }
     .privacy-note { margin-top:16px; padding:14px; border-radius:var(--radius-sm); background:var(--surface-2); color:var(--muted); font-size:.82rem; line-height:1.5; }
     .code-chip { letter-spacing:.12em; font-weight:800; }
     dialog.confirm { width:min(calc(100% - 40px),360px); margin:auto; padding:22px; border-radius:22px; box-shadow:0 20px 50px rgba(40,20,50,.3); }
@@ -872,6 +878,7 @@
         <button class="btn soft wide" id="joinPair" type="button">Join with code</button>
         <button class="link-btn hidden" id="pairBack" type="button">← Back to our space</button>
         <div class="auth-message" id="pairMessage"></div>
+        <button class="link-btn del-link" id="pairDelete" type="button">Delete my account and data</button>
       </section>
       <section id="statusPanel" class="hidden">
         <h2>One moment…</h2><p class="muted" id="statusText"></p>
@@ -1240,9 +1247,23 @@
         <button class="btn soft wide" id="downloadBtn" type="button">Install the app</button>
         <button class="btn soft wide" id="codeBtn" type="button">Change connection code</button>
         <button class="btn danger wide" id="logoutBtn" type="button">Log out</button>
+        <button class="btn danger wide" id="deleteAccountBtn" type="button">Delete my account and data</button>
       </div>
       <p class="privacy-note">Your messages, notes and snaps are stored in your private TW space online. Security rules let only the two of you read them, but they are not end-to-end encrypted, so keep anything truly secret out of here.</p>
     </div>
+  </dialog>
+
+  <!-- Delete my account and data -->
+  <dialog id="deleteDialog" class="sheet" aria-labelledby="deleteTitle">
+    <div class="sheet-head"><h2 id="deleteTitle">Delete my account and data</h2><button class="icon-btn" id="closeDelete" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <form class="sheet-body" id="deleteForm" novalidate>
+      <p class="del-lead">This permanently deletes your TW login and everything that belongs to you. It can’t be undone. What goes:</p>
+      <ul class="del-list" id="deleteList"></ul>
+      <div class="setting" id="deleteMessagesRow"><label for="deleteMessages"><b>Also delete the messages and notes I sent</b><small class="set-sub">Otherwise they stay in your partner’s chat.</small></label><input class="switch" id="deleteMessages" type="checkbox"></div>
+      <div class="field"><label class="del-label" for="deletePassword">Type your password to confirm</label><input id="deletePassword" type="password" autocomplete="current-password" placeholder="Your password"></div>
+      <p class="status" id="deleteStatus" role="status"></p>
+      <div class="sheet-actions"><button class="btn danger-solid wide" id="deleteConfirm" type="submit">Delete everything</button><button class="btn ghost wide" id="deleteCancel" type="button">Keep my account</button></div>
+    </form>
   </dialog>
 
   <!-- Confirm / info dialog and toast -->
@@ -1448,9 +1469,9 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-    import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager, doc, setDoc, getDoc, updateDoc, addDoc, deleteDoc, collection, query, orderBy, onSnapshot, serverTimestamp, runTransaction, increment, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-    const firebaseConfig = { apiKey:"AIzaSyBeBde2ro0vYt3XADcdmbuu56HdylpajQA", authDomain:"aytt-677b4.firebaseapp.com", projectId:"aytt-677b4", storageBucket:"aytt-677b4.firebasestorage.app", messagingSenderId:"366976601638", appId:"1:366976601638:web:c6d9689f098251844b20e7", measurementId:"G-42VV7B6HYR" };
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager, doc, setDoc, getDoc, updateDoc, addDoc, deleteDoc, collection, query, orderBy, onSnapshot, serverTimestamp, runTransaction, increment, arrayUnion, arrayRemove, limit, where, getDocs, deleteField, terminate, clearIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+    const firebaseConfig = { apiKey:"AIzaSyBeBde2ro0vYt3XADcdmbuu56HdylpajQA", authDomain:"aytt-677b4.firebaseapp.com", projectId:"aytt-677b4", storageBucket:"aytt-677b4.firebasestorage.app", messagingSenderId:"366976601638", appId:"1:366976601638:web:c6d9689f098251844b20e7" };
     const firebaseApp = initializeApp(firebaseConfig), auth = getAuth(firebaseApp);
     // The local cache keeps chat history readable offline and queues writes made while offline.
     let db;
@@ -1831,6 +1852,134 @@
     $("statusLogout").onclick=async()=>{ await removePushDevice(coupleId); signOut(auth); };
     $("retryBtn").onclick=()=>enterApp();
 
+    // ---- Delete my account and data ----------------------------------------------------------------------
+    // Erases what is yours in this order: your profile, the things only you own inside your space, your place in the space
+    // (or the whole space when you are the last one in it) and, last of all, the login. The profile goes first because that
+    // is where out-of-date security rules show up, before anything else is touched. If a step fails the login is left alone
+    // and the app is put back, so you can simply try again. The security rules decide what you may delete, so the app can't over-reach.
+    let deleting=false, deleteStarted=false, deleteSpace={ id:null, partner:false };
+    const deleteSay = text => { $("deleteStatus").textContent=text; };
+    const setDeleteBusy = isBusy => { deleting=isBusy; ["deleteConfirm","deleteCancel","closeDelete","deletePassword","deleteMessages"].forEach(name=>{ $(name).disabled=isBusy; }); };
+    const deleteWhy = (error,fallback="Couldn’t delete everything") => {
+      if(error?.message==="timeout") return "That took too long — check your connection and try again.";
+      const text=saveFailure(error,fallback);
+      return /[.!]$/.test(text) ? text : text+".";
+    };
+    function openDeleteDialog(){
+      deleteSpace={ id:coupleId, partner:members.length>1 };
+      const items=["Your login and profile."];
+      if(deleteSpace.id) items.push("Your photo, cycle tracker, snaps, moods and answers, and your phones’ notification addresses.");
+      if(deleteSpace.id && deleteSpace.partner) items.push("You leave your shared space. Your partner keeps it, with the same code, and can invite someone new. The AI couple portrait is removed.");
+      if(deleteSpace.id && !deleteSpace.partner) items.push("Your whole space goes with you: every message, note, snap and photo in it.");
+      $("deleteList").replaceChildren(...items.map(text=>Object.assign(document.createElement("li"),{ textContent:text })));
+      $("deleteMessagesRow").classList.toggle("hidden",!deleteSpace.partner);
+      $("deleteMessages").checked=false; $("deletePassword").value=""; deleteSay("");
+      openDialog($("deleteDialog"));
+    }
+    const listDocs = async q => (await withTimeout(getDocs(q),20000)).docs;
+    // A few deletes at a time. Each one is its own request, so the rules' limit on reads per request is never reached.
+    async function deleteMany(refs,label){
+      let next=0, done=0, failed=false;
+      const worker=async()=>{
+        while(!failed && next<refs.length){
+          const ref=refs[next++];
+          try { await withTimeout(deleteDoc(ref),20000); } catch(error){ failed=true; throw error; }
+          done++;
+          if(refs.length>40 && done%10===0) deleteSay(`${label} ${done} of ${refs.length}…`);
+        }
+      };
+      await Promise.all(Array.from({length:Math.min(10,refs.length)},worker));
+    }
+    // Removes what is yours from the space, or all of it when you are alone in it. Null means you are not in the space any more.
+    async function clearMyThingsInSpace(uid,id,withMessages){
+      const ref=doc(db,"couples",id);
+      let snap=null;
+      try { snap=await withTimeout(getDoc(ref),15000); } catch(error){ if(error?.code!=="permission-denied") throw error; }
+      const data=snap?.exists() ? snap.data() : null, list=data?.members||[];
+      if(!list.includes(uid)) return null;
+      const alone=list.length===1, col=name=>collection(db,"couples",id,name), at=(name,key)=>doc(db,"couples",id,name,key);
+      const mine=name=>alone ? col(name) : query(col(name),where("authorId","==",uid));
+      const [devices,snaps,messages,photos]=await Promise.all([ listDocs(col("push")), listDocs(mine("snaps")), (alone||withMessages) ? listDocs(mine("messages")) : [], alone ? listDocs(col("photos")) : [] ]);
+      deleteSay("Deleting your data…");
+      await deleteMany([
+        ...devices.filter(device=>alone || device.id.startsWith(uid+"_")).map(device=>device.ref),
+        ...(alone ? photos.map(item=>item.ref) : [at("photos",uid)]), at("cycle",uid), at("portraits","current"),
+        ...snaps.flatMap(item=>[at("snapImages",item.id),item.ref])
+      ],"Deleting");
+      await deleteMany(messages.map(item=>item.ref),"Deleting messages");
+      if(!alone){
+        // Your mood, presence and answers live inside the shared document under your id.
+        const paths=[], walk=(object,path)=>Object.entries(object||{}).forEach(([key,value])=>{
+          if(key===uid) paths.push(path+"."+key);
+          else if(value && Object.getPrototypeOf(value)===Object.prototype) walk(value,path+"."+key);
+        });
+        walk(data.shared,"shared");
+        if(paths.length) await withTimeout(updateDoc(ref,Object.fromEntries(paths.map(path=>[path,deleteField()]))),20000);
+      }
+      return { alone };
+    }
+    const leaveSpace = (uid,id,alone) => withTimeout(alone ? deleteDoc(doc(db,"couples",id)) : updateDoc(doc(db,"couples",id),{ members:arrayRemove(uid) }),20000);
+    // Once the account is gone, forget this phone's settings and the offline copy Firebase keeps, so nothing is left behind.
+    async function forgetThisPhone(){
+      try { Object.keys(localStorage).filter(key=>key.startsWith("ty-") && key!=="ty-dark-mode").forEach(key=>localStorage.removeItem(key)); } catch(error){}
+      let stopped=false;
+      try { await withTimeout(terminate(db),4000); stopped=true; await withTimeout(clearIndexedDbPersistence(db),4000); } catch(error){}
+      if(stopped){ store.set("ty-deleted","1"); location.reload(); }   // a stopped Firestore needs a fresh page
+    }
+    async function deleteAccount(){
+      const user=authUser;
+      if(!user || deleting) return;
+      const uid=user.uid, id=deleteSpace.id, withMessages=deleteSpace.partner && $("deleteMessages").checked, password=$("deletePassword").value;
+      if(!password){ deleteSay("Type your password to confirm."); return; }
+      if(navigator.onLine===false){ deleteSay("No connection — check your internet and try again."); return; }
+      setDeleteBusy(true);
+      let stage="password", profile=null, profileGone=false, outOfSpace=false;
+      try {
+        deleteSay("Checking your password…");
+        await withTimeout(reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,password)),15000);
+        // The profile goes first: if the security rules are out of date this is where it shows, before anything else is touched.
+        stage="profile";
+        deleteSay("Deleting your profile…");
+        profile=(await withTimeout(getDoc(doc(db,"users",uid)),15000)).data()||null;
+        await withTimeout(deleteDoc(doc(db,"users",uid)),20000);
+        profileGone=true; deleteStarted=true; stage="data";
+        deleteSay("Deleting your data…");
+        if(id){ await removePushDevice(id); teardown(); }   // nothing in the app may write to the space (presence, push address…) while it is being emptied
+        const inSpace=id ? await clearMyThingsInSpace(uid,id,withMessages) : null;
+        if(inSpace){ deleteSay(inSpace.alone ? "Erasing your space…" : "Leaving your space…"); await leaveSpace(uid,id,inSpace.alone); }
+        outOfSpace=true; stage="login";
+        deleteSay("Deleting your login…");
+        await withTimeout(deleteUser(user),20000);
+      } catch(error){
+        console.warn("TW: deleting the account stopped at",stage,error?.code||error?.message||error);
+        if(stage==="password") deleteSay(error?.message==="timeout" ? deleteWhy(error) : friendlyError(error));
+        else if(!profileGone) deleteSay(deleteWhy(error)+" Nothing was deleted.");
+        else if(outOfSpace) deleteSay("Your data is deleted, but the login itself is still there. "+deleteWhy(error,"Couldn’t delete the login")+" Tap Delete again to finish.");
+        else {
+          // You are still in your space: put the profile and the app back as they were. The login is kept.
+          if(profile) setDoc(doc(db,"users",uid),profile).catch(()=>{});
+          deleteStarted=false;
+          if(id) openCouple(id); else enterApp();
+          deleteSay(deleteWhy(error)+" Your login is still here.");
+        }
+        return;
+      } finally { setDeleteBusy(false); }
+      deleteStarted=false; closeDialog($("deleteDialog"));
+      setAuthMessage("Your account and data were deleted.");
+      await forgetThisPhone();
+    }
+    $("deleteAccountBtn").onclick=()=>{ closeDialog($("settingsDialog")); openDeleteDialog(); };
+    $("pairDelete").onclick=openDeleteDialog;
+    $("closeDelete").onclick=$("deleteCancel").onclick=()=>closeDialog($("deleteDialog"));
+    $("deleteDialog").addEventListener("click",event=>{ if(event.target===$("deleteDialog") && !deleting) closeDialog($("deleteDialog")); });
+    $("deleteDialog").addEventListener("cancel",event=>{ if(deleting) event.preventDefault(); });
+    $("deleteDialog").addEventListener("close",()=>{
+      $("deletePassword").value="";
+      // The app was taken apart for a deletion that stopped half-way; open your space (or the pairing screen) again.
+      if(deleteStarted && authUser && !deleting){ deleteStarted=false; enterApp(); }
+    });
+    $("deleteForm").addEventListener("submit",event=>{ event.preventDefault(); deleteAccount(); });
+
     // ---- Pairing -----------------------------------------------------------------------------------------
     async function enterApp(){
       const uid=authUser.uid;
@@ -1901,7 +2050,7 @@
       photos={}; portraitDoc=null; collageCache={ key:"", url:"" }; collageToken++; worldKey=""; lastPet=null; cycleMine=null; cycleTheirs=null; cycleMineLoaded=false; cycleMineDenied=false; cycleTheirsFor=""; $("cycleHost").innerHTML=""; $("cycleSection").classList.add("hidden");
     }
     onAuthStateChanged(auth,user=>{
-      authUser=user; teardown(); closeDialog($("settingsDialog"));
+      authUser=user; teardown(); closeDialog($("settingsDialog")); closeDialog($("deleteDialog"));
       if(!user){ $("authPassword").value=""; if($("lockScreen").open && lockMode==="unlock") hideLock(); showPanel("login"); hideSplash(); return; }
       enterApp();
     });
@@ -4167,6 +4316,7 @@
 
     // The page is ready: unlock the sign-in buttons (they stay disabled if the Firebase SDK can't load).
     setAuthBusy(false); setAuthMessage("");
+    if(store.get("ty-deleted")){ store.set("ty-deleted",""); setAuthMessage("Your account and data were deleted."); }
     window.__tyReady=true;
   </script>
   <script>

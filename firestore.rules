@@ -6,6 +6,8 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/couples/$(coupleId)).data.members;
     }
     function memberOf(coupleId) { return signedIn() && request.auth.uid in membersOf(coupleId); }
+    // Used when somebody deletes their account and is the only one left in a space: they may erase all of it.
+    function lastMember(coupleId) { return membersOf(coupleId).size() == 1; }
     function onlyChanges(keys) {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
     }
@@ -23,6 +25,8 @@ service cloud.firestore {
       );
       allow create, update: if signedIn() && request.auth.uid == userId
         && (!('gender' in request.resource.data) || request.resource.data.gender in ['girl', 'boy']);
+      // "Delete my account and data": you can delete your own profile.
+      allow delete: if signedIn() && request.auth.uid == userId;
     }
 
     match /couples/{coupleId} {
@@ -44,8 +48,14 @@ service cloud.firestore {
           && request.resource.data.members.size() == 2
           && resource.data.members[0] == request.resource.data.members[0]
           && request.resource.data.members[1] == request.auth.uid
-          && onlyChanges(['members']))
+          && onlyChanges(['members'])) ||
+        // A member leaves: only `members` changes, and only by taking themselves out of it.
+        (request.auth.uid in resource.data.members
+          && onlyChanges(['members'])
+          && request.resource.data.members == resource.data.members.removeAll([request.auth.uid]))
       );
+      // The last person in a space can delete it.
+      allow delete: if signedIn() && request.auth.uid in resource.data.members && resource.data.members.size() == 1;
 
       match /messages/{messageId} {
         allow read: if memberOf(coupleId);
@@ -59,6 +69,8 @@ service cloud.firestore {
           && request.resource.data.createdAt == request.time;
         // Reactions are the only thing that can change on a message.
         allow update: if memberOf(coupleId) && onlyChanges(['reactions']);
+        // You can delete messages you sent; the last person in a space can delete them all when erasing it.
+        allow delete: if memberOf(coupleId) && (resource.data.authorId == request.auth.uid || lastMember(coupleId));
       }
 
       // Snaps are one-time photos. The snap record is small; the photo itself lives in snapImages.
@@ -113,7 +125,7 @@ service cloud.firestore {
             && request.resource.data.aiOk is bool
             && request.resource.data.createdAt == request.time)
         );
-        allow delete: if memberOf(coupleId) && photoId == request.auth.uid;
+        allow delete: if memberOf(coupleId) && (photoId == request.auth.uid || lastMember(coupleId));
       }
 
       // Phones that have notifications turned on. Both of you can read them (that is how a push finds your
@@ -132,7 +144,7 @@ service cloud.firestore {
           && request.resource.data.auth is string
           && request.resource.data.auth.size() < 100
           && request.resource.data.createdAt == request.time;
-        allow delete: if memberOf(coupleId) && deviceId.matches(request.auth.uid + '_[A-Za-z0-9]{8,64}');
+        allow delete: if memberOf(coupleId) && (deviceId.matches(request.auth.uid + '_[A-Za-z0-9]{8,64}') || lastMember(coupleId));
       }
 
       // The AI-drawn couple portrait shown on the home screen (the collage needs no document).
@@ -165,7 +177,7 @@ service cloud.firestore {
         allow read: if memberOf(coupleId)
           && (ownerId == request.auth.uid || resource == null || (resource.data.on == true && resource.data.share == true));
         allow create, update: if memberOf(coupleId) && ownerId == request.auth.uid && validCycle();
-        allow delete: if memberOf(coupleId) && ownerId == request.auth.uid;
+        allow delete: if memberOf(coupleId) && (ownerId == request.auth.uid || lastMember(coupleId));
       }
     }
   }
