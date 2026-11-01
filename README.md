@@ -10,6 +10,7 @@ static site backed by Firebase (Auth and Firestore; no Storage bucket or paid pl
 | --- | --- |
 | `public/index.html` | The whole app (markup, styles and the module script). `public/our-little-world.html` just redirects here for old links. |
 | `public/service-worker.js`, `public/manifest.webmanifest`, `public/icon*.svg/png` | PWA: offline shell, install metadata, icons. |
+| `public/fonts/` | Nunito, the rounded typeface, bundled so every phone shows the same font and nothing is loaded from Google. Its SIL Open Font License is `Nunito-OFL.txt`. |
 | `firestore.rules`, `firebase.json`, `.firebaserc` | Firestore security rules and CLI config (project `aytt-677b4`). |
 | `api/couple-portrait.js` | Optional Vercel function that draws the AI couple portrait (see below). |
 | `api/notify.js`, `package.json` | Vercel function that sends push notifications to your partner's phone (see below). |

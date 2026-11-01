@@ -1,6 +1,6 @@
 // Bump SHELL_CACHE only if you change the precache list; page updates arrive on their own
 // because same-origin files are fetched network-first.
-const SHELL_CACHE = "ty-shell-v4";
+const SHELL_CACHE = "ty-shell-v5";
 // The Firebase SDK URLs carry their version number, so cached copies never go stale.
 const SDK_CACHE = "ty-sdk-v1";
 const SHELL_FILES = [
@@ -11,7 +11,8 @@ const SHELL_FILES = [
   "./icon-192.png",
   "./icon-512.png",
   "./icon-maskable-512.png",
-  "./apple-touch-icon.png"
+  "./apple-touch-icon.png",
+  "./fonts/nunito-latin-wght-normal.woff2"
 ];
 const NETWORK_TIMEOUT_MS = 4000;
 
