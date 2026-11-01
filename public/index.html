@@ -31,6 +31,8 @@
       --radius:20px; --radius-sm:14px;
       --shadow:0 1px 2px rgba(80,40,60,.04),0 10px 28px rgba(214,51,108,.08);
       --tabbar-h:70px; --tabbar-gap:10px;
+      --ico-heart:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z'/%3E%3C/svg%3E");
+      --ico-spark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z'/%3E%3C/svg%3E");
     }
     body.dark {
       --bg:#110E1B; --bg-2:#1A162B; --app:rgba(17,14,27,0);
@@ -85,9 +87,9 @@
     .switch:checked:before { transform:translateX(18px); }
     .setting { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:52px; padding:8px 0; border-bottom:1px solid var(--line); font-size:.95rem; }
     .setting:last-child { border-bottom:0; }
-    .segmented { display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:4px; padding:4px; border-radius:14px; background:var(--surface-2); border:1px solid var(--line); }
-    .seg { min-height:40px; border-radius:10px; color:var(--muted); font-weight:700; font-size:.88rem; }
-    .seg.active { background:var(--surface); color:var(--ink); box-shadow:0 1px 4px rgba(80,40,60,.12); }
+    .segmented { display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:4px; padding:4px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); }
+    .seg { min-height:40px; border-radius:999px; color:var(--muted); font-weight:700; font-size:.88rem; transition:background .2s,color .2s,box-shadow .2s; }
+    .seg.active { background:var(--accent); color:#fff; box-shadow:0 6px 14px -4px rgba(214,51,108,.5); }
 
     /* ---- App shell ----------------------------------------------------------------------------------- */
     .app { position:relative; display:flex; flex-direction:column; width:min(100%,640px); height:100vh; height:var(--app-h,100dvh); margin:0 auto; background:var(--app); }
@@ -148,7 +150,7 @@
     .moods { display:flex; gap:8px; flex-wrap:wrap; }
     .mood { min-height:38px; padding:0 14px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); color:var(--muted); font-size:.88rem; font-weight:700; }
     .mood.selected { background:var(--accent); border-color:var(--accent); color:#fff; }
-    .result { display:none; margin-top:14px; padding:16px; border-radius:var(--radius-sm); text-align:center; line-height:1.5; background:linear-gradient(120deg,var(--accent-soft),var(--purple-soft)); }
+    .result { display:none; margin-top:14px; padding:16px; border-radius:var(--radius); text-align:center; line-height:1.5; background:linear-gradient(120deg,var(--accent-soft),var(--purple-soft)); }
     .result.show { display:block; }
 
     /* Play */
@@ -191,22 +193,47 @@
     .chat { display:flex; flex-direction:column; gap:6px; min-height:100%; justify-content:flex-end; }
     .bubble-wrap { display:flex; flex-direction:column; max-width:80%; }
     .bubble-wrap.mine { align-self:flex-end; align-items:flex-end; }
-    .bubble { padding:9px 14px; border-radius:18px 18px 18px 5px; background:var(--surface); border:1px solid var(--line); line-height:1.4; overflow-wrap:anywhere; white-space:pre-wrap; cursor:pointer; text-align:left; }
-    .bubble.mine { border-radius:18px 18px 5px 18px; background:var(--accent); border-color:var(--accent); color:#fff; }
-    .msg-time { margin:2px 6px 0; color:var(--muted); font-size:.68rem; }
-    .reactions { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+    .bubble { padding:10px 15px; border-radius:20px 20px 20px 5px; background:var(--surface); border:1px solid var(--line); box-shadow:0 1px 2px rgba(80,40,60,.05); line-height:1.4; overflow-wrap:anywhere; white-space:pre-wrap; cursor:pointer; text-align:left; }
+    .bubble.mine { border-radius:20px 20px 5px 20px; background:var(--accent); border-color:var(--accent); color:#fff; }
+    .msg-time { margin:3px 8px 0; color:var(--muted); font-size:.68rem; }
+    .reactions { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:5px; margin:-9px 10px 0; }
+    .bubble-wrap.mine .reactions { justify-content:flex-end; }
+    .reactions:not(:empty) + .msg-time { margin-top:4px; }
     .reactions:empty { display:none; }
-    .reaction-pill { padding:2px 9px; min-height:26px; border-radius:99px; background:var(--surface); border:1px solid var(--line); font-size:.78rem; font-weight:700; }
+    .reaction-pill { padding:2px 9px; min-height:26px; border-radius:99px; background:var(--surface); border:1px solid var(--line); box-shadow:0 2px 6px rgba(80,40,60,.1); font-size:.78rem; font-weight:700; }
     .reaction-pill.mine { border-color:var(--pink); background:var(--accent-soft); }
     .reaction-picker { display:none; gap:2px; margin-top:4px; padding:3px 6px; border-radius:99px; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); }
     .bubble-wrap.picking .reaction-picker { display:flex; }
     .reaction-picker button { width:34px; height:34px; border-radius:50%; font-size:1.05rem; }
     .reaction-picker button:hover { background:var(--surface-2); }
     .typing-indicator { flex:none; min-height:22px; padding:0 18px 4px; color:var(--muted); font-size:.8rem; font-style:italic; }
-    .chat-form { flex:none; display:flex; gap:8px; padding:8px max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left)); border-top:1px solid var(--line); background:var(--surface); }
-    .chat-form input { flex:1; min-width:0; border-radius:999px; padding:0 18px; }
-    .send { display:grid; place-items:center; flex:none; width:46px; height:46px; border-radius:50%; background:var(--accent); color:#fff; }
+    .chat-form { flex:none; display:flex; align-items:center; gap:8px; margin:4px max(12px,env(safe-area-inset-right)) 10px max(12px,env(safe-area-inset-left)); padding:5px 5px 5px 18px; border-radius:999px; border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow); transition:border-color .15s,box-shadow .15s; }
+    .chat-form:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px rgba(214,51,108,.14), var(--shadow); }
+    .chat-form input { flex:1; min-width:0; min-height:42px; padding:0; border:0; border-radius:0; background:transparent; }
+    .chat-form input:focus-visible { outline:none; }
+    .send { display:grid; place-items:center; flex:none; width:44px; height:44px; border-radius:50%; background:var(--accent); color:#fff; }
     .send svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+    .day-divider { align-self:center; margin:10px 0 4px; padding:4px 14px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); color:var(--muted); font-size:.72rem; font-weight:800; letter-spacing:.02em; }
+    body.dark .day-divider { background:var(--glass); border-color:var(--glass-line); }
+    body.dark .chat-form:focus-within { border-color:var(--accent); }
+
+    /* Paper notes: the live preview, love notes in the chat, and softly tinted pokes */
+    .paper, .bubble-wrap.kind-note .bubble, .bubble-wrap.kind-note .bubble.mine { position:relative; border-radius:20px; background:linear-gradient(160deg,#fffdf8,#fff3f8); border:1px solid #f1cfdd; color:#2a2130; box-shadow:0 10px 22px -12px rgba(214,51,108,.45); }
+    body.dark .paper, body.dark .bubble-wrap.kind-note .bubble, body.dark .bubble-wrap.kind-note .bubble.mine { background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,91,136,.14)); border-color:rgba(255,255,255,.16); color:#fff; box-shadow:none; }
+    .paper { padding:14px 16px 12px; overflow:hidden; }
+    .field > .paper { margin-top:0; }
+    .paper-kind, .bubble-wrap.kind-note > .msg-time:first-child, .bubble-wrap.kind-poke > .msg-time:first-child { display:flex; align-items:center; gap:6px; font-size:.66rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-text); }
+    .paper-kind:before, .bubble-wrap.kind-note > .msg-time:first-child:before, .bubble-wrap.kind-poke > .msg-time:first-child:before { content:""; flex:none; width:12px; height:12px; background:currentColor; -webkit-mask:var(--ico-heart) center/contain no-repeat; mask:var(--ico-heart) center/contain no-repeat; }
+    .bubble-wrap.kind-poke > .msg-time:first-child:before { -webkit-mask-image:var(--ico-spark); mask-image:var(--ico-spark); }
+    .bubble-wrap.kind-note > .msg-time:first-child, .bubble-wrap.kind-poke > .msg-time:first-child { margin:0 8px 4px; }
+    .paper-text { margin:8px 0 6px; font-size:1.02rem; font-weight:700; line-height:1.45; overflow-wrap:anywhere; }
+    .paper-text.placeholder { opacity:.55; }
+    .paper-foot { color:var(--muted); font-size:.72rem; font-weight:700; }
+    .bubble-wrap.kind-note, .bubble-wrap.kind-poke { max-width:86%; }
+    .bubble-wrap.kind-note .bubble, .bubble-wrap.kind-note .bubble.mine { padding:14px 16px; font-size:1.02rem; font-weight:700; line-height:1.45; overflow:hidden; }
+    .bubble-wrap.kind-note .bubble:after { content:""; position:absolute; right:10px; top:8px; width:22px; height:22px; background:var(--accent); opacity:.13; -webkit-mask:var(--ico-heart) center/contain no-repeat; mask:var(--ico-heart) center/contain no-repeat; pointer-events:none; }
+    .bubble-wrap.kind-poke .bubble, .bubble-wrap.kind-poke .bubble.mine, body.dark .bubble-wrap.kind-poke .bubble, body.dark .bubble-wrap.kind-poke .bubble.mine { background:linear-gradient(135deg,var(--purple-soft),var(--accent-soft)); border-color:transparent; color:var(--ink); font-weight:700; }
+    .btn.has-heart:before { content:""; flex:none; width:18px; height:18px; background:currentColor; -webkit-mask:var(--ico-heart) center/contain no-repeat; mask:var(--ico-heart) center/contain no-repeat; }
 
     /* ---- Full-screen cards: sign-in, surprise, bouquet, snap viewer --------------------------------- */
     .screen { position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:20px; overflow-y:auto; background:rgba(34,22,40,.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
@@ -1072,7 +1099,12 @@
           <div class="field">
             <div class="moods" id="moods"><button class="mood selected" data-mood="loving" type="button" aria-pressed="true">Loving</button><button class="mood" data-mood="happy" type="button" aria-pressed="false">Happy</button><button class="mood" data-mood="missing you" type="button" aria-pressed="false">Missing you</button><button class="mood" data-mood="sorry" type="button" aria-pressed="false">Sorry</button></div>
             <textarea id="noteText" placeholder="Write something for your partner…" aria-label="Your note" maxlength="500"></textarea>
-            <button class="btn wide" id="makeNote" type="button">Wrap it with love</button>
+            <div class="paper" id="notePreview" role="group" aria-label="Preview of your note">
+              <div class="paper-kind" id="notePreviewKind">Love note</div>
+              <p class="paper-text" id="notePreviewText"></p>
+              <div class="paper-foot">Wrapped with love when you send</div>
+            </div>
+            <button class="btn wide has-heart" id="makeNote" type="button">Wrap it with love</button>
           </div>
           <div id="noteResult" class="result"></div>
         </article>
@@ -2184,10 +2216,17 @@
       try { await updateDoc(doc(db,"couples",coupleId,"messages",msgId),{[`reactions.${emoji}`]: alreadyReacted?arrayRemove(authUser.uid):arrayUnion(authUser.uid)}); } catch(error){}
     }
     const clock = ms => new Date(ms).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+    function dayLabel(ms){
+      const d=new Date(ms), today=new Date(); today.setHours(0,0,0,0);
+      const ago=Math.round((today-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);
+      if(ago<=0) return "Today";
+      if(ago===1) return "Yesterday";
+      return d.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"});
+    }
     const kindLabels={poke:"Poke",note:"Love note"};
     function renderBubble(id,m,container){
       const mine=m.authorId===authUser.uid;
-      const wrap=document.createElement("div"); wrap.className="bubble-wrap"+(mine?" mine":"");
+      const wrap=document.createElement("div"); wrap.className="bubble-wrap"+(mine?" mine":"")+(kindLabels[m.type]?" kind-"+m.type:"");
       if(kindLabels[m.type]){ const kind=document.createElement("div"); kind.className="msg-time"; kind.textContent=kindLabels[m.type]; wrap.appendChild(kind); }
       const bubble=document.createElement("div"); bubble.className="bubble"+(mine?" mine":""); bubble.textContent=m.text;
       bubble.tabIndex=0; bubble.setAttribute("role","button"); bubble.setAttribute("aria-label","React to this message");
@@ -2195,7 +2234,6 @@
       bubble.onclick=togglePicker;
       bubble.onkeydown=event=>{ if(event.key==="Enter" || event.key===" "){ event.preventDefault(); togglePicker(); } };
       wrap.appendChild(bubble);
-      const time=document.createElement("div"); time.className="msg-time"; time.textContent=clock(millis(m.createdAt)||Date.now()); wrap.appendChild(time);
       const reactions=m.reactions||{};
       const pillRow=document.createElement("div"); pillRow.className="reactions";
       Object.keys(reactions).forEach(emoji=>{
@@ -2204,6 +2242,7 @@
         pill.textContent=`${emoji} ${uids.length}`; pill.onclick=()=>toggleReaction(id,emoji,uids.includes(authUser.uid)); pillRow.appendChild(pill);
       });
       wrap.appendChild(pillRow);
+      const time=document.createElement("div"); time.className="msg-time"; time.textContent=clock(millis(m.createdAt)||Date.now()); wrap.appendChild(time);
       const picker=document.createElement("div"); picker.className="reaction-picker";
       ["❤️","😂","😮","👍"].forEach(emoji=>{
         const btn=document.createElement("button"); btn.type="button"; btn.textContent=emoji; btn.setAttribute("aria-label","React with "+emoji);
@@ -2221,7 +2260,12 @@
       const nearBottom=scroller.scrollHeight-scroller.scrollTop-scroller.clientHeight<140;
       box.innerHTML="";
       if(!docs.length){ const hello=document.createElement("p"); hello.className="empty"; hello.textContent="No messages yet — say hi 👋"; box.appendChild(hello); }
-      for(let i=docs.length-1;i>=0;i--) renderBubble(docs[i].id,docs[i].data(),box);
+      let lastDay="";
+      for(let i=docs.length-1;i>=0;i--){
+        const data=docs[i].data(), day=dayLabel(millis(data.createdAt)||Date.now());
+        if(day!==lastDay){ const divider=document.createElement("div"); divider.className="day-divider"; divider.textContent=day; box.appendChild(divider); lastDay=day; }
+        renderBubble(docs[i].id,data,box);
+      }
       if(nearBottom || !seen.chat || docs[0]?.data().authorId===me) scroller.scrollTop=scroller.scrollHeight;
       if(seen.chat){
         snap.docChanges().forEach(change=>{
@@ -2367,18 +2411,31 @@
     // ---- Love note ---------------------------------------------------------------------------------------
     let selectedMood="loving";
     const wraps={loving:["💗 A pocket full of love:","🌙 A little moonlit note:"],happy:["🎈 A happy little surprise:","🌈 A bright note for you:"],"missing you":["🫂 Until I can hug you:","✨ A small piece of my heart:"],sorry:["🌷 A gentle apology:","💌 I want you to know:"]};
+    const NOTE_DEFAULT="You make my world feel warmer.";
+    let noteWrap=pick(wraps[selectedMood]);
+    // While AI_ENDPOINT is empty the built-in wording is what gets sent, so the preview can show it exactly.
+    function renderNotePreview(){
+      const typed=$("noteText").value.trim();
+      $("notePreviewKind").textContent="Love note · "+document.querySelector(".mood.selected").textContent;
+      $("notePreviewText").textContent=`${noteWrap} ${typed||NOTE_DEFAULT} ✨`;
+      $("notePreviewText").classList.toggle("placeholder",!typed);
+    }
+    if(AI_ENDPOINT) $("notePreview").classList.add("hidden");
+    $("noteText").addEventListener("input",renderNotePreview);
     document.querySelectorAll(".mood").forEach(b=>b.onclick=()=>{
       document.querySelectorAll(".mood").forEach(x=>{ x.classList.remove("selected"); x.setAttribute("aria-pressed","false"); });
       b.classList.add("selected"); b.setAttribute("aria-pressed","true"); selectedMood=b.dataset.mood;
+      noteWrap=pick(wraps[selectedMood]); renderNotePreview();
     });
+    renderNotePreview();
     $("makeNote").onclick=()=>busy($("makeNote"),async()=>{
-      const t=$("noteText").value.trim()||"You make my world feel warmer.";
-      const fallback=`${pick(wraps[selectedMood])} ${t} ✨`;
+      const t=$("noteText").value.trim()||NOTE_DEFAULT;
+      const fallback=`${noteWrap} ${t} ✨`;
       $("noteResult").textContent="Writing something sweet…"; $("noteResult").classList.add("show");
       const text=await generateAIText(`Write one short, warm romantic love note (2-3 sentences max) with a "${selectedMood}" tone, inspired by this idea: "${t}". No quotation marks, end with one fitting emoji.`,fallback);
       try {
         await Promise.all([share("note",text),updateDoc(coupleRef(),{"shared.lastNote":text,"shared.lastNoteBy":authUser.uid,"shared.lastNoteAt":serverTimestamp()})]);
-        $("noteText").value="";
+        $("noteText").value=""; noteWrap=pick(wraps[selectedMood]); renderNotePreview();
       } catch(error){ $("noteResult").textContent="Could not send the note yet."; }
     });
 
