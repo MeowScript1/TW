@@ -721,7 +721,10 @@
     .lock-dots { display:flex; justify-content:center; gap:14px; margin:16px 0 20px; }
     .lock-dots i { width:22px; height:20px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff5b88' stroke-width='2.2' stroke-linejoin='round'%3E%3Cpath d='M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z'/%3E%3C/svg%3E") center/contain no-repeat; transition:transform .15s, filter .15s; }
     .lock-dots i.on { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff5b88' d='M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z'/%3E%3C/svg%3E"); filter:drop-shadow(0 0 6px rgba(255,91,136,.85)); transform:scale(1.15); }
-    .lock-dots.shake { animation:lockShake .45s; }
+    .lock-dots.shake, .lock-pw.shake { animation:lockShake .45s; }
+    .lock-choose, .lock-pw { display:grid; gap:10px; margin:16px 0 4px; }
+    .lock-choose .btn, .lock-pw .btn { margin-top:0; min-height:46px; }
+    .lock-pw input { text-align:center; font-size:1.05rem; }
     @keyframes lockShake { 20%,60% { transform:translateX(-9px); } 40%,80% { transform:translateX(9px); } }
     .lock-pad { display:grid; grid-template-columns:repeat(3,66px); justify-content:center; gap:12px; }
     .lock-pad button { height:66px; border-radius:50%; font-size:1.55rem; font-weight:700; background:var(--surface-2); border:1px solid var(--line); transition:transform .1s, background .15s, box-shadow .15s; }
@@ -1352,9 +1355,9 @@
       </div>
       <p class="privacy-note hidden" id="cycleSettingsNote" style="margin-top:8px"></p>
       <p class="status" id="cycleSettingsSay" role="status"></p>
-      <div class="setting"><label for="lockToggle">Heart lock (4-digit code)</label><input class="switch" id="lockToggle" type="checkbox"></div>
-      <div class="setting hidden" id="lockChangeRow"><span>Change your lock code</span><button class="btn soft" id="lockChange" type="button" style="min-height:38px;padding:0 14px">Change</button></div>
-      <p class="privacy-note" style="margin-top:8px">The Heart lock hides TW on this phone when you open it or come back after a minute away. It’s a screen lock, not encryption.</p>
+      <div class="setting"><label for="lockToggle">Heart lock (code or password)</label><input class="switch" id="lockToggle" type="checkbox"></div>
+      <div class="setting hidden" id="lockChangeRow"><span>Change your lock</span><button class="btn soft" id="lockChange" type="button" style="min-height:38px;padding:0 14px">Change</button></div>
+      <p class="privacy-note" style="margin-top:8px">The Heart lock asks for your 4-digit code or password when you open TW on this phone or come back after a minute away. It’s a screen lock, not encryption.</p>
       <div class="setting"><span>Our connection code</span><span class="code-chip" id="settingsCode">—</span></div>
       <div class="sheet-actions">
         <button class="btn soft wide" id="downloadBtn" type="button">Install the app</button>
@@ -1515,8 +1518,16 @@
       <img class="logo big" src="icon-192.png" alt="" width="72" height="72">
       <h2 id="lockTitle">TW is locked</h2>
       <p class="muted" id="lockSub">Enter your 4-digit code</p>
+      <div class="lock-choose hidden" id="lockChoose">
+        <button class="btn soft wide" id="lockPickPin" type="button">4-digit code</button>
+        <button class="btn soft wide" id="lockPickPw" type="button">Password</button>
+      </div>
       <div class="lock-dots" id="lockDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <div class="lock-pad" id="lockPad"></div>
+      <form class="lock-pw hidden" id="lockPwForm" autocomplete="off">
+        <input id="lockPw" type="password" autocomplete="off" maxlength="64" placeholder="Password" aria-label="Lock password">
+        <button class="btn wide" id="lockPwGo" type="submit">Unlock</button>
+      </form>
       <button class="btn ghost wide" id="lockForgot" type="button">Forgot the code? Log out</button>
       <button class="btn ghost wide hidden" id="lockCancel" type="button">Cancel</button>
     </div>
@@ -1677,9 +1688,10 @@
       "permission-denied":"TW isn't allowed to do that yet — the Firebase security rules may need updating."
     };
     // Explains a failed save. Firebase answers "permission-denied" when the published security rules don't know about a feature yet.
+    const RULES_OUT_OF_DATE = "Firebase refused this because TW’s database rules are out of date. Publish the latest firestore.rules (Firebase → Firestore → Rules), then try again.";
     const saveFailure = (error,fallback) => {
       console.warn("TW: save failed",error?.code||error);
-      if(error?.code==="permission-denied") return "Firebase refused this because TW’s database rules are out of date. Publish the latest firestore.rules (Firebase → Firestore → Rules), then try again.";
+      if(error?.code==="permission-denied") return RULES_OUT_OF_DATE;
       return fallback+(error?.code?` (${error.code})`:"");
     };
     const friendlyError = error => errorMessages[error?.code] || (error?.message||"Something went wrong.").replace(/^Firebase: /,"");
@@ -1856,54 +1868,88 @@
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshNotifyUi(); });
     refreshNotifyUi();
 
-    // ---- Heart lock: an optional 4-digit screen lock for this phone --------------------------------------------
-    // Only a salted hash of the code is kept (in this browser, never online). It hides TW; it does not encrypt anything.
-    const LOCK_KEY="ty-lock", LOCK_AFTER_MS=60000;
-    let lockMode="unlock", lockCode="", lockFirst="", lockFails=0, lockUntil=0, lockHiddenAt=0, lockBusy=false;
+    // ---- Heart lock: an optional screen lock for this phone, opened with a 4-digit code or a password -----------------
+    // Only a salted hash is kept (in this browser, never online): "salt:hash" for a code, "pw:salt:hash" for a password.
+    // It hides TW; it does not encrypt anything.
+    const LOCK_KEY="ty-lock", LOCK_AFTER_MS=60000, LOCK_PW_MIN=6;
+    let lockMode="unlock", lockKind="pin", lockCode="", lockFirst="", lockFails=0, lockUntil=0, lockHiddenAt=0, lockBusy=false;
     const lockStored=()=>store.get(LOCK_KEY)||"";
-    async function lockHash(code,salt){ const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(salt+":"+code)); return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+    const storedKind=()=>lockStored().startsWith("pw:")?"password":"pin";
+    const hex=bytes=>[...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,"0")).join("");
+    async function lockHash(code,salt){ return hex(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(salt+":"+code))); }
+    // A password may be one the person also uses elsewhere, so it gets a slow hash.
+    async function lockHashPw(code,salt){
+      const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(code),"PBKDF2",false,["deriveBits"]);
+      return hex(await crypto.subtle.deriveBits({name:"PBKDF2",salt:new TextEncoder().encode(salt),iterations:150000,hash:"SHA-256"},key,256));
+    }
     function refreshLockUi(){ $("lockToggle").checked=!!lockStored(); $("lockChangeRow").classList.toggle("hidden",!lockStored()); }
     function lockPaint(message,shake){
       [...$("lockDots").children].forEach((dot,i)=>dot.classList.toggle("on",i<lockCode.length));
       if(message) $("lockSub").textContent=message;
-      if(shake){ $("lockDots").classList.remove("shake"); void $("lockDots").offsetWidth; $("lockDots").classList.add("shake"); haptic([40,40,40]); }
+      if(shake){ const box=lockKind==="password"?$("lockPwForm"):$("lockDots"); box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); haptic([40,40,40]); }
+    }
+    function lockPrompt(){
+      const pw=lockKind==="password";
+      if(lockMode==="choose") return "How do you want to unlock TW?";
+      if(lockMode==="set1") return pw?`Choose a password (at least ${LOCK_PW_MIN} characters)`:"Choose a 4-digit code";
+      if(lockMode==="set2") return pw?"Repeat the password to confirm":"Repeat the code to confirm";
+      return pw?"Enter your password":"Enter your 4-digit code";
+    }
+    // Shows the chooser, the keypad or the password field for the current step.
+    function lockStep(mode){
+      lockMode=mode; lockCode="";
+      const choosing=mode==="choose", pw=lockKind==="password";
+      $("lockChoose").classList.toggle("hidden",!choosing);
+      $("lockDots").classList.toggle("hidden",choosing||pw); $("lockPad").classList.toggle("hidden",choosing||pw);
+      $("lockPwForm").classList.toggle("hidden",choosing||!pw);
+      $("lockPw").value="";
+      $("lockPwGo").textContent=mode==="unlock"?"Unlock":mode==="set1"?"Next":mode==="set2"?"Turn on the lock":"Continue";
+      lockPaint(lockPrompt());
+      if(!choosing && pw) setTimeout(()=>{ if($("lockScreen").open) $("lockPw").focus(); },60);
     }
     function showLock(mode){
-      lockMode=mode; lockCode=""; lockFirst=""; lockBusy=false;
-      $("lockTitle").textContent=mode==="unlock"?"TW is locked":mode==="disable"?"Turn off the lock":mode==="change"?"Change your code":"Set a lock code";
+      lockFirst=""; lockBusy=false;
+      if(mode!=="choose") lockKind=storedKind();
+      $("lockTitle").textContent=mode==="unlock"?"TW is locked":mode==="disable"?"Turn off the lock":mode==="change"?"Change your lock":"Set up the lock";
+      $("lockForgot").textContent=storedKind()==="password"?"Forgot the password? Log out":"Forgot the code? Log out";
       $("lockForgot").classList.toggle("hidden",mode!=="unlock"); $("lockCancel").classList.toggle("hidden",mode==="unlock");
-      lockPaint(mode==="set1"?"Choose a 4-digit code":"Enter your 4-digit code");
-      openDialog($("lockScreen"));
+      if(!$("lockScreen").open) openDialog($("lockScreen"));
+      lockStep(mode);
     }
-    const hideLock=()=>{ lockCode=""; closeDialog($("lockScreen")); refreshLockUi(); };
-    async function lockSubmit(){
-      const code=lockCode; lockBusy=true;
+    const hideLock=()=>{ lockCode=""; $("lockPw").value=""; closeDialog($("lockScreen")); refreshLockUi(); };
+    async function lockSubmit(code){
+      lockBusy=true;
+      const pw=lockKind==="password";
       try {
-        if(lockMode==="set1"){ lockFirst=code; lockCode=""; lockMode="set2"; lockPaint("Repeat the code to confirm"); return; }
+        if(lockMode==="set1"){
+          if(pw && code.length<LOCK_PW_MIN){ $("lockPw").value=""; lockPaint(`Use at least ${LOCK_PW_MIN} characters`,true); return; }
+          lockFirst=code; lockStep("set2"); return;
+        }
         if(lockMode==="set2"){
-          if(code!==lockFirst){ lockCode=""; lockFirst=""; lockMode="set1"; lockPaint("Those didn’t match — choose a code again",true); return; }
-          const salt=randomId()+randomId(); store.set(LOCK_KEY,salt+":"+await lockHash(code,salt));
+          if(code!==lockFirst){ lockFirst=""; lockStep("set1"); lockPaint(pw?"Those didn’t match — choose a password again":"Those didn’t match — choose a code again",true); return; }
+          const salt=randomId()+randomId();
+          store.set(LOCK_KEY,pw?"pw:"+salt+":"+await lockHashPw(code,salt):salt+":"+await lockHash(code,salt));
           hideLock(); toast("Heart lock is on"); return;
         }
-        if(Date.now()<lockUntil){ lockCode=""; lockPaint(`Too many tries — wait ${Math.ceil((lockUntil-Date.now())/1000)}s`,true); return; }
-        const [salt,hash]=lockStored().split(":");
-        if(salt && hash && await lockHash(code,salt)===hash){
+        if(Date.now()<lockUntil){ lockCode=""; $("lockPw").value=""; lockPaint(`Too many tries — wait ${Math.ceil((lockUntil-Date.now())/1000)}s`,true); return; }
+        const parts=lockStored().split(":"), [salt,hash]=parts[0]==="pw"?parts.slice(1):parts;
+        if(salt && hash && await (parts[0]==="pw"?lockHashPw(code,salt):lockHash(code,salt))===hash){
           lockFails=0;
           if(lockMode==="unlock"){ hideLock(); return; }
           if(lockMode==="disable"){ store.set(LOCK_KEY,""); hideLock(); toast("Heart lock is off"); return; }
-          lockMode="set1"; lockCode=""; lockPaint("Choose a new 4-digit code"); return;   // change
+          lockStep("choose"); return;   // change: pick a code or a password again
         }
-        lockCode=""; lockFails++;
-        if(lockFails>=5){ lockFails=0; lockUntil=Date.now()+30000; lockPaint("Too many tries — wait 30s",true); } else lockPaint("Wrong code — try again",true);
-      } finally { lockBusy=false; if(lockMode!=="set1" || lockCode.length===0) lockPaint(); }
+        lockCode=""; $("lockPw").value=""; lockFails++;
+        if(lockFails>=5){ lockFails=0; lockUntil=Date.now()+30000; lockPaint("Too many tries — wait 30s",true); } else lockPaint(pw?"Wrong password — try again":"Wrong code — try again",true);
+      } finally { lockBusy=false; lockPaint(); }
     }
     function lockKey(key){
-      if(lockBusy || !$("lockScreen").open) return;
+      if(lockBusy || !$("lockScreen").open || lockKind!=="pin" || lockMode==="choose") return;
       if(key==="back") lockCode=lockCode.slice(0,-1);
       else if(/^\d$/.test(key) && lockCode.length<4) lockCode+=key;
       else return;
       haptic([8]); lockPaint();
-      if(lockCode.length===4) lockSubmit();
+      if(lockCode.length===4) lockSubmit(lockCode);
     }
     ["1","2","3","4","5","6","7","8","9","","0","back"].forEach(key=>{
       const button=document.createElement("button"); button.type="button";
@@ -1912,11 +1958,14 @@
       else button.textContent=key;
       button.onclick=()=>lockKey(key); $("lockPad").appendChild(button);
     });
-    $("lockScreen").addEventListener("keydown",event=>{ if(/^\d$/.test(event.key)) lockKey(event.key); else if(event.key==="Backspace") lockKey("back"); });
+    $("lockScreen").addEventListener("keydown",event=>{ if(lockKind!=="pin") return; if(/^\d$/.test(event.key)) lockKey(event.key); else if(event.key==="Backspace") lockKey("back"); });
     $("lockScreen").addEventListener("cancel",event=>{ if(lockMode==="unlock") event.preventDefault(); else { lockCode=""; refreshLockUi(); } });
+    $("lockPickPin").onclick=()=>{ lockKind="pin"; lockStep("set1"); };
+    $("lockPickPw").onclick=()=>{ lockKind="password"; lockStep("set1"); };
+    $("lockPwForm").onsubmit=event=>{ event.preventDefault(); const value=$("lockPw").value; if(!lockBusy && lockKind==="password" && value) lockSubmit(value); };
     $("lockCancel").onclick=hideLock;
     $("lockForgot").onclick=async()=>{ store.set(LOCK_KEY,""); hideLock(); await removePushDevice(coupleId); signOut(auth); toast("Signed out — the lock was reset"); };
-    $("lockToggle").onchange=()=>{ const wantOn=$("lockToggle").checked; $("lockToggle").checked=!!lockStored(); closeDialog($("settingsDialog")); showLock(wantOn?"set1":"disable"); };
+    $("lockToggle").onchange=()=>{ const wantOn=$("lockToggle").checked; $("lockToggle").checked=!!lockStored(); closeDialog($("settingsDialog")); showLock(wantOn?"choose":"disable"); };
     $("lockChange").onclick=()=>{ closeDialog($("settingsDialog")); showLock("change"); };
     document.addEventListener("visibilitychange",()=>{
       if(document.hidden){ lockHiddenAt=Date.now(); return; }
@@ -2185,7 +2234,10 @@
       cycleMineLoaded=false;
       coupleUnsubs.push(onSnapshot(cycleRefFor(authUser.uid),onMineSnapshot,error=>{ if(coupleId!==id) return; cycleMineLoaded=true; cycleMine=null; cycleMineDenied=error?.code==="permission-denied"; if(!cycleMineDenied) console.warn("TW: could not listen to the cycle tracker",error?.code||error); renderCycle(); renderCycleDialog(); renderCycleSettings(); }));
       coupleUnsubs.push(()=>{ if(cycleTheirsStop){ cycleTheirsStop(); cycleTheirsStop=null; } cycleTheirsFor=""; });
-      coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"snaps"),orderBy("createdAt","desc"),limit(SNAP_LIMIT)),onSnapsSnapshot,listenError("snaps")));
+      coupleUnsubs.push(onSnapshot(query(collection(db,"couples",id,"snaps"),orderBy("createdAt","desc"),limit(SNAP_LIMIT)),onSnapsSnapshot,error=>{
+        listenError("snaps")(error);
+        if(coupleId===id && error?.code==="permission-denied") $("snapStatus").textContent=RULES_OUT_OF_DATE;
+      }));
       if(previousCouple && previousCouple!==id) removePushDevice(previousCouple);
       syncPush(false);
       heartbeat();
@@ -2667,13 +2719,19 @@
         $("snapViewCaption").classList.toggle("hidden",!item.caption);
         $("snapViewScreen").classList.remove("hidden");
       } catch(error){
-        // A missing photo reads as "permission denied" (the rule needs the document to exist), so treat that as gone too.
-        const gone=error.code==="gone" || error.code==="permission-denied";
+        // A missing photo reads as "permission denied" (the rule needs the document to exist), but out-of-date security
+        // rules give the same error, and so does a refused "viewed" mark. Only call the snap gone when it has really
+        // disappeared (the sender unsent it); otherwise keep it, so nobody loses a snap to a rules problem.
+        let gone=error.code==="gone" || error.code==="not-found";
+        if(!gone && marked && error.code==="permission-denied")
+          gone=await getDoc(doc(db,"couples",coupleId,"snaps",item.id)).then(snapDoc=>!snapDoc.exists()).catch(()=>false);
+        const refused=!gone && error.code==="permission-denied";
         // Couldn't show it (e.g. the connection dropped): put it back as unopened instead of wasting the snap.
         if(marked && !gone) updateDoc(doc(db,"couples",coupleId,"snaps",item.id),{viewed:false}).catch(()=>{});
         if(gone) purgeSnap(item);
         currentSnap=null;
-        $("snapStatus").textContent=gone?"That snap is no longer available.":"Could not open that snap right now — try again in a moment.";
+        if(refused) console.warn("TW: opening a snap was refused",error);
+        $("snapStatus").textContent=gone?"That snap is no longer available.":refused?RULES_OUT_OF_DATE:"Could not open that snap right now — try again in a moment.";
         toast($("snapStatus").textContent);
       }
       finally { openingSnap=false; }
